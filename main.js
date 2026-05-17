@@ -197,63 +197,52 @@ async function loadGitHub() {
 
 loadGitHub();
 
-// ── NEWS API ──────────────────────────────────────────────
+// ── HACKER NEWS API ───────────────────────────────────────
 async function loadNews() {
   try {
-    const res = await fetch(
-      'https://newsapi.org/v2/top-headlines?category=technology&language=es&pageSize=5' +
-      '&apiKey=2666beef9d4d40729ea63b2c8c3d0867'
+    const idsRes = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json');
+    const ids = await idsRes.json();
+    const top5 = ids.slice(0, 5);
+
+    const stories = await Promise.all(
+      top5.map(id =>
+        fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`).then(r => r.json())
+      )
     );
-    const data = await res.json();
-    const articles = data.articles?.filter(a => a.title && a.title !== '[Removed]') ?? [];
 
-    if (articles.length === 0) throw new Error('sin artículos');
-
-    document.getElementById('news-list').innerHTML = articles.slice(0, 5).map(a => `
-      <a class="news-item" href="${a.url}" target="_blank" rel="noopener">
-        <div class="news-title">${a.title}</div>
-        <div class="news-source">${a.source?.name ?? ''} · ${new Date(a.publishedAt).toLocaleDateString('es-CL')}</div>
-      </a>`).join('');
+    document.getElementById('news-list').innerHTML = stories
+      .filter(s => s && s.title && s.url)
+      .map(s => {
+        const domain = new URL(s.url).hostname.replace('www.', '');
+        const ago = Math.round((Date.now() / 1000 - s.time) / 3600);
+        return `
+          <a class="news-item" href="${s.url}" target="_blank" rel="noopener">
+            <div class="news-title">${s.title}</div>
+            <div class="news-source">${domain} · hace ${ago}h · ▲ ${s.score} pts</div>
+          </a>`;
+      }).join('');
   } catch {
-    // Fallback: noticias en inglés si no hay en español
-    try {
-      const res = await fetch(
-        'https://newsapi.org/v2/top-headlines?category=technology&language=en&pageSize=5' +
-        '&apiKey=2666beef9d4d40729ea63b2c8c3d0867'
-      );
-      const data = await res.json();
-      const articles = data.articles?.filter(a => a.title && a.title !== '[Removed]') ?? [];
-      document.getElementById('news-list').innerHTML = articles.slice(0, 5).map(a => `
-        <a class="news-item" href="${a.url}" target="_blank" rel="noopener">
-          <div class="news-title">${a.title}</div>
-          <div class="news-source">${a.source?.name ?? ''} · ${new Date(a.publishedAt).toLocaleDateString('es-CL')}</div>
-        </a>`).join('');
-    } catch {
-      document.getElementById('news-list').innerHTML =
-        `<p style="color:var(--muted);font-size:.85rem">Noticias no disponibles.</p>`;
-    }
+    document.getElementById('news-list').innerHTML =
+      `<p style="color:var(--muted);font-size:.85rem">Noticias no disponibles.</p>`;
   }
 }
 
 loadNews();
 
-// ── VISITOR LOCATION ──────────────────────────────────────
+// ── VISITOR LOCATION (ipwho.is) ───────────────────────────
 async function loadVisitorLocation() {
   try {
-    const res = await fetch('https://ipapi.co/json/');
+    const res = await fetch('https://ipwho.is/');
     const d = await res.json();
+    if (!d.success) throw new Error();
 
-    const countryFlags = {
-      CL:'🇨🇱', AR:'🇦🇷', PE:'🇵🇪', MX:'🇲🇽', CO:'🇨🇴',
-      US:'🇺🇸', ES:'🇪🇸', BR:'🇧🇷', UY:'🇺🇾', VE:'🇻🇪',
-    };
-    const flag = countryFlags[d.country_code] ?? '🌍';
+    const flag = d.flag?.emoji ?? '🌍';
 
     document.getElementById('visitor-location').innerHTML = `
       <div class="visitor-card">
         <div class="visitor-row">
           <span class="visitor-flag">${flag}</span>
-          <span class="visitor-value">${d.country_name}</span>
+          <span class="visitor-value">${d.country ?? '—'}</span>
         </div>
         <div class="visitor-row">
           <span class="visitor-label">Ciudad</span>
@@ -261,11 +250,11 @@ async function loadVisitorLocation() {
         </div>
         <div class="visitor-row">
           <span class="visitor-label">Zona horaria</span>
-          <span class="visitor-value">${d.timezone ?? '—'}</span>
+          <span class="visitor-value">${d.timezone?.id ?? '—'}</span>
         </div>
         <div class="visitor-row">
           <span class="visitor-label">Proveedor</span>
-          <span class="visitor-value">${d.org ?? '—'}</span>
+          <span class="visitor-value">${d.connection?.org ?? d.connection?.isp ?? '—'}</span>
         </div>
       </div>`;
   } catch {
