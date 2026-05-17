@@ -22,6 +22,7 @@
     <li><a href="#habilidades">Skills</a></li>
     <li><a href="#experiencia">Experiencia</a></li>
     <li><a href="#proyectos">Proyectos</a></li>
+    <li><a href="#educacion">Educación</a></li>
     <li><a href="#apis">APIs</a></li>
     <li><a href="#contacto">Contacto</a></li>
   </ul>
@@ -40,6 +41,7 @@
     <div class="hero-ctas">
       <a href="#experiencia" class="btn btn-primary">Ver experiencia</a>
       <a href="#contacto" class="btn btn-outline">Contactar</a>
+      <a href="CV_Maximiliano_Valdes_v2.docx" download class="btn btn-download">⬇ Descargar CV</a>
     </div>
     <!-- Weather Widget -->
     <div id="weather-widget">
@@ -262,6 +264,84 @@
   </div>
 </section>
 
+<!-- EDUCACIÓN Y CERTIFICADOS -->
+<section id="educacion" style="background: var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <p class="section-label reveal">Formación</p>
+    <h2 class="section-title reveal">Educación & Certificados</h2>
+    <p class="section-desc reveal">Formación académica y cursos complementarios completados.</p>
+
+    <div class="edu-grid">
+      <div class="edu-card reveal">
+        <div class="edu-icon">🎓</div>
+        <div class="edu-body">
+          <div class="edu-period">2021 – 2025</div>
+          <div class="edu-title">Ingeniería en Informática</div>
+          <div class="edu-institution">DUOC UC</div>
+          <p class="edu-desc">Carrera técnico-profesional con énfasis en desarrollo de software, bases de datos, redes y sistemas operativos.</p>
+        </div>
+      </div>
+      <div class="edu-card reveal">
+        <div class="edu-icon">📚</div>
+        <div class="edu-body">
+          <div class="edu-period">Santander Open Academy</div>
+          <div class="edu-title">Introducción a la Ciencia de Datos</div>
+          <div class="edu-institution">Santander Open Academy</div>
+          <p class="edu-desc">Fundamentos de análisis de datos, estadística descriptiva y herramientas de visualización.</p>
+        </div>
+      </div>
+      <div class="edu-card reveal">
+        <div class="edu-icon">🐍</div>
+        <div class="edu-body">
+          <div class="edu-period">Santander Open Academy</div>
+          <div class="edu-title">Python</div>
+          <div class="edu-institution">Santander Open Academy</div>
+          <p class="edu-desc">Programación con Python desde cero: estructuras de datos, funciones, POO y manejo de librerías.</p>
+        </div>
+      </div>
+      <div class="edu-card reveal">
+        <div class="edu-icon">🧮</div>
+        <div class="edu-body">
+          <div class="edu-period">Mastermind</div>
+          <div class="edu-title">Fundamentos de Matemáticas para Informáticos</div>
+          <div class="edu-institution">Mastermind</div>
+          <p class="edu-desc">Lógica, álgebra booleana, teoría de conjuntos y matemática discreta aplicada a la informática.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="cert-subtitle reveal">Certificados verificables</h3>
+    <div class="cert-grid">
+      <div class="cert-card reveal" onclick="openLightbox('Certificados/1756486256094.jpeg')">
+        <img src="Certificados/1756486256094.jpeg" alt="Certificado 1" loading="lazy" />
+        <div class="cert-overlay">🔍 Ver certificado</div>
+      </div>
+      <div class="cert-card reveal" onclick="openLightbox('Certificados/1756486420666.jpeg')">
+        <img src="Certificados/1756486420666.jpeg" alt="Certificado 2" loading="lazy" />
+        <div class="cert-overlay">🔍 Ver certificado</div>
+      </div>
+      <div class="cert-card reveal" onclick="openLightbox('Certificados/1756487303624.jpeg')">
+        <img src="Certificados/1756487303624.jpeg" alt="Certificado 3" loading="lazy" />
+        <div class="cert-overlay">🔍 Ver certificado</div>
+      </div>
+      <div class="cert-card reveal" onclick="openLightbox('Certificados/1756487329771.jpeg')">
+        <img src="Certificados/1756487329771.jpeg" alt="Certificado 4" loading="lazy" />
+        <div class="cert-overlay">🔍 Ver certificado</div>
+      </div>
+      <div class="cert-card reveal" onclick="openLightbox('Certificados/1768766643346.jpeg')">
+        <img src="Certificados/1768766643346.jpeg" alt="Certificado 5" loading="lazy" />
+        <div class="cert-overlay">🔍 Ver certificado</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="Certificado" />
+</div>
+
 <!-- PROYECTOS FUTUROS -->
 <section id="proyectos" style="background: var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
   <div class="container">
@@ -425,6 +505,35 @@
         <div id="github-repos" class="github-repos"></div>
       </div>
 
+      <!-- NewsAPI -->
+      <div class="api-card reveal">
+        <div class="api-card-header">
+          <div class="api-badge news">NewsAPI</div>
+          <div class="api-live-dot"></div>
+        </div>
+        <h3>Noticias Tech</h3>
+        <p class="api-desc">Titulares de tecnología en tiempo real · Fuente: NewsAPI.org</p>
+        <div id="news-list">
+          <div class="crypto-skeleton"></div>
+          <div class="crypto-skeleton"></div>
+          <div class="crypto-skeleton"></div>
+        </div>
+      </div>
+
+      <!-- Visitor Location -->
+      <div class="api-card reveal">
+        <div class="api-card-header">
+          <div class="api-badge visitor">ipapi.co</div>
+          <div class="api-live-dot"></div>
+        </div>
+        <h3>Tu Ubicación</h3>
+        <p class="api-desc">Detección de ubicación por IP · Sin datos personales almacenados</p>
+        <div id="visitor-location">
+          <div class="crypto-skeleton"></div>
+          <div class="crypto-skeleton"></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -443,6 +552,25 @@
         <a href="https://www.linkedin.com/in/maximiliano-alejandro-valdes-musrri-716678271/" class="contact-link" target="_blank" rel="noopener">💼 LinkedIn</a>
         <a href="tel:+56945859365" class="contact-link">📱 +56 9 4585 9365</a>
       </div>
+
+      <form id="contact-form" class="contact-form reveal">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cf-name">Nombre</label>
+            <input type="text" id="cf-name" name="name" placeholder="Tu nombre" required />
+          </div>
+          <div class="form-group">
+            <label for="cf-email">Email</label>
+            <input type="email" id="cf-email" name="email" placeholder="tu@email.com" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="cf-message">Mensaje</label>
+          <textarea id="cf-message" name="message" rows="4" placeholder="¿En qué puedo ayudarte?" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary form-submit" id="form-btn">Enviar mensaje</button>
+        <div id="form-status"></div>
+      </form>
     </div>
   </div>
 </section>

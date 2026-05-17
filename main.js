@@ -197,6 +197,134 @@ async function loadGitHub() {
 
 loadGitHub();
 
+// ── NEWS API ──────────────────────────────────────────────
+async function loadNews() {
+  try {
+    const res = await fetch(
+      'https://newsapi.org/v2/top-headlines?category=technology&language=es&pageSize=5' +
+      '&apiKey=2666beef9d4d40729ea63b2c8c3d0867'
+    );
+    const data = await res.json();
+    const articles = data.articles?.filter(a => a.title && a.title !== '[Removed]') ?? [];
+
+    if (articles.length === 0) throw new Error('sin artículos');
+
+    document.getElementById('news-list').innerHTML = articles.slice(0, 5).map(a => `
+      <a class="news-item" href="${a.url}" target="_blank" rel="noopener">
+        <div class="news-title">${a.title}</div>
+        <div class="news-source">${a.source?.name ?? ''} · ${new Date(a.publishedAt).toLocaleDateString('es-CL')}</div>
+      </a>`).join('');
+  } catch {
+    // Fallback: noticias en inglés si no hay en español
+    try {
+      const res = await fetch(
+        'https://newsapi.org/v2/top-headlines?category=technology&language=en&pageSize=5' +
+        '&apiKey=2666beef9d4d40729ea63b2c8c3d0867'
+      );
+      const data = await res.json();
+      const articles = data.articles?.filter(a => a.title && a.title !== '[Removed]') ?? [];
+      document.getElementById('news-list').innerHTML = articles.slice(0, 5).map(a => `
+        <a class="news-item" href="${a.url}" target="_blank" rel="noopener">
+          <div class="news-title">${a.title}</div>
+          <div class="news-source">${a.source?.name ?? ''} · ${new Date(a.publishedAt).toLocaleDateString('es-CL')}</div>
+        </a>`).join('');
+    } catch {
+      document.getElementById('news-list').innerHTML =
+        `<p style="color:var(--muted);font-size:.85rem">Noticias no disponibles.</p>`;
+    }
+  }
+}
+
+loadNews();
+
+// ── VISITOR LOCATION ──────────────────────────────────────
+async function loadVisitorLocation() {
+  try {
+    const res = await fetch('https://ipapi.co/json/');
+    const d = await res.json();
+
+    const countryFlags = {
+      CL:'🇨🇱', AR:'🇦🇷', PE:'🇵🇪', MX:'🇲🇽', CO:'🇨🇴',
+      US:'🇺🇸', ES:'🇪🇸', BR:'🇧🇷', UY:'🇺🇾', VE:'🇻🇪',
+    };
+    const flag = countryFlags[d.country_code] ?? '🌍';
+
+    document.getElementById('visitor-location').innerHTML = `
+      <div class="visitor-card">
+        <div class="visitor-row">
+          <span class="visitor-flag">${flag}</span>
+          <span class="visitor-value">${d.country_name}</span>
+        </div>
+        <div class="visitor-row">
+          <span class="visitor-label">Ciudad</span>
+          <span class="visitor-value">${d.city ?? '—'}, ${d.region ?? ''}</span>
+        </div>
+        <div class="visitor-row">
+          <span class="visitor-label">Zona horaria</span>
+          <span class="visitor-value">${d.timezone ?? '—'}</span>
+        </div>
+        <div class="visitor-row">
+          <span class="visitor-label">Proveedor</span>
+          <span class="visitor-value">${d.org ?? '—'}</span>
+        </div>
+      </div>`;
+  } catch {
+    document.getElementById('visitor-location').innerHTML =
+      `<p style="color:var(--muted);font-size:.85rem">Ubicación no disponible.</p>`;
+  }
+}
+
+loadVisitorLocation();
+
+// ── LIGHTBOX ──────────────────────────────────────────────
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+// ── CONTACT FORM ──────────────────────────────────────────
+document.getElementById('contact-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn    = document.getElementById('form-btn');
+  const status = document.getElementById('form-status');
+  const name    = document.getElementById('cf-name').value.trim();
+  const email   = document.getElementById('cf-email').value.trim();
+  const message = document.getElementById('cf-message').value.trim();
+
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+  status.className = '';
+  status.textContent = '';
+
+  try {
+    const res = await fetch('https://formsubmit.co/ajax/musrri.valdes.maxi03@gmail.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ name, email, message, _subject: `Portfolio — mensaje de ${name}` }),
+    });
+    const data = await res.json();
+    if (data.success === 'true' || data.success === true) {
+      status.textContent = '✅ Mensaje enviado. Te responderé pronto.';
+      status.className = 'ok';
+      this.reset();
+    } else {
+      throw new Error();
+    }
+  } catch {
+    status.textContent = '❌ Error al enviar. Escríbeme directo a musrri.valdes.maxi03@gmail.com';
+    status.className = 'err';
+  } finally {
+    btn.textContent = 'Enviar mensaje';
+    btn.disabled = false;
+  }
+});
+
 // ── SCROLL REVEAL ─────────────────────────────────────────
 const revealEls = document.querySelectorAll('.reveal, .timeline-item');
 const io = new IntersectionObserver((entries) => {

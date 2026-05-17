@@ -322,6 +322,67 @@ section { padding: 5rem 2rem; }
 }
 .contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
 
+/* ── DOWNLOAD BTN ── */
+.btn-download {
+  background: transparent; color: var(--accent3);
+  border: 1px solid var(--accent3);
+}
+.btn-download:hover { background: rgba(67,233,123,0.1); transform: translateY(-1px); }
+
+/* ── EDUCATION ── */
+.edu-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem; margin-bottom: 3rem;
+}
+.edu-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 1.5rem; display: flex; gap: 1rem; align-items: flex-start;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.edu-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+.edu-icon { font-size: 2rem; flex-shrink: 0; }
+.edu-period { font-size: 0.75rem; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+.edu-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.2rem; }
+.edu-institution { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem; }
+.edu-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+.cert-subtitle { font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem; }
+.cert-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem;
+}
+.cert-card {
+  position: relative; border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--border); cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+  aspect-ratio: 4/3;
+}
+.cert-card:hover { transform: scale(1.03); border-color: var(--accent); }
+.cert-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cert-overlay {
+  position: absolute; inset: 0; background: rgba(108,99,255,0.75);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 0.85rem; font-weight: 600;
+  opacity: 0; transition: opacity 0.2s;
+}
+.cert-card:hover .cert-overlay { opacity: 1; }
+
+/* LIGHTBOX */
+#lightbox {
+  display: none; position: fixed; inset: 0; z-index: 999;
+  background: rgba(0,0,0,0.9); align-items: center; justify-content: center;
+  cursor: zoom-out;
+}
+#lightbox.open { display: flex; }
+#lightbox img { max-width: 90vw; max-height: 88vh; border-radius: 8px; object-fit: contain; }
+.lightbox-close {
+  position: absolute; top: 1rem; right: 1rem;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+  color: white; width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
+  font-size: 1rem; display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.25); }
+
 /* ── APIS EN VIVO ── */
 .apis-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;
@@ -339,6 +400,12 @@ section { padding: 5rem 2rem; }
 }
 .api-badge.github {
   background: rgba(67,233,123,0.1); color: var(--accent3); border-color: rgba(67,233,123,0.2);
+}
+.api-badge.news {
+  background: rgba(255,101,132,0.1); color: var(--accent2); border-color: rgba(255,101,132,0.2);
+}
+.api-badge.visitor {
+  background: rgba(255,204,0,0.1); color: #ffd700; border-color: rgba(255,204,0,0.2);
 }
 .api-live-dot {
   width: 8px; height: 8px; border-radius: 50%; background: var(--accent3);
@@ -407,6 +474,56 @@ section { padding: 5rem 2rem; }
 }
 .github-repo-right { display: flex; align-items: center; gap: 0.5rem; }
 .github-repo-stars { font-size: 0.78rem; color: var(--muted); }
+
+/* ── NEWS ── */
+.news-item {
+  display: flex; flex-direction: column; gap: 0.2rem;
+  padding: 0.65rem 0.75rem; border-radius: 8px; margin-bottom: 0.5rem;
+  background: var(--surface2); border: 1px solid var(--border);
+  text-decoration: none; transition: border-color 0.2s, transform 0.15s;
+}
+.news-item:hover { border-color: var(--accent2); transform: translateX(3px); }
+.news-title { font-size: 0.83rem; font-weight: 600; color: var(--text); line-height: 1.4; }
+.news-source { font-size: 0.72rem; color: var(--muted); }
+
+/* ── VISITOR ── */
+.visitor-card {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem;
+}
+.visitor-row { display: flex; align-items: center; gap: 0.6rem; font-size: 0.88rem; }
+.visitor-label { color: var(--muted); min-width: 70px; font-size: 0.78rem; }
+.visitor-value { font-weight: 600; color: var(--text); }
+.visitor-flag { font-size: 1.4rem; }
+
+/* ── CONTACT FORM ── */
+.contact-form {
+  margin-top: 2.5rem; background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 2rem; text-align: left;
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+.form-group label { font-size: 0.82rem; font-weight: 600; color: var(--muted); }
+.form-group input,
+.form-group textarea {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 0.65rem 0.85rem; color: var(--text); font-size: 0.9rem;
+  font-family: inherit; resize: vertical; outline: none;
+  transition: border-color 0.2s, background-color 0.35s ease;
+}
+.form-group input:focus,
+.form-group textarea:focus { border-color: var(--accent); }
+.form-submit { width: 100%; justify-content: center; display: block; text-align: center; }
+#form-status {
+  margin-top: 0.75rem; font-size: 0.85rem; text-align: center;
+  min-height: 1.2rem; transition: color 0.2s;
+}
+#form-status.ok   { color: var(--accent3); }
+#form-status.err  { color: var(--accent2); }
+
+@media (max-width: 600px) {
+  .form-row { grid-template-columns: 1fr; }
+}
 
 /* ── FOOTER ── */
 footer {
