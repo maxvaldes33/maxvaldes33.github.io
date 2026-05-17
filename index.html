@@ -312,34 +312,38 @@
 
     <h3 class="cert-subtitle reveal">Certificados verificables</h3>
     <div class="cert-grid">
-      <div class="cert-card reveal" onclick="openLightbox('Certificados/1756486256094.jpeg')">
-        <img src="Certificados/1756486256094.jpeg" alt="Certificado 1" loading="lazy" />
+      <div class="cert-card reveal" onclick="openGallery(0)">
+        <img src="Certificados/1768766643346.jpeg" alt="Título Ingeniero en Informática — DUOC UC" loading="lazy" />
         <div class="cert-overlay">🔍 Ver certificado</div>
+        <div class="cert-label">Ingeniería en Informática · DUOC UC</div>
       </div>
-      <div class="cert-card reveal" onclick="openLightbox('Certificados/1756486420666.jpeg')">
-        <img src="Certificados/1756486420666.jpeg" alt="Certificado 2" loading="lazy" />
+      <div class="cert-card reveal" onclick="openGallery(1)">
+        <img src="Certificados/1756486420666.jpeg" alt="Introducción a la Ciencia de Datos — Santander" loading="lazy" />
         <div class="cert-overlay">🔍 Ver certificado</div>
+        <div class="cert-label">Ciencia de Datos · Santander</div>
       </div>
-      <div class="cert-card reveal" onclick="openLightbox('Certificados/1756487303624.jpeg')">
-        <img src="Certificados/1756487303624.jpeg" alt="Certificado 3" loading="lazy" />
+      <div class="cert-card reveal cert-card-pdf" onclick="openGallery(2)">
+        <div class="cert-pdf-thumb">📄</div>
         <div class="cert-overlay">🔍 Ver certificado</div>
-      </div>
-      <div class="cert-card reveal" onclick="openLightbox('Certificados/1756487329771.jpeg')">
-        <img src="Certificados/1756487329771.jpeg" alt="Certificado 4" loading="lazy" />
-        <div class="cert-overlay">🔍 Ver certificado</div>
-      </div>
-      <div class="cert-card reveal" onclick="openLightbox('Certificados/1768766643346.jpeg')">
-        <img src="Certificados/1768766643346.jpeg" alt="Certificado 5" loading="lazy" />
-        <div class="cert-overlay">🔍 Ver certificado</div>
+        <div class="cert-label">Matemáticas para Informáticos · Mastermind</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- LIGHTBOX -->
-<div id="lightbox" onclick="closeLightbox()">
+<!-- LIGHTBOX GALLERY -->
+<div id="lightbox" onclick="handleLightboxClick(event)">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <img id="lightbox-img" src="" alt="Certificado" />
+  <button class="lightbox-prev" onclick="galleryNav(-1); event.stopPropagation()">&#8249;</button>
+  <div class="lightbox-content">
+    <img id="lightbox-img" src="" alt="Certificado" />
+    <div id="lightbox-pdf-btn" style="display:none">
+      <a id="lightbox-pdf-link" href="Certificados/Cerficado Matematicas.pdf" target="_blank" class="btn btn-primary" onclick="event.stopPropagation()">📄 Abrir PDF</a>
+    </div>
+    <div id="lightbox-caption"></div>
+  </div>
+  <button class="lightbox-next" onclick="galleryNav(1); event.stopPropagation()">&#8250;</button>
+  <div id="lightbox-counter"></div>
 </div>
 
 <!-- PROYECTOS FUTUROS -->

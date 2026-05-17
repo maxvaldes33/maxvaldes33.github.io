@@ -276,17 +276,64 @@ async function loadVisitorLocation() {
 
 loadVisitorLocation();
 
-// ── LIGHTBOX ──────────────────────────────────────────────
-function openLightbox(src) {
-  document.getElementById('lightbox-img').src = src;
+// ── LIGHTBOX GALLERY ──────────────────────────────────────
+const GALLERY = [
+  { type: 'img', src: 'Certificados/1768766643346.jpeg',  caption: 'Ingeniería en Informática · DUOC UC · 2025' },
+  { type: 'img', src: 'Certificados/1756486420666.jpeg',  caption: 'Introducción a la Ciencia de Datos · Santander Open Academy' },
+  { type: 'pdf', src: 'Certificados/Cerficado Matematicas.pdf', caption: 'Fundamentos de Matemáticas para Informáticos · Mastermind' },
+];
+let currentIdx = 0;
+
+function openGallery(idx) {
+  currentIdx = idx;
+  renderGalleryItem();
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
+
+function renderGalleryItem() {
+  const item    = GALLERY[currentIdx];
+  const img     = document.getElementById('lightbox-img');
+  const pdfBtn  = document.getElementById('lightbox-pdf-btn');
+  const pdfLink = document.getElementById('lightbox-pdf-link');
+  const caption = document.getElementById('lightbox-caption');
+  const counter = document.getElementById('lightbox-counter');
+
+  img.style.opacity = '0';
+  if (item.type === 'pdf') {
+    img.style.display = 'none';
+    pdfBtn.style.display = 'block';
+    pdfLink.href = item.src;
+  } else {
+    img.style.display = 'block';
+    pdfBtn.style.display = 'none';
+    img.src = item.src;
+    img.onload = () => { img.style.opacity = '1'; };
+  }
+  caption.textContent = item.caption;
+  counter.textContent = `${currentIdx + 1} / ${GALLERY.length}`;
+}
+
+function galleryNav(dir) {
+  currentIdx = (currentIdx + dir + GALLERY.length) % GALLERY.length;
+  renderGalleryItem();
+}
+
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
   document.body.style.overflow = '';
 }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+function handleLightboxClick(e) {
+  if (e.target === document.getElementById('lightbox')) closeLightbox();
+}
+
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'Escape')      closeLightbox();
+  if (e.key === 'ArrowRight')  galleryNav(1);
+  if (e.key === 'ArrowLeft')   galleryNav(-1);
+});
 
 // ── CONTACT FORM ──────────────────────────────────────────
 document.getElementById('contact-form').addEventListener('submit', async function(e) {
