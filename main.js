@@ -229,14 +229,20 @@ async function loadNews() {
 
 loadNews();
 
-// ── VISITOR LOCATION (ipwho.is) ───────────────────────────
+// ── VISITOR LOCATION (ipinfo.io) ─────────────────────────
 async function loadVisitorLocation() {
   try {
-    const res = await fetch('https://ipwho.is/');
+    const res = await fetch('https://ipinfo.io/json');
     const d = await res.json();
-    if (!d.success) throw new Error();
+    if (!d.ip) throw new Error();
 
-    const flag = d.flag?.emoji ?? '🌍';
+    const countryFlags = {
+      CL:'🇨🇱', AR:'🇦🇷', PE:'🇵🇪', MX:'🇲🇽', CO:'🇨🇴',
+      US:'🇺🇸', ES:'🇪🇸', BR:'🇧🇷', UY:'🇺🇾', VE:'🇻🇪',
+      DE:'🇩🇪', FR:'🇫🇷', GB:'🇬🇧', CA:'🇨🇦', AU:'🇦🇺',
+    };
+    const flag = countryFlags[d.country] ?? '🌍';
+    const [city, region] = [d.city ?? '—', d.region ?? ''];
 
     document.getElementById('visitor-location').innerHTML = `
       <div class="visitor-card">
@@ -246,15 +252,15 @@ async function loadVisitorLocation() {
         </div>
         <div class="visitor-row">
           <span class="visitor-label">Ciudad</span>
-          <span class="visitor-value">${d.city ?? '—'}, ${d.region ?? ''}</span>
+          <span class="visitor-value">${city}${region ? ', ' + region : ''}</span>
         </div>
         <div class="visitor-row">
           <span class="visitor-label">Zona horaria</span>
-          <span class="visitor-value">${d.timezone?.id ?? '—'}</span>
+          <span class="visitor-value">${d.timezone ?? '—'}</span>
         </div>
         <div class="visitor-row">
           <span class="visitor-label">Proveedor</span>
-          <span class="visitor-value">${d.connection?.org ?? d.connection?.isp ?? '—'}</span>
+          <span class="visitor-value">${d.org ?? '—'}</span>
         </div>
       </div>`;
   } catch {
