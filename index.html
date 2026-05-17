@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maximiliano Valdés — Ingeniero en Informática</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface2: #1a1a26;
+      --border: #2a2a3a;
+      --accent: #6c63ff;
+      --accent2: #ff6584;
+      --accent3: #43e97b;
+      --text: #e8e8f0;
+      --muted: #888899;
+      --card: #16161f;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .nav-logo {
+      font-weight: 700; font-size: 1.1rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      padding: 6rem 2rem 4rem;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(108,99,255,0.15) 0%, transparent 70%),
+                  radial-gradient(ellipse 40% 40% at 80% 80%, rgba(255,101,132,0.08) 0%, transparent 60%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.3;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 700px; text-align: center; }
+    .hero-badge {
+      display: inline-block; margin-bottom: 1.5rem;
+      padding: 0.3rem 1rem; border-radius: 999px;
+      background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.3);
+      font-size: 0.8rem; color: var(--accent); letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: 1.1rem; color: var(--muted); margin-bottom: 2rem; max-width: 520px; margin-left: auto; margin-right: auto;
+    }
+    .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      padding: 0.7rem 1.6rem; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+      text-decoration: none; transition: all 0.2s; cursor: pointer; border: none;
+    }
+    .btn-primary {
+      background: var(--accent); color: white;
+      box-shadow: 0 0 20px rgba(108,99,255,0.3);
+    }
+    .btn-primary:hover { background: #7b73ff; box-shadow: 0 0 30px rgba(108,99,255,0.5); transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+
+    /* SECTIONS */
+    section { padding: 5rem 2rem; }
+    .container { max-width: 1000px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--accent); font-weight: 700; margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 800; margin-bottom: 1rem;
+    }
+    .section-desc { color: var(--muted); max-width: 560px; margin-bottom: 3rem; }
+
+    /* STATS BAR */
+    .stats {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+    }
+    .stats-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2rem; text-align: center; }
+    .stat-num { font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-label { font-size: 0.85rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* SKILLS */
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .skill-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .skill-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .skill-card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+    .skill-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    }
+    .skill-card h3 { font-size: 1rem; font-weight: 700; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag {
+      padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600;
+      background: rgba(108,99,255,0.12); color: var(--accent); border: 1px solid rgba(108,99,255,0.2);
+    }
+    .tag.green { background: rgba(67,233,123,0.1); color: var(--accent3); border-color: rgba(67,233,123,0.2); }
+    .tag.pink { background: rgba(255,101,132,0.1); color: var(--accent2); border-color: rgba(255,101,132,0.2); }
+    .tag.yellow { background: rgba(255,204,0,0.1); color: #ffd700; border-color: rgba(255,204,0,0.2); }
+
+    /* EXPERIENCE TIMELINE */
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(to bottom, var(--accent), var(--accent2), transparent);
+    }
+    .timeline-item {
+      position: relative; margin-bottom: 2.5rem;
+      opacity: 0; transform: translateX(-20px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    .timeline-item.visible { opacity: 1; transform: translateX(0); }
+    .timeline-dot {
+      position: absolute; left: -2rem; top: 0.3rem;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--accent); border: 2px solid var(--bg);
+      box-shadow: 0 0 8px var(--accent);
+    }
+    .timeline-dot.pink { background: var(--accent2); box-shadow: 0 0 8px var(--accent2); }
+    .timeline-dot.green { background: var(--accent3); box-shadow: 0 0 8px var(--accent3); }
+    .timeline-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+    .timeline-card:hover { border-color: var(--border); border-color: rgba(108,99,255,0.4); }
+    .timeline-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
+    .timeline-title { font-weight: 700; font-size: 1.05rem; }
+    .timeline-company { color: var(--accent); font-size: 0.9rem; margin-bottom: 0.3rem; }
+    .timeline-date {
+      font-size: 0.75rem; padding: 0.2rem 0.7rem; border-radius: 999px;
+      background: var(--surface2); color: var(--muted); white-space: nowrap;
+    }
+    .timeline-card ul { padding-left: 1.2rem; margin-top: 0.75rem; }
+    .timeline-card li { color: var(--muted); font-size: 0.9rem; margin-bottom: 0.35rem; }
+    .timeline-card li::marker { color: var(--accent); }
+
+    /* PROJECTS FUTURE */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .project-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.75rem; position: relative; overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .project-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+    .project-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    }
+    .project-card.purple::before { background: linear-gradient(90deg, var(--accent), #a78bfa); }
+    .project-card.pink::before { background: linear-gradient(90deg, var(--accent2), #f9a8d4); }
+    .project-card.green::before { background: linear-gradient(90deg, var(--accent3), #86efac); }
+    .project-card.yellow::before { background: linear-gradient(90deg, #fbbf24, #fde68a); }
+    .project-status {
+      display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; padding: 0.2rem 0.6rem; border-radius: 999px; margin-bottom: 1rem;
+    }
+    .project-status.concept { background: rgba(108,99,255,0.12); color: var(--accent); }
+    .project-status.planned { background: rgba(67,233,123,0.1); color: var(--accent3); }
+    .project-status.building { background: rgba(255,204,0,0.1); color: #ffd700; }
+    .project-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .project-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem; }
+    .project-stack { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+    /* ABOUT / IMPROVEMENT */
+    .improvement-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
+    .improvement-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem;
+      display: flex; gap: 1rem; align-items: flex-start;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .improvement-card:hover { border-color: var(--accent3); transform: translateY(-2px); }
+    .improvement-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .improvement-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .improvement-card p { font-size: 0.83rem; color: var(--muted); }
+
+    /* CONTACT */
+    .contact-section { background: var(--surface); border-top: 1px solid var(--border); }
+    .contact-inner {
+      max-width: 600px; margin: 0 auto; text-align: center;
+    }
+    .contact-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+    .contact-link {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.6rem 1.2rem; border-radius: 8px;
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text); text-decoration: none; font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    /* FOOTER */
+    footer {
+      text-align: center; padding: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted); font-size: 0.8rem;
+    }
+
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* SKILL BAR */
+    .skill-bar-wrap { margin-top: 0.6rem; }
+    .skill-bar-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.25rem; }
+    .skill-bar-track {
+      height: 5px; background: var(--border); border-radius: 999px; overflow: hidden;
+    }
+    .skill-bar-fill {
+      height: 100%; border-radius: 999px; width: 0;
+      transition: width 1.2s cubic-bezier(.25,.8,.25,1);
+    }
+    .fill-purple { background: linear-gradient(90deg, var(--accent), #a78bfa); }
+    .fill-green  { background: linear-gradient(90deg, var(--accent3), #86efac); }
+    .fill-pink   { background: linear-gradient(90deg, var(--accent2), #f9a8d4); }
+    .fill-yellow { background: linear-gradient(90deg, #fbbf24, #fde68a); }
+
+    @media (max-width: 600px) {
+      nav { padding: 0.75rem 1rem; }
+      .nav-links { gap: 1rem; }
+      section { padding: 3.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">MV.</span>
+  <ul class="nav-links">
+    <li><a href="#sobre-mi">Sobre mí</a></li>
+    <li><a href="#habilidades">Skills</a></li>
+    <li><a href="#experiencia">Experiencia</a></li>
+    <li><a href="#proyectos">Proyectos</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Disponible para nuevas oportunidades</div>
+    <h1>Maximiliano<br><span>Valdés</span></h1>
+    <p class="hero-sub">
+      Ingeniero en Informática · Automatización · Python · IA aplicada · Power BI
+    </p>
+    <div class="hero-ctas">
+      <a href="#experiencia" class="btn btn-primary">Ver experiencia</a>
+      <a href="#contacto" class="btn btn-outline">Contactar</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-grid">
+    <div>
+      <div class="stat-num" data-count="3">0</div>
+      <div class="stat-label">Años de experiencia</div>
+    </div>
+    <div>
+      <div class="stat-num" data-count="5">0</div>
+      <div class="stat-label">Lenguajes / stacks</div>
+    </div>
+    <div>
+      <div class="stat-num" data-count="10">0</div>
+      <div class="stat-label">Librerías Python</div>
+    </div>
+    <div>
+      <div class="stat-num" data-count="4">0</div>
+      <div class="stat-label">Posiciones laborales</div>
+    </div>
+  </div>
+</div>
+
+<!-- SOBRE MI -->
+<section id="sobre-mi">
+  <div class="container">
+    <p class="section-label reveal">Quién soy</p>
+    <h2 class="section-title reveal">Perfil profesional</h2>
+    <p class="section-desc reveal" style="max-width:720px; margin-bottom: 2rem;">
+      Ingeniero en Informática titulado en DUOC UC, especializado en <strong style="color:var(--text)">automatización de procesos</strong>,
+      desarrollo de herramientas de escritorio con Python y análisis de datos con Power BI.
+      Experiencia integrando <strong style="color:var(--text)">LLMs (Claude API)</strong> en flujos reales de trabajo,
+      desde generación de reportes hasta sistemas de comunicación masiva vía email, SMS y WhatsApp.
+      Me muevo entre macOS y Windows, valoro los plazos y el trabajo bien hecho.
+    </p>
+  </div>
+</section>
+
+<!-- HABILIDADES -->
+<section id="habilidades" style="background: var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <p class="section-label reveal">Stack técnico</p>
+    <h2 class="section-title reveal">Habilidades</h2>
+    <p class="section-desc reveal">Tecnologías y herramientas que domino en el día a día.</p>
+
+    <!-- Skill bars -->
+    <div class="skills-bars reveal" style="margin-bottom:3rem; display:grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap:1rem;">
+      <div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-label"><span>Python</span><span>90%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill fill-purple" data-width="90"></div></div>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-label"><span>Excel / VBA</span><span>88%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill fill-green" data-width="88"></div></div>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-label"><span>Power BI</span><span>75%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill fill-pink" data-width="75"></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-label"><span>SQL / MySQL</span><span>72%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill fill-yellow" data-width="72"></div></div>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-label"><span>HTML / CSS / JS</span><span>65%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill fill-purple" data-width="65"></div></div>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-label"><span>Git / GitHub</span><span>68%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill fill-green" data-width="68"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <div class="skill-card-header">
+          <div class="skill-icon" style="background:rgba(108,99,255,0.12)">🐍</div>
+          <h3>Python Ecosystem</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="tag">pandas</span><span class="tag">openpyxl</span>
+          <span class="tag">PyQt5</span><span class="tag">tkinter</span>
+          <span class="tag">Selenium</span><span class="tag">PyInstaller</span>
+          <span class="tag">requests</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-header">
+          <div class="skill-icon" style="background:rgba(67,233,123,0.1)">📊</div>
+          <h3>Datos & Reportes</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="tag green">Power BI</span><span class="tag green">Excel Avanzado</span>
+          <span class="tag green">VBA / Macros</span><span class="tag green">SQL</span>
+          <span class="tag green">Google Sheets</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-header">
+          <div class="skill-icon" style="background:rgba(255,101,132,0.1)">🤖</div>
+          <h3>IA & Automatización</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="tag pink">Claude API</span><span class="tag pink">LLM Workflows</span>
+          <span class="tag pink">Email masivo</span><span class="tag pink">SMS / WhatsApp</span>
+          <span class="tag pink">Web scraping</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-header">
+          <div class="skill-icon" style="background:rgba(255,204,0,0.1)">🌐</div>
+          <h3>Web & Herramientas</h3>
+        </div>
+        <div class="skill-tags">
+          <span class="tag yellow">HTML5 / CSS</span><span class="tag yellow">JavaScript</span>
+          <span class="tag yellow">Git / GitHub</span><span class="tag yellow">Notion</span>
+          <span class="tag yellow">Trello</span><span class="tag yellow">Canva</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCIA -->
+<section id="experiencia">
+  <div class="container">
+    <p class="section-label reveal">Trayectoria</p>
+    <h2 class="section-title reveal">Experiencia profesional</h2>
+    <p class="section-desc reveal">Posiciones donde generé impacto real con tecnología.</p>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div>
+              <div class="timeline-title">Técnico en Informática – Soporte de Cobranza</div>
+              <div class="timeline-company">Multicob Chile LTDA</div>
+            </div>
+            <span class="timeline-date">Oct 2025 – Actualidad</span>
+          </div>
+          <ul>
+            <li>Desarrollo y optimización de macros VBA para eficiencia operativa.</li>
+            <li>Herramientas de escritorio Python (pandas, PyQt5, PyInstaller) que redujeron tiempos manuales.</li>
+            <li>Dashboards en Power BI para soporte en toma de decisiones.</li>
+            <li>Gestión de campañas masivas: Email, SMS y WhatsApp con múltiples proveedores.</li>
+            <li>Diseño de plantillas HTML responsive para campañas de email.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot pink"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div>
+              <div class="timeline-title">Desarrollador de Sistemas</div>
+              <div class="timeline-company">Avícola San Luis de Cuncumen</div>
+            </div>
+            <span class="timeline-date">Jun 2025 – Ago 2025</span>
+          </div>
+          <ul>
+            <li>Sistema ofimático en Google Sheets para gestión empresarial.</li>
+            <li>Automatización de datos que eliminó tareas manuales repetitivas.</li>
+            <li>Reportes diarios de evolución del negocio con cálculos financieros integrados.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot green"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div>
+              <div class="timeline-title">Practicante – Desarrollo Full Stack</div>
+              <div class="timeline-company">Business Oil SPA</div>
+            </div>
+            <span class="timeline-date">Mar 2025 – May 2025</span>
+          </div>
+          <ul>
+            <li>Soluciones Full Stack para automatización de procesos internos.</li>
+            <li>Scripts Python para optimizar tareas repetitivas.</li>
+            <li>Administración de bases de datos relacionales en MySQL.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background: #888; box-shadow: none;"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div>
+              <div class="timeline-title">Encargado de Logística</div>
+              <div class="timeline-company">Avícola San Luis de Cuncumen</div>
+            </div>
+            <span class="timeline-date">Mar 2023 – Feb 2024</span>
+          </div>
+          <ul>
+            <li>Gestión y coordinación de pedidos de productos avícolas.</li>
+            <li>Supervisión de documentación de envíos.</li>
+            <li>Optimización de procesos logísticos.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROYECTOS FUTUROS -->
+<section id="proyectos" style="background: var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <p class="section-label reveal">Roadmap personal</p>
+    <h2 class="section-title reveal">Proyectos a futuro</h2>
+    <p class="section-desc reveal">Iniciativas que estoy diseñando para crecer técnicamente y generar valor real.</p>
+
+    <div class="projects-grid">
+
+      <div class="project-card purple reveal">
+        <span class="project-status planned">En planificación</span>
+        <h3>🤖 Agente IA de gestión documental</h3>
+        <p>Sistema que ingesta contratos, facturas y reportes PDF, extrae información clave con Claude API y la almacena en una base de datos consultable por lenguaje natural.</p>
+        <div class="project-stack">
+          <span class="tag">Python</span><span class="tag">Claude API</span><span class="tag">SQLite</span><span class="tag">PyQt5</span>
+        </div>
+      </div>
+
+      <div class="project-card green reveal">
+        <span class="project-status concept">Concepto</span>
+        <h3>📊 Dashboard SaaS de cobranza</h3>
+        <p>Plataforma web ligera para empresas de cobranza: KPIs en tiempo real, segmentación de carteras y disparo automático de comunicaciones multicanal desde un solo panel.</p>
+        <div class="project-stack">
+          <span class="tag green">FastAPI</span><span class="tag green">React</span><span class="tag green">Power BI Embed</span><span class="tag green">PostgreSQL</span>
+        </div>
+      </div>
+
+      <div class="project-card pink reveal">
+        <span class="project-status concept">Concepto</span>
+        <h3>📩 Motor de campañas inteligente</h3>
+        <p>Herramienta que personaliza mensajes masivos (email/SMS/WhatsApp) usando IA para adaptar el tono según el perfil del destinatario y el historial de respuestas.</p>
+        <div class="project-stack">
+          <span class="tag pink">Python</span><span class="tag pink">Claude API</span><span class="tag pink">SMTP</span><span class="tag pink">Twilio</span>
+        </div>
+      </div>
+
+      <div class="project-card yellow reveal">
+        <span class="project-status building">Explorando</span>
+        <h3>🧠 Copiloto de macros VBA</h3>
+        <p>Extensión para Excel que, a través de un chat integrado, genera, corrige y explica macros VBA desde lenguaje natural. Orientado a equipos no técnicos en empresas.</p>
+        <div class="project-stack">
+          <span class="tag yellow">VBA</span><span class="tag yellow">Claude API</span><span class="tag yellow">Excel Add-in</span>
+        </div>
+      </div>
+
+      <div class="project-card purple reveal">
+        <span class="project-status concept">Concepto</span>
+        <h3>🔍 Scraper + reporte automatizado</h3>
+        <p>Pipeline que extrae datos de portales públicos (licitaciones, precios, competencia), los limpia con pandas y genera reportes Power BI actualizados diariamente.</p>
+        <div class="project-stack">
+          <span class="tag">Selenium</span><span class="tag">pandas</span><span class="tag">Power BI API</span><span class="tag">cron</span>
+        </div>
+      </div>
+
+      <div class="project-card green reveal">
+        <span class="project-status planned">En planificación</span>
+        <h3>📱 App de finanzas personales CLI</h3>
+        <p>Herramienta de terminal que categoriza gastos desde exportaciones bancarias CSV, genera gráficas en terminal y envía resúmenes semanales por email.</p>
+        <div class="project-stack">
+          <span class="tag green">Python</span><span class="tag green">Rich</span><span class="tag green">pandas</span><span class="tag green">SMTP</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ÁREAS DE MEJORA -->
+<section id="mejoras">
+  <div class="container">
+    <p class="section-label reveal">Crecimiento</p>
+    <h2 class="section-title reveal">Áreas de desarrollo</h2>
+    <p class="section-desc reveal">Ejes en los que me estoy enfocando para ampliar mi perfil técnico.</p>
+
+    <div class="improvement-grid">
+      <div class="improvement-card reveal">
+        <div class="improvement-icon">☁️</div>
+        <div>
+          <h4>Cloud & DevOps</h4>
+          <p>AWS / GCP básico, Docker, CI/CD con GitHub Actions para deployar proyectos reales.</p>
+        </div>
+      </div>
+      <div class="improvement-card reveal">
+        <div class="improvement-icon">🌐</div>
+        <div>
+          <h4>Desarrollo Web Full Stack</h4>
+          <p>Fortalecer FastAPI + React para construir interfaces de usuario para mis herramientas Python.</p>
+        </div>
+      </div>
+      <div class="improvement-card reveal">
+        <div class="improvement-icon">🧪</div>
+        <div>
+          <h4>Testing & calidad de código</h4>
+          <p>pytest, unittest, coverage reports. Escribir código más robusto y documentado.</p>
+        </div>
+      </div>
+      <div class="improvement-card reveal">
+        <div class="improvement-icon">🗃️</div>
+        <div>
+          <h4>Bases de datos avanzadas</h4>
+          <p>PostgreSQL, índices, optimización de queries, Redis para caché en proyectos de mayor escala.</p>
+        </div>
+      </div>
+      <div class="improvement-card reveal">
+        <div class="improvement-icon">🤖</div>
+        <div>
+          <h4>MLOps & Data Engineering</h4>
+          <p>Pipelines de datos con Airflow, integración de modelos ML en producción con FastAPI.</p>
+        </div>
+      </div>
+      <div class="improvement-card reveal">
+        <div class="improvement-icon">🔐</div>
+        <div>
+          <h4>Seguridad en aplicaciones</h4>
+          <p>OWASP básico, autenticación JWT/OAuth2, buenas prácticas de manejo de secrets.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto" class="contact-section">
+  <div class="container">
+    <div class="contact-inner">
+      <p class="section-label reveal">Contacto</p>
+      <h2 class="section-title reveal">Hablemos</h2>
+      <p style="color:var(--muted); margin-top:0.5rem;" class="reveal">
+        Abierto a nuevas oportunidades, proyectos freelance o simplemente conversar sobre tecnología.
+      </p>
+      <div class="contact-links reveal">
+        <a href="mailto:musrri.valdes.maxi03@gmail.com" class="contact-link">
+          ✉️ Email
+        </a>
+        <a href="https://www.linkedin.com/in/maximiliano-valdés" class="contact-link" target="_blank" rel="noopener">
+          💼 LinkedIn
+        </a>
+        <a href="tel:+56945859365" class="contact-link">
+          📱 +56 9 4585 9365
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Maximiliano Valdés · Ingeniero en Informática · Santiago, Chile · 2026</p>
+</footer>
+
+<script>
+  // Intersection Observer — reveal + timeline
+  const revealEls = document.querySelectorAll('.reveal, .timeline-item');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Skill bars animate when visible
+  const barIo = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+          bar.style.width = bar.dataset.width + '%';
+        });
+        barIo.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.skills-bars').forEach(el => barIo.observe(el));
+
+  // Count-up animation for stats
+  const countIo = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const els = e.target.querySelectorAll('[data-count]');
+        els.forEach(el => {
+          const target = +el.dataset.count;
+          const dur = 1200;
+          const step = 30;
+          const inc = target / (dur / step);
+          let cur = 0;
+          const timer = setInterval(() => {
+            cur += inc;
+            if (cur >= target) { cur = target; clearInterval(timer); }
+            el.textContent = Math.round(cur) + '+';
+          }, step);
+        });
+        countIo.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stats-grid').forEach(el => countIo.observe(el));
+</script>
+</body>
+</html>
