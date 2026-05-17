@@ -339,13 +339,17 @@ document.getElementById('contact-form').addEventListener('submit', async functio
   status.textContent = '';
 
   try {
-    const res = await fetch('https://formsubmit.co/ajax/musrri.valdes.maxi03@gmail.com', {
+    const res = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ name, email, message, _subject: `Portfolio — mensaje de ${name}` }),
+      body: JSON.stringify({
+        access_key: '94968791-9c05-46e1-a9b0-1a351781d7f9',
+        subject: `Portfolio — mensaje de ${name}`,
+        name, email, message,
+      }),
     });
     const data = await res.json();
-    if (data.success === 'true' || data.success === true) {
+    if (data.success) {
       status.textContent = '✅ Mensaje enviado. Te responderé pronto.';
       status.className = 'ok';
       this.reset();
