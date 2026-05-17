@@ -278,9 +278,9 @@ loadVisitorLocation();
 
 // ── LIGHTBOX GALLERY ──────────────────────────────────────
 const GALLERY = [
-  { type: 'img', src: 'Certificados/1768766643346.jpeg',  caption: 'Ingeniería en Informática · DUOC UC · 2025' },
-  { type: 'img', src: 'Certificados/1756486420666.jpeg',  caption: 'Introducción a la Ciencia de Datos · Santander Open Academy' },
-  { type: 'pdf', src: 'Certificados/Cerficado Matematicas.pdf', caption: 'Fundamentos de Matemáticas para Informáticos · Mastermind' },
+  { type: 'img', src: 'Certificados/1768766643346.jpeg',         caption: 'Ingeniería en Informática · DUOC UC · 2025' },
+  { type: 'img', src: 'Certificados/1756486420666.jpeg',         caption: 'Introducción a la Ciencia de Datos · Santander Open Academy' },
+  { type: 'img', src: 'Certificados/certificado_matematicas.jpeg', caption: 'Fundamentos de Matemáticas para Informáticos · Mastermind' },
 ];
 let currentIdx = 0;
 
@@ -300,16 +300,10 @@ function renderGalleryItem() {
   const counter = document.getElementById('lightbox-counter');
 
   img.style.opacity = '0';
-  if (item.type === 'pdf') {
-    img.style.display = 'none';
-    pdfBtn.style.display = 'block';
-    pdfLink.href = item.src;
-  } else {
-    img.style.display = 'block';
-    pdfBtn.style.display = 'none';
-    img.src = item.src;
-    img.onload = () => { img.style.opacity = '1'; };
-  }
+  img.style.display = 'block';
+  pdfBtn.style.display = 'none';
+  img.src = item.src;
+  img.onload = () => { img.style.opacity = '1'; };
   caption.textContent = item.caption;
   counter.textContent = `${currentIdx + 1} / ${GALLERY.length}`;
 }
