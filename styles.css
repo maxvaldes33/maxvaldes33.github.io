@@ -322,6 +322,92 @@ section { padding: 5rem 2rem; }
 }
 .contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
 
+/* ── APIS EN VIVO ── */
+.apis-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;
+}
+.api-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.api-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+.api-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.api-badge {
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 0.2rem 0.7rem; border-radius: 999px;
+  background: rgba(108,99,255,0.12); color: var(--accent); border: 1px solid rgba(108,99,255,0.2);
+}
+.api-badge.github {
+  background: rgba(67,233,123,0.1); color: var(--accent3); border-color: rgba(67,233,123,0.2);
+}
+.api-live-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--accent3);
+  box-shadow: 0 0 6px var(--accent3);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.8); }
+}
+.api-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem; }
+.api-desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.25rem; }
+.api-updated { font-size: 0.75rem; color: var(--muted); margin-top: 0.75rem; }
+
+/* Skeleton loader */
+.crypto-skeleton {
+  height: 44px; border-radius: 8px; background: var(--border);
+  margin-bottom: 0.6rem;
+  animation: shimmer 1.4s ease-in-out infinite;
+  background: linear-gradient(90deg, var(--border) 25%, var(--surface2) 50%, var(--border) 75%);
+  background-size: 200% 100%;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* Crypto row */
+.crypto-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.6rem 0.75rem; border-radius: 8px; margin-bottom: 0.5rem;
+  background: var(--surface2); border: 1px solid var(--border);
+  transition: background-color 0.35s ease, border-color 0.35s ease;
+}
+.crypto-left { display: flex; align-items: center; gap: 0.6rem; }
+.crypto-logo { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.crypto-name { font-weight: 700; font-size: 0.9rem; }
+.crypto-symbol { font-size: 0.75rem; color: var(--muted); }
+.crypto-right { text-align: right; }
+.crypto-price { font-weight: 700; font-size: 0.9rem; }
+.crypto-change { font-size: 0.75rem; font-weight: 600; }
+.crypto-change.up   { color: var(--accent3); }
+.crypto-change.down { color: var(--accent2); }
+
+/* GitHub section */
+.github-profile { margin-bottom: 1rem; }
+.github-stat-row {
+  display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;
+}
+.github-stat {
+  flex: 1; min-width: 80px;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 0.6rem 0.75rem; text-align: center;
+}
+.github-stat-num { font-size: 1.4rem; font-weight: 800; color: var(--accent3); }
+.github-stat-label { font-size: 0.72rem; color: var(--muted); }
+.github-repos { display: flex; flex-direction: column; gap: 0.5rem; }
+.github-repo {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.4rem;
+  padding: 0.6rem 0.75rem; border-radius: 8px;
+  background: var(--surface2); border: 1px solid var(--border);
+  text-decoration: none; transition: border-color 0.2s, transform 0.15s;
+}
+.github-repo:hover { border-color: var(--accent3); transform: translateX(3px); }
+.github-repo-name { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+.github-repo-lang {
+  font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 999px;
+  background: rgba(67,233,123,0.1); color: var(--accent3); border: 1px solid rgba(67,233,123,0.2);
+}
+.github-repo-right { display: flex; align-items: center; gap: 0.5rem; }
+.github-repo-stars { font-size: 0.78rem; color: var(--muted); }
+
 /* ── FOOTER ── */
 footer {
   text-align: center; padding: 2rem;

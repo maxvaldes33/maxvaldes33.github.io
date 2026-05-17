@@ -22,6 +22,7 @@
     <li><a href="#habilidades">Skills</a></li>
     <li><a href="#experiencia">Experiencia</a></li>
     <li><a href="#proyectos">Proyectos</a></li>
+    <li><a href="#apis">APIs</a></li>
     <li><a href="#contacto">Contacto</a></li>
   </ul>
 </nav>
@@ -378,6 +379,52 @@
           <p>OWASP básico, autenticación JWT/OAuth2, buenas prácticas de manejo de secrets.</p>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- APIS EN VIVO -->
+<section id="apis">
+  <div class="container">
+    <p class="section-label reveal">Integración de APIs</p>
+    <h2 class="section-title reveal">Datos en tiempo real</h2>
+    <p class="section-desc reveal">Conexión en vivo a APIs públicas — precios de crypto y actividad en GitHub.</p>
+
+    <div class="apis-grid">
+
+      <!-- CoinGecko -->
+      <div class="api-card reveal">
+        <div class="api-card-header">
+          <div class="api-badge">CoinGecko API</div>
+          <div class="api-live-dot"></div>
+        </div>
+        <h3>Mercado Crypto</h3>
+        <p class="api-desc">Precios actualizados cada 60 seg · Sin API key · REST público</p>
+        <div id="crypto-list">
+          <div class="crypto-skeleton"></div>
+          <div class="crypto-skeleton"></div>
+          <div class="crypto-skeleton"></div>
+          <div class="crypto-skeleton"></div>
+        </div>
+        <div id="crypto-updated" class="api-updated"></div>
+      </div>
+
+      <!-- GitHub -->
+      <div class="api-card reveal">
+        <div class="api-card-header">
+          <div class="api-badge github">GitHub API</div>
+          <div class="api-live-dot"></div>
+        </div>
+        <h3>Actividad en GitHub</h3>
+        <p class="api-desc">Repositorios públicos · Lenguajes · Actividad reciente</p>
+        <div id="github-profile" class="github-profile">
+          <div class="crypto-skeleton"></div>
+          <div class="crypto-skeleton"></div>
+          <div class="crypto-skeleton"></div>
+        </div>
+        <div id="github-repos" class="github-repos"></div>
+      </div>
+
     </div>
   </div>
 </section>

@@ -92,6 +92,107 @@ async function loadWeather() {
 
 loadWeather();
 
+// ── COINGECKO API ─────────────────────────────────────────
+const COINS = [
+  { id: 'bitcoin',  name: 'Bitcoin',  symbol: 'BTC' },
+  { id: 'ethereum', name: 'Ethereum', symbol: 'ETH' },
+  { id: 'solana',   name: 'Solana',   symbol: 'SOL' },
+  { id: 'chainlink',name: 'Chainlink',symbol: 'LINK' },
+];
+
+function formatPrice(n) {
+  return n >= 1000
+    ? '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 })
+    : '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+async function loadCrypto() {
+  const ids = COINS.map(c => c.id).join(',');
+  try {
+    const res = await fetch(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true&include_image=true`
+    );
+    const data = await res.json();
+    const list = document.getElementById('crypto-list');
+    list.innerHTML = COINS.map(coin => {
+      const d = data[coin.id];
+      if (!d) return '';
+      const change = d.usd_24h_change?.toFixed(2) ?? '0.00';
+      const up = parseFloat(change) >= 0;
+      return `
+        <div class="crypto-row">
+          <div class="crypto-left">
+            <div>
+              <div class="crypto-name">${coin.name}</div>
+              <div class="crypto-symbol">${coin.symbol}</div>
+            </div>
+          </div>
+          <div class="crypto-right">
+            <div class="crypto-price">${formatPrice(d.usd)}</div>
+            <div class="crypto-change ${up ? 'up' : 'down'}">${up ? '▲' : '▼'} ${Math.abs(change)}%</div>
+          </div>
+        </div>`;
+    }).join('');
+    const now = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('crypto-updated').textContent = `Actualizado: ${now} · Fuente: CoinGecko`;
+  } catch {
+    document.getElementById('crypto-list').innerHTML =
+      `<p style="color:var(--muted);font-size:.85rem">No se pudo cargar el mercado.</p>`;
+  }
+}
+
+loadCrypto();
+setInterval(loadCrypto, 60000);
+
+// ── GITHUB API ────────────────────────────────────────────
+const GITHUB_USER = 'maxvaldes33';
+
+async function loadGitHub() {
+  try {
+    const [userRes, reposRes] = await Promise.all([
+      fetch(`https://api.github.com/users/${GITHUB_USER}`),
+      fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=5`),
+    ]);
+    const user  = await userRes.json();
+    const repos = await reposRes.json();
+
+    document.getElementById('github-profile').innerHTML = `
+      <div class="github-stat-row">
+        <div class="github-stat">
+          <div class="github-stat-num">${user.public_repos ?? 0}</div>
+          <div class="github-stat-label">Repos públicos</div>
+        </div>
+        <div class="github-stat">
+          <div class="github-stat-num">${user.followers ?? 0}</div>
+          <div class="github-stat-label">Seguidores</div>
+        </div>
+        <div class="github-stat">
+          <div class="github-stat-num">${user.following ?? 0}</div>
+          <div class="github-stat-label">Siguiendo</div>
+        </div>
+      </div>`;
+
+    const reposEl = document.getElementById('github-repos');
+    if (!Array.isArray(repos) || repos.length === 0) {
+      reposEl.innerHTML = `<p style="color:var(--muted);font-size:.85rem">Sin repositorios públicos aún.</p>`;
+      return;
+    }
+    reposEl.innerHTML = repos.map(r => `
+      <a class="github-repo" href="${r.html_url}" target="_blank" rel="noopener">
+        <div class="github-repo-name">📁 ${r.name}</div>
+        <div class="github-repo-right">
+          ${r.language ? `<span class="github-repo-lang">${r.language}</span>` : ''}
+          <span class="github-repo-stars">⭐ ${r.stargazers_count}</span>
+        </div>
+      </a>`).join('');
+  } catch {
+    document.getElementById('github-profile').innerHTML =
+      `<p style="color:var(--muted);font-size:.85rem">No se pudo cargar GitHub.</p>`;
+  }
+}
+
+loadGitHub();
+
 // ── SCROLL REVEAL ─────────────────────────────────────────
 const revealEls = document.querySelectorAll('.reveal, .timeline-item');
 const io = new IntersectionObserver((entries) => {
