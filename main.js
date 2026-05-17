@@ -2,6 +2,18 @@
 history.scrollRestoration = 'manual';
 window.scrollTo(0, 0);
 
+// ── DOWNLOAD CV ───────────────────────────────────────────
+async function downloadCV() {
+  const res = await fetch('CV_Maximiliano_Valdes.pdf');
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'CV_Maximiliano_Valdes.pdf';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 // ── THEME TOGGLE ──────────────────────────────────────────
 const html = document.documentElement;
 if (localStorage.getItem('theme') === 'light') html.classList.add('light');
