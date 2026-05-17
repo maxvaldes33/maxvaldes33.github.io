@@ -1,3 +1,7 @@
+// Fuerza scroll al tope en cada carga (evita que el browser restaure posición)
+history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
+
 // ── THEME TOGGLE ──────────────────────────────────────────
 const html = document.documentElement;
 if (localStorage.getItem('theme') === 'light') html.classList.add('light');
