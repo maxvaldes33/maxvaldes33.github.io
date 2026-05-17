@@ -51,6 +51,29 @@ body {
   overflow-x: hidden;
 }
 
+/* ── SCROLL PROGRESS ── */
+#scroll-progress {
+  position: fixed; top: 0; left: 0; z-index: 300;
+  height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transition: width 0.1s linear;
+}
+
+/* ── BACK TO TOP ── */
+#back-to-top {
+  position: fixed; bottom: 5rem; right: 1.5rem; z-index: 200;
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--text); font-size: 1.1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  opacity: 0; transform: translateY(10px); pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease,
+              background-color 0.35s ease, border-color 0.35s ease;
+}
+#back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+#back-to-top:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
 /* ── THEME TOGGLE ── */
 #theme-toggle {
   position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200;
@@ -114,11 +137,25 @@ nav {
   mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
 }
 .hero-content { position: relative; z-index: 1; max-width: 700px; text-align: center; }
+.hero-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1.5rem; }
 .hero-badge {
-  display: inline-block; margin-bottom: 1.5rem;
+  display: inline-block;
   padding: 0.3rem 1rem; border-radius: 999px;
   background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.3);
   font-size: 0.8rem; color: var(--accent); letter-spacing: 0.05em; text-transform: uppercase;
+}
+.hero-badge.availability {
+  background: rgba(67,233,123,0.1); border-color: rgba(67,233,123,0.3);
+  color: var(--accent3); text-transform: none; letter-spacing: 0;
+}
+.hero-widgets-row {
+  display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 1.5rem;
+}
+#visit-counter {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  padding: 0.45rem 1rem; border-radius: 999px;
+  background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.2);
+  font-size: 0.85rem; color: var(--muted);
 }
 .hero h1 {
   font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1.1;
@@ -561,6 +598,32 @@ section { padding: 5rem 2rem; }
 
 @media (max-width: 600px) {
   .form-row { grid-template-columns: 1fr; }
+}
+
+/* ── ABOUT PILLS ── */
+.about-pills {
+  display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem;
+}
+.about-pill {
+  padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.83rem;
+  background: var(--card); border: 1px solid var(--border); color: var(--muted);
+  transition: border-color 0.2s, background-color 0.35s ease;
+}
+.about-pill strong { color: var(--text); }
+.about-pill:hover { border-color: var(--accent); }
+
+/* ── PRINT ── */
+@media print {
+  #scroll-progress, #back-to-top, #theme-toggle, nav,
+  .hero-ctas, #weather-widget, #visit-counter,
+  #apis, #mejoras, .contact-form, footer { display: none !important; }
+  body { background: white; color: black; font-size: 12pt; }
+  .hero { min-height: auto; padding: 2rem 1rem 1rem; }
+  .hero-bg, .hero-grid { display: none; }
+  section { padding: 1.5rem 1rem; break-inside: avoid; }
+  .timeline-card, .skill-card, .edu-card { border: 1px solid #ccc !important; break-inside: avoid; }
+  a { color: black; text-decoration: none; }
+  .tag { border: 1px solid #ccc; background: #f5f5f5; color: black; }
 }
 
 /* ── FOOTER ── */

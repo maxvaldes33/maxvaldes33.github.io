@@ -4,9 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maximiliano Valdés — Ingeniero en Informática</title>
+
+  <!-- Favicon SVG -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%236c63ff'/><text x='50' y='68' font-family='system-ui,sans-serif' font-size='44' font-weight='800' fill='white' text-anchor='middle'>MV</text></svg>" />
+
+  <!-- Open Graph / LinkedIn preview -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="Maximiliano Valdés — Ingeniero en Informática" />
+  <meta property="og:description" content="Portfolio profesional · Python · Automatización · IA aplicada · Power BI · Santiago, Chile" />
+  <meta property="og:locale"      content="es_CL" />
+  <meta name="description"        content="Portfolio profesional de Maximiliano Valdés, Ingeniero en Informática especializado en Python, automatización, IA y análisis de datos." />
+  <meta name="author"             content="Maximiliano Valdés" />
+  <meta name="theme-color"        content="#6c63ff" />
+
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
+<!-- SCROLL PROGRESS -->
+<div id="scroll-progress"></div>
+
+<!-- BACK TO TOP -->
+<button id="back-to-top" aria-label="Volver al inicio" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <!-- THEME TOGGLE -->
 <button id="theme-toggle" aria-label="Cambiar tema">
@@ -33,7 +52,10 @@
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
   <div class="hero-content">
-    <div class="hero-badge">Disponible para nuevas oportunidades</div>
+    <div class="hero-badges">
+      <div class="hero-badge">Disponible para nuevas oportunidades</div>
+      <div class="hero-badge availability">🏠 Remoto &nbsp;·&nbsp; 🏢 Híbrido &nbsp;·&nbsp; 📍 Santiago</div>
+    </div>
     <h1>Maximiliano<br><span>Valdés</span></h1>
     <p class="hero-sub">
       Ingeniero en Informática · Automatización · Python · IA aplicada · Power BI
@@ -43,10 +65,16 @@
       <a href="#contacto" class="btn btn-outline">Contactar</a>
       <button onclick="downloadCV()" class="btn btn-download">⬇ Descargar CV</button>
     </div>
-    <!-- Weather Widget -->
-    <div id="weather-widget">
-      <div class="w-spinner"></div>
-      <span class="w-desc">Obteniendo clima...</span>
+    <!-- Hero widgets row -->
+    <div class="hero-widgets-row">
+      <div id="weather-widget">
+        <div class="w-spinner"></div>
+        <span class="w-desc">Obteniendo clima...</span>
+      </div>
+      <div id="visit-counter">
+        <span class="w-icon">👁</span>
+        <span class="w-desc">Cargando visitas...</span>
+      </div>
     </div>
   </div>
 </section>
@@ -86,6 +114,13 @@
       desde generación de reportes hasta sistemas de comunicación masiva vía email, SMS y WhatsApp.
       Me muevo entre macOS y Windows, valoro los plazos y el trabajo bien hecho.
     </p>
+    <div class="about-pills reveal">
+      <div class="about-pill">🌐 <strong>Inglés B1</strong> — lectura técnica fluida</div>
+      <div class="about-pill">🇨🇱 <strong>Español</strong> — nativo</div>
+      <div class="about-pill">🏠 Disponible <strong>remoto</strong></div>
+      <div class="about-pill">🏢 Disponible <strong>híbrido / presencial</strong> en Santiago</div>
+      <div class="about-pill">⚡ Incorporación <strong>inmediata</strong></div>
+    </div>
   </div>
 </section>
 

@@ -381,6 +381,34 @@ document.getElementById('contact-form').addEventListener('submit', async functio
   }
 });
 
+// ── SCROLL PROGRESS + BACK TO TOP ────────────────────────
+const progressBar = document.getElementById('scroll-progress');
+const backToTop   = document.getElementById('back-to-top');
+
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const total    = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.width = (scrolled / total * 100) + '%';
+  backToTop.classList.toggle('visible', scrolled > 400);
+}, { passive: true });
+
+// ── VISIT COUNTER ─────────────────────────────────────────
+async function loadVisitCounter() {
+  try {
+    const res  = await fetch('https://api.counterapi.dev/v1/maxi-portfolio/visits/up');
+    const data = await res.json();
+    const count = data.count ?? '—';
+    document.getElementById('visit-counter').innerHTML = `
+      <span class="w-icon">👁</span>
+      <span class="w-desc"><strong style="color:var(--text)">${count.toLocaleString()}</strong> visitas</span>`;
+  } catch {
+    document.getElementById('visit-counter').innerHTML =
+      `<span class="w-icon">👁</span><span class="w-desc">Portfolio en línea</span>`;
+  }
+}
+
+loadVisitCounter();
+
 // ── SCROLL REVEAL ─────────────────────────────────────────
 const revealEls = document.querySelectorAll('.reveal, .timeline-item');
 const io = new IntersectionObserver((entries) => {
