@@ -211,7 +211,13 @@ section { padding: 5rem 2rem; }
   width: 40px; height: 40px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
 }
-.skill-card h3 { font-size: 1rem; font-weight: 700; }
+.skill-card h3 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.skill-card-learning { border-style: dashed; }
+.learning-badge {
+  font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 0.15rem 0.5rem; border-radius: 999px;
+  background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3);
+}
 .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .tag {
   padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600;
