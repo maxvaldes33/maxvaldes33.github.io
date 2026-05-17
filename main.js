@@ -3,14 +3,18 @@ history.scrollRestoration = 'manual';
 window.scrollTo(0, 0);
 
 // ── DOWNLOAD CV ───────────────────────────────────────────
-async function downloadCV() {
-  const res = await fetch('CV_Maximiliano_Valdes.pdf');
-  const blob = await res.blob();
+function downloadCV() {
+  const binary = atob(CV_BASE64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  const blob = new Blob([bytes], { type: 'application/pdf' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
   a.download = 'CV_Maximiliano_Valdes.pdf';
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
 
