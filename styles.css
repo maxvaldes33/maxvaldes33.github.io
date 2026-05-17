@@ -137,6 +137,21 @@ nav {
   mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
 }
 .hero-content { position: relative; z-index: 1; max-width: 700px; text-align: center; }
+/* ── HERO PHOTO ── */
+.hero-photo-wrap {
+  margin-bottom: 1.75rem;
+  display: inline-block; position: relative;
+}
+.hero-photo {
+  width: 120px; height: 120px; border-radius: 50%; object-fit: cover; object-position: center top;
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 0 6px rgba(108,99,255,0.15), 0 8px 32px rgba(0,0,0,0.4);
+  transition: box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.hero-photo:hover {
+  box-shadow: 0 0 0 8px rgba(108,99,255,0.25), 0 12px 40px rgba(0,0,0,0.5);
+}
+
 .hero-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1.5rem; }
 .hero-badge {
   display: inline-block;
