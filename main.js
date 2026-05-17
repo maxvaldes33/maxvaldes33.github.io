@@ -96,49 +96,49 @@ async function loadWeather() {
 
 loadWeather();
 
-// ── COINGECKO API ─────────────────────────────────────────
+// ── BINANCE API (crypto) ──────────────────────────────────
 const COINS = [
-  { id: 'bitcoin',  name: 'Bitcoin',  symbol: 'BTC' },
-  { id: 'ethereum', name: 'Ethereum', symbol: 'ETH' },
-  { id: 'solana',   name: 'Solana',   symbol: 'SOL' },
-  { id: 'chainlink',name: 'Chainlink',symbol: 'LINK' },
+  { symbol: 'BTCUSDT',  name: 'Bitcoin',   ticker: 'BTC' },
+  { symbol: 'ETHUSDT',  name: 'Ethereum',  ticker: 'ETH' },
+  { symbol: 'SOLUSDT',  name: 'Solana',    ticker: 'SOL' },
+  { symbol: 'LINKUSDT', name: 'Chainlink', ticker: 'LINK' },
 ];
 
 function formatPrice(n) {
   return n >= 1000
-    ? '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 })
-    : '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    ? '$' + Number(n).toLocaleString('en-US', { maximumFractionDigits: 0 })
+    : '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 async function loadCrypto() {
-  const ids = COINS.map(c => c.id).join(',');
   try {
+    const symbols = JSON.stringify(COINS.map(c => c.symbol));
     const res = await fetch(
-      `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true&include_image=true`
+      `https://api.binance.com/api/v3/ticker/24hr?symbols=${encodeURIComponent(symbols)}`
     );
     const data = await res.json();
-    const list = document.getElementById('crypto-list');
-    list.innerHTML = COINS.map(coin => {
-      const d = data[coin.id];
+    const bySymbol = Object.fromEntries(data.map(d => [d.symbol, d]));
+
+    document.getElementById('crypto-list').innerHTML = COINS.map(coin => {
+      const d = bySymbol[coin.symbol];
       if (!d) return '';
-      const change = d.usd_24h_change?.toFixed(2) ?? '0.00';
+      const change = parseFloat(d.priceChangePercent).toFixed(2);
       const up = parseFloat(change) >= 0;
       return `
         <div class="crypto-row">
           <div class="crypto-left">
-            <div>
-              <div class="crypto-name">${coin.name}</div>
-              <div class="crypto-symbol">${coin.symbol}</div>
-            </div>
+            <div class="crypto-name">${coin.name}</div>
+            <div class="crypto-symbol">${coin.ticker}</div>
           </div>
           <div class="crypto-right">
-            <div class="crypto-price">${formatPrice(d.usd)}</div>
+            <div class="crypto-price">${formatPrice(d.lastPrice)}</div>
             <div class="crypto-change ${up ? 'up' : 'down'}">${up ? '▲' : '▼'} ${Math.abs(change)}%</div>
           </div>
         </div>`;
     }).join('');
+
     const now = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
-    document.getElementById('crypto-updated').textContent = `Actualizado: ${now} · Fuente: CoinGecko`;
+    document.getElementById('crypto-updated').textContent = `Actualizado: ${now} · Fuente: Binance`;
   } catch {
     document.getElementById('crypto-list').innerHTML =
       `<p style="color:var(--muted);font-size:.85rem">No se pudo cargar el mercado.</p>`;
