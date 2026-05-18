@@ -464,8 +464,18 @@ const navLinks  = document.getElementById('nav-links');
 hamburger.addEventListener('click', () => {
   const open = navLinks.classList.toggle('open');
   hamburger.classList.toggle('open', open);
-  hamburger.setAttribute('aria-expanded', open);
+  hamburger.setAttribute('aria-expanded', String(open));
   document.body.style.overflow = open ? 'hidden' : '';
+  // Al cerrar, resetea delays para que los li no queden atascados
+  if (!open) {
+    navLinks.querySelectorAll('li').forEach(li => {
+      li.style.transitionDelay = '0s';
+    });
+  } else {
+    navLinks.querySelectorAll('li').forEach(li => {
+      li.style.transitionDelay = '';
+    });
+  }
 });
 
 document.querySelectorAll('.nav-link-item').forEach(link => {
