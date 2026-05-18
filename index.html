@@ -44,6 +44,11 @@
   <meta name="theme-color"        content="#6c63ff" />
 
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+    window.addEventListener('pageshow', function(e) { window.scrollTo(0, 0); });
+  </script>
 </head>
 <body>
 

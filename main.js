@@ -1,8 +1,3 @@
-// Fuerza scroll al tope en cada carga (evita que el browser restaure posición)
-history.scrollRestoration = 'manual';
-window.scrollTo(0, 0);
-window.addEventListener('load', () => window.scrollTo(0, 0));
-window.addEventListener('beforeunload', () => window.scrollTo(0, 0));
 
 // ── DOWNLOAD CV ───────────────────────────────────────────
 function downloadCV() {
