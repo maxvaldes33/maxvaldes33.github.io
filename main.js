@@ -1,3 +1,13 @@
+// ── ANCHOR LINKS sin cambiar URL ──────────────────────────
+document.addEventListener('click', function(e) {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  const id = a.getAttribute('href').slice(1);
+  if (!id) return;
+  e.preventDefault();
+  const target = document.getElementById(id);
+  if (target) target.scrollIntoView({ behavior: 'smooth' });
+});
 
 // ── DOWNLOAD CV ───────────────────────────────────────────
 function downloadCV() {

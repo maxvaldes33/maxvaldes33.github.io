@@ -46,8 +46,13 @@
   <link rel="stylesheet" href="styles.css" />
   <script>
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-    window.scrollTo(0, 0);
-    window.addEventListener('pageshow', function(e) { window.scrollTo(0, 0); });
+    // Limpia el hash de la URL sin disparar scroll (causa raíz del problema)
+    if (window.location.hash) history.replaceState(null, '', window.location.pathname);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    window.addEventListener('pageshow', function() {
+      if (window.location.hash) history.replaceState(null, '', window.location.pathname);
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    });
   </script>
 </head>
 <body>
