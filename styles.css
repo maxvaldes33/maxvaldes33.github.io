@@ -981,7 +981,81 @@ footer {
   .nav-links a:active { color: var(--text); background: var(--surface2); }
 
   section { padding: 3.5rem 1.25rem; }
-  .hero { padding-top: 5rem; }
+  .hero { padding: 5rem 1.25rem 3rem; }
+
+  /* ── Hero mobile ── */
+  .hero-orb-1 { width: 280px; height: 280px; top: -60px; left: -80px; }
+  .hero-orb-2 { width: 220px; height: 220px; bottom: -40px; right: -60px; }
+  .hero-orb-3 { display: none; }
+
+  .hero-content { max-width: 100%; }
+
+  .hero h1 { font-size: clamp(2.4rem, 11vw, 3.5rem); }
+
+  .hero-badges { gap: 0.4rem; margin-bottom: 1.25rem; }
+  .hero-badge  { font-size: 0.72rem; padding: 0.25rem 0.75rem; }
+
+  .hero-sub { font-size: 0.95rem; }
+
+  .hero-ctas { gap: 0.6rem; }
+  .hero-ctas .btn { padding: 0.6rem 1.2rem; font-size: 0.85rem; }
+
+  .hero-social { gap: 0.6rem; margin-top: 1rem; }
+  .hero-social-link { padding: 0.4rem 0.85rem; font-size: 0.78rem; }
+
+  .hero-widgets-row { gap: 0.5rem; }
+  #weather-widget, #visit-counter { min-width: 0; font-size: 0.78rem; padding: 0.4rem 0.75rem; }
+
+  /* ── Stats ── */
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+  .stat-num   { font-size: 2rem; }
+
+  /* ── Skills ── */
+  .skills-grid { grid-template-columns: 1fr; }
+  .skills-bars { margin-bottom: 2rem !important; }
+  .skills-bars > div + div { margin-top: 0.5rem; }
+
+  /* ── Timeline ── */
+  .timeline { padding-left: 1.5rem; }
+  .timeline-dot { left: -1.5rem; }
+  .timeline-header { flex-direction: column; gap: 0.35rem; }
+  .timeline-date { align-self: flex-start; }
+
+  /* ── Projects ── */
+  .projects-grid { grid-template-columns: 1fr; }
+
+  /* ── Education ── */
+  .edu-grid  { grid-template-columns: 1fr; }
+  .cert-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+
+  /* ── Improvement ── */
+  .improvement-grid { grid-template-columns: 1fr; }
+
+  /* ── APIs ── */
+  .apis-grid { grid-template-columns: 1fr; }
+
+  /* ── Contact ── */
+  .contact-links { gap: 0.5rem; }
+  .contact-link  { font-size: 0.82rem; padding: 0.5rem 1rem; }
+
+  /* ── Buttons fixed ── */
+  #back-to-top  { bottom: 4.5rem; right: 1rem; width: 40px; height: 40px; }
+  #theme-toggle { bottom: 1rem; right: 1rem; width: 40px; height: 40px; }
+
+  /* ── Section headers ── */
+  .section-title { font-size: clamp(1.6rem, 7vw, 2rem); }
+  .section-desc  { font-size: 0.88rem; }
+}
+
+/* ── SMALL PHONES (≤390px) ── */
+@media (max-width: 390px) {
+  .hero h1 { font-size: 2.2rem; }
+  .hero-ctas { flex-direction: column; align-items: center; }
+  .hero-ctas .btn { width: 100%; justify-content: center; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .cert-grid  { grid-template-columns: repeat(2, 1fr); }
+  .contact-links { flex-direction: column; align-items: center; }
+  .contact-link  { width: 100%; justify-content: center; }
 }
 
 /* ── REDUCED MOTION ── */
