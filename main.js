@@ -206,17 +206,6 @@ document.addEventListener('click', function(e) {
   if (target) target.scrollIntoView({ behavior: 'smooth' });
 });
 
-// ── CV LINK — desktop descarga, mobile abre viewer ────────
-(function initCVLink() {
-  const link = document.getElementById('cv-link');
-  if (!link) return;
-  const isMobile = navigator.maxTouchPoints > 0;
-  if (isMobile) {
-    link.target = '_blank';
-  } else {
-    link.download = 'CV_Maximiliano_Valdes.pdf';
-  }
-})();
 
 // ── THEME TOGGLE — 3 modos ───────────────────────────────
 const html        = document.documentElement;

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV — Maximiliano Valdés</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; background: #111; font-family: system-ui, sans-serif; }
+
+    .toolbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+      background: #1a1a2e; border-bottom: 1px solid #2a2a4a;
+      padding: 0.6rem 1rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .toolbar-title { color: #eee; font-size: 0.9rem; font-weight: 600; }
+    .toolbar-actions { display: flex; gap: 0.5rem; }
+    .toolbar-btn {
+      background: #7c83ff; color: #fff; border: none; border-radius: 8px;
+      padding: 0.45rem 1rem; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .toolbar-btn.secondary {
+      background: transparent; border: 1px solid #3a3a5a; color: #aaa;
+    }
+
+    .viewer {
+      position: fixed; top: 48px; left: 0; right: 0; bottom: 0;
+    }
+    embed, iframe {
+      width: 100%; height: 100%; border: none; display: block;
+    }
+
+    /* Mobile fallback message */
+    .mobile-fallback {
+      display: none;
+      flex-direction: column; align-items: center; justify-content: center;
+      height: 100%; gap: 1.5rem; padding: 2rem; text-align: center; color: #aaa;
+    }
+    .mobile-fallback p { font-size: 0.95rem; line-height: 1.6; }
+    @media (max-width: 768px) {
+      .viewer embed { display: none; }
+      .viewer iframe { display: block; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <span class="toolbar-title">CV — Maximiliano Valdés</span>
+    <div class="toolbar-actions">
+      <a href="cv.pdf" download="CV_Maximiliano_Valdes.pdf" class="toolbar-btn">⬇ Descargar</a>
+      <a href="/" class="toolbar-btn secondary">← Volver</a>
+    </div>
+  </div>
+
+  <div class="viewer">
+    <embed src="cv.pdf" type="application/pdf">
+  </div>
+
+</body>
+</html>
