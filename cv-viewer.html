@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CV — Maximiliano Valdés</title>
-  <link href="https://fonts.googleapis.com/css2?family=Calibri:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: #e8e8e8;
-      font-family: 'Calibri', Calibri, 'Trebuchet MS', sans-serif;
+      background: #d0d0d0;
+      font-family: Calibri, 'Carlito', 'Trebuchet MS', sans-serif;
       padding: 0 0 3rem;
     }
 
@@ -32,79 +32,88 @@
     .btn-download { background: #7c83ff; color: #fff; }
     .btn-close    { background: transparent; border: 1px solid #3a3a5a; color: #aaa; }
 
-    /* ── CV Paper — A4 proportions ── */
+    /* ── CV Paper ── */
     .cv {
       max-width: 794px;
       margin: 1.5rem auto;
       background: #fff;
-      box-shadow: 0 2px 20px rgba(0,0,0,0.2);
-      padding: 2.8cm 2.5cm;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.25);
+      padding: 2.2cm 2.5cm 3cm;
       font-size: 11pt;
-      line-height: 1.4;
+      line-height: 1.45;
       color: #000;
     }
 
-    /* ── Header ── */
+    /* ── HEADER — centrado ── */
+    .cv-header { text-align: center; margin-bottom: 0.6rem; }
     .cv-name {
-      font-size: 18pt;
-      font-weight: 700;
-      font-style: italic;
-      line-height: 1.1;
+      font-size: 18pt; font-weight: 700; font-style: italic;
+      display: block; margin-bottom: 0.05rem;
     }
-    .cv-contact {
-      font-size: 11pt;
-      margin-top: 0.15rem;
-    }
-    .cv-contact a { color: #000; text-decoration: none; }
-    .cv-header-sep { border: none; border-top: 1px solid #000; margin: 0.5rem 0 0.8rem; }
+    .cv-rol { font-size: 11pt; font-style: italic; display: block; }
+    .cv-uni { font-size: 11pt; font-weight: 700; display: block; }
+    .cv-contact { font-size: 11pt; margin-top: 0.15rem; }
+    .cv-contact a { color: #1155cc; text-decoration: underline; }
 
-    /* ── Section titles ── */
+    /* línea después del header */
+    .header-rule {
+      border: none; border-top: 1.5px solid #222;
+      margin: 0.55rem 0 0.7rem;
+    }
+
+    /* ── Sección sin línea arriba (Perfil) ── */
+    .section { margin-bottom: 0.7rem; }
+
+    /* ── Sección con línea separadora arriba ── */
+    .section-ruled {
+      border-top: 1px solid #999;
+      margin-top: 0.9rem; padding-top: 0.55rem;
+      margin-bottom: 0.7rem;
+    }
+
+    /* ── Título de sección ── */
     .section-title {
-      font-family: Arial, sans-serif;
-      font-size: 12pt;
-      font-weight: 700;
-      border-bottom: 1px solid #000;
-      padding-bottom: 1px;
-      margin-bottom: 0.4rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12pt; font-weight: 400;
+      margin-bottom: 0.5rem;
     }
 
-    .section { margin-bottom: 0.9rem; }
+    /* ── Texto de perfil ── */
+    .cv-p { font-size: 11pt; line-height: 1.5; text-align: justify; margin-bottom: 0.4rem; }
 
-    /* ── Body text ── */
-    p, li { font-size: 11pt; line-height: 1.45; text-align: justify; }
-
-    /* ── Experience entry ── */
+    /* ── Entrada de experiencia ── */
     .entry { margin-bottom: 0.55rem; }
     .entry-header {
       display: flex; justify-content: space-between; align-items: baseline;
+      gap: 1rem;
     }
     .entry-title { font-weight: 700; font-size: 11pt; }
-    .entry-date  { font-weight: 700; font-size: 11pt; white-space: nowrap; }
+    .entry-date  { font-weight: 700; font-size: 11pt; white-space: nowrap; flex-shrink: 0; }
 
-    /* ── Bullet list ── */
-    .cv-bullets { list-style: none; padding: 0; margin-top: 0.1rem; }
-    .cv-bullets li {
-      display: flex; gap: 0.5rem;
-      font-size: 11pt; line-height: 1.45; text-align: justify;
-      margin-bottom: 0;
+    /* ── Bullets con guión ── */
+    .bullets { list-style: none; margin: 0.25rem 0 0 1.1cm; }
+    .bullets li {
+      display: flex; gap: 0.55rem;
+      font-size: 11pt; line-height: 1.5; text-align: justify;
+      margin-bottom: 0.05rem;
     }
-    .cv-bullets li::before { content: "-"; flex-shrink: 0; }
+    .bullets li::before { content: "-"; flex-shrink: 0; }
 
-    /* ── Education ── */
-    .edu-row { display: flex; justify-content: space-between; align-items: baseline; }
-
-    /* ── Courses ── */
-    .course-group { font-weight: 700; margin-top: 0.2rem; }
-    .course-bullets { list-style: none; padding: 0; }
-    .course-bullets li {
-      display: flex; gap: 0.5rem; font-size: 11pt; line-height: 1.45; text-align: justify;
+    /* ── Educación 3 columnas ── */
+    .edu-row {
+      display: grid; grid-template-columns: 100px 1fr auto;
+      gap: 0.5rem; align-items: baseline;
+      font-size: 11pt;
     }
-    .course-bullets li::before { content: "-"; flex-shrink: 0; }
+
+    /* ── Cursos ── */
+    .course-group { font-weight: 700; font-size: 11pt; margin: 0.45rem 0 0.1rem; }
 
     @media (max-width: 600px) {
-      .cv { padding: 1.5rem 1.2rem; margin: 0.8rem; }
-      .cv-name { font-size: 15pt; }
-      .entry-header { flex-direction: column; }
+      .cv { padding: 1.5rem 1.2rem 2.5rem; margin: 0.5rem; }
+      .cv-name { font-size: 14pt; }
+      .entry-header { flex-direction: column; gap: 0; }
+      .edu-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -121,22 +130,27 @@
   <div class="cv">
 
     <!-- HEADER -->
-    <div class="cv-name">MAXIMILIANO VALDES<br>Ingeniero en Informática<br>Duoc UC</div>
-    <div class="cv-contact">
-      +56945859365 – <a href="mailto:musrri.valdes.maxi03@gmail.com">musrri.valdes.maxi03@gmail.com</a> –
-      <a href="https://linkedin.com/in/maxvaldes33" target="_blank">LinkedIn</a>
+    <div class="cv-header">
+      <span class="cv-name">MAXIMILIANO VALDES</span>
+      <span class="cv-rol">Ingeniero en Informática</span>
+      <span class="cv-uni">Duoc UC</span>
+      <div class="cv-contact">
+        +56945859365– <a href="mailto:musrri.valdes.maxi03@gmail.com">musrri.valdes.maxi03@gmail.com</a><br>
+        <a href="https://linkedin.com/in/maxvaldes33" target="_blank">LinkedIn</a>
+      </div>
     </div>
-    <hr class="cv-header-sep">
 
-    <!-- PERFIL -->
+    <hr class="header-rule">
+
+    <!-- PERFIL PROFESIONAL -->
     <div class="section">
       <div class="section-title">Perfil Profesional</div>
-      <p>Ingeniero en Informática con experiencia en proyectos tecnológicos, especializado en Python y Excel Avanzado y programación en VBA para el desarrollo y optimización de macros. Cuenta con sólida experiencia en automatización de procesos, creación de sistemas para tareas repetitivas, generación de reportes en Excel y Power BI, y despacho masivo de comunicaciones vía correo electrónico, SMS y WhatsApp mediante distintos proveedores de servicio. Maneja librerías Python como pandas, openpyxl, PyQt5, Selenium y PyInstaller para el desarrollo de herramientas de escritorio y automatización web, e integra soluciones basadas en modelos de lenguaje (LLMs) mediante la API de Anthropic (Claude) para potenciar flujos de trabajo y desarrollo de software.</p>
-      <p style="margin-top:0.3rem">Maneja otros lenguajes de programación y bases de datos como JavaScript, SQL y control de versiones con Git, además de tecnologías web como HTML5 y CSS. Trabaja en entornos macOS y Windows. Se caracteriza por su comunicación clara, responsabilidad en el cumplimiento de plazos, capacidad de trabajo bajo presión y buen desempeño en equipos de trabajo.</p>
+      <p class="cv-p">Ingeniero en Informática con experiencia en proyectos tecnológicos, especializado en Python y Excel Avanzado y programación en VBA para el desarrollo y optimización de macros. Cuenta con sólida experiencia en automatización de procesos, creación de sistemas para tareas repetitivas, generación de reportes en Excel y Power BI, y despacho masivo de comunicaciones vía correo electrónico, SMS y WhatsApp mediante distintos proveedores de servicio. Maneja librerías Python como pandas, openpyxl, PyQt5, Selenium y PyInstaller para el desarrollo de herramientas de escritorio y automatización web, e integra soluciones basadas en modelos de lenguaje (LLMs) mediante la API de Anthropic (Claude) para potenciar flujos de trabajo y desarrollo de software.</p>
+      <p class="cv-p">Maneja otros lenguajes de programación y bases de datos como JavaScript, SQL y control de versiones con Git, además de tecnologías web como HTML5 y CSS. Trabaja en entornos macOS y Windows. Se caracteriza por su comunicación clara, responsabilidad en el cumplimiento de plazos, capacidad de trabajo bajo presión y buen desempeño en equipos de trabajo.</p>
     </div>
 
-    <!-- EXPERIENCIA -->
-    <div class="section">
+    <!-- EXPERIENCIA PROFESIONAL -->
+    <div class="section-ruled">
       <div class="section-title">Experiencia Profesional</div>
 
       <div class="entry">
@@ -144,7 +158,7 @@
           <span class="entry-title">Técnico en Informática – Soporte de Cobranza / Multicob Chile LTDA</span>
           <span class="entry-date">10.2025 – Actualidad</span>
         </div>
-        <ul class="cv-bullets">
+        <ul class="bullets">
           <li>Desarrollo, actualización y optimización de macros en Excel mediante Visual Basic (VBA) para mejorar la eficiencia operativa.</li>
           <li>Automatización de procesos y generación de herramientas de escritorio con Python (pandas, openpyxl, PyQt5, tkinter, PyInstaller), reduciendo tiempos de ejecución manual.</li>
           <li>Modelamiento de datos y generación de reportes analíticos en Power BI para soporte en la toma de decisiones.</li>
@@ -158,7 +172,7 @@
           <span class="entry-title">Desarrollador de Sistemas / Avícola San Luis de Cuncumen</span>
           <span class="entry-date">06.2025 – 08.2025</span>
         </div>
-        <ul class="cv-bullets">
+        <ul class="bullets">
           <li>Diseño y desarrollo de un sistema ofimático en Google Sheets para la gestión empresarial.</li>
           <li>Implementación de procesos de automatización de datos que redujeron tareas manuales y aumentaron la eficiencia operativa.</li>
           <li>Incorporación de cálculos matemáticos y financieros para generar reportes diarios sobre evolución del negocio, control de gastos y ganancias.</li>
@@ -171,7 +185,7 @@
           <span class="entry-title">Practicante de Ingeniería en Informática / Business Oil SPA</span>
           <span class="entry-date">03.2025 – 05.2025</span>
         </div>
-        <ul class="cv-bullets">
+        <ul class="bullets">
           <li>Desarrollo de soluciones Full Stack para automatización de procesos internos.</li>
           <li>Implementación de scripts en Python para optimizar tareas repetitivas.</li>
           <li>Automatización de procesos en Excel para gestión administrativa.</li>
@@ -184,7 +198,7 @@
           <span class="entry-title">Encargado de logística / Avícola San Luis de Cuncumen</span>
           <span class="entry-date">03.2023 – 02.2024</span>
         </div>
-        <ul class="cv-bullets">
+        <ul class="bullets">
           <li>Gestión de carga y coordinación de pedidos de productos avícolas.</li>
           <li>Supervisión y control de documentación de envíos.</li>
           <li>Optimización de procesos logísticos para asegurar entregas oportunas.</li>
@@ -193,34 +207,32 @@
     </div>
 
     <!-- EDUCACIÓN -->
-    <div class="section">
+    <div class="section-ruled">
       <div class="section-title">Educación</div>
       <div class="edu-row">
-        <div>
-          <div style="font-size:11pt">Ingeniería en informática</div>
-          <div style="font-size:11pt">DUOC UC</div>
-        </div>
-        <div style="font-size:11pt">2021 – 2025</div>
+        <span>2021 – 2025</span>
+        <span>Ingeniería en informática</span>
+        <span>DUOC UC</span>
       </div>
     </div>
 
     <!-- CURSOS -->
-    <div class="section">
+    <div class="section-ruled">
       <div class="section-title">Cursos – Otros conocimientos</div>
 
       <p class="course-group">Santander Open Academy.</p>
-      <ul class="course-bullets">
+      <ul class="bullets">
         <li>Introducción a la Ciencia de Datos.</li>
         <li>Python.</li>
       </ul>
 
       <p class="course-group">Mastermind.</p>
-      <ul class="course-bullets">
+      <ul class="bullets">
         <li>Fundamentos de Matemáticas para Informáticos.</li>
       </ul>
 
       <p class="course-group">Otros Conocimientos.</p>
-      <ul class="course-bullets">
+      <ul class="bullets">
         <li>Inglés nivel B1, con capacidad de lectura y comprensión de documentación técnica.</li>
         <li>Excel Avanzado para análisis de datos, automatización y generación de reportes.</li>
         <li>Visual Basic (VBA) orientado a la creación y optimización de macros en Excel.</li>
