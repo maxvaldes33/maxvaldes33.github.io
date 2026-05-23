@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
   <title>CV — Maximiliano Valdés</title>
   <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <style>
@@ -109,11 +109,10 @@
     /* ── Cursos ── */
     .course-group { font-weight: 700; font-size: 11pt; margin: 0.45rem 0 0.1rem; }
 
+    /* Mobile: escalar como visor PDF, sin reorganizar layout */
+    .cv-scaler { display: flex; justify-content: center; padding: 1rem 0 3rem; }
     @media (max-width: 600px) {
-      .cv { padding: 1.5rem 1.2rem 2.5rem; margin: 0.5rem; }
-      .cv-name { font-size: 14pt; }
-      .entry-header { flex-direction: column; gap: 0; }
-      .edu-row { grid-template-columns: 1fr; }
+      .cv-scaler { padding: 0.5rem 0 2rem; }
     }
   </style>
 </head>
@@ -127,7 +126,8 @@
     </div>
   </div>
 
-  <div class="cv">
+  <div class="cv-scaler">
+  <div class="cv" id="cv-page">
 
     <!-- HEADER -->
     <div class="cv-header">
@@ -250,6 +250,30 @@
     </div>
 
   </div>
+  </div>
+
+  <script>
+    function scaleCv() {
+      const cv = document.getElementById('cv-page');
+      const scaler = cv.parentElement;
+      const cvNaturalWidth = 794;
+      const available = window.innerWidth - 16;
+      if (available < cvNaturalWidth) {
+        const scale = available / cvNaturalWidth;
+        cv.style.transform = 'scale(' + scale + ')';
+        cv.style.transformOrigin = 'top center';
+        cv.style.marginTop = '0';
+        // Ajustar altura del wrapper para que no haya espacio vacío
+        scaler.style.height = (cv.offsetHeight * scale + 16) + 'px';
+      } else {
+        cv.style.transform = '';
+        cv.style.transformOrigin = '';
+        scaler.style.height = '';
+      }
+    }
+    scaleCv();
+    window.addEventListener('resize', scaleCv);
+  </script>
 
 </body>
 </html>
