@@ -109,11 +109,7 @@
     /* ── Cursos ── */
     .course-group { font-weight: 700; font-size: 11pt; margin: 0.45rem 0 0.1rem; }
 
-    /* Mobile: escalar como visor PDF, sin reorganizar layout */
     .cv-scaler { display: flex; justify-content: center; padding: 1rem 0 3rem; }
-    @media (max-width: 600px) {
-      .cv-scaler { padding: 0.5rem 0 2rem; }
-    }
   </style>
 </head>
 <body>
@@ -136,7 +132,7 @@
       <span class="cv-uni">Duoc UC</span>
       <div class="cv-contact">
         +56945859365– <a href="mailto:musrri.valdes.maxi03@gmail.com">musrri.valdes.maxi03@gmail.com</a><br>
-        <a href="https://linkedin.com/in/maxvaldes33" target="_blank">LinkedIn</a>
+        <a href="https://www.linkedin.com/in/maximiliano-alejandro-valdes-musrri-716678271/" target="_blank">LinkedIn</a>
       </div>
     </div>
 
@@ -255,21 +251,9 @@
   <script>
     function scaleCv() {
       const cv = document.getElementById('cv-page');
-      const scaler = cv.parentElement;
-      const cvNaturalWidth = 794;
-      const available = window.innerWidth - 16;
-      if (available < cvNaturalWidth) {
-        const scale = available / cvNaturalWidth;
-        cv.style.transform = 'scale(' + scale + ')';
-        cv.style.transformOrigin = 'top center';
-        cv.style.marginTop = '0';
-        // Ajustar altura del wrapper para que no haya espacio vacío
-        scaler.style.height = (cv.offsetHeight * scale + 16) + 'px';
-      } else {
-        cv.style.transform = '';
-        cv.style.transformOrigin = '';
-        scaler.style.height = '';
-      }
+      const cvWidth = 842; // 794px + márgenes
+      const available = window.innerWidth;
+      cv.style.zoom = available < cvWidth ? (available / cvWidth).toFixed(3) : '1';
     }
     scaleCv();
     window.addEventListener('resize', scaleCv);
