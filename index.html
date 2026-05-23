@@ -49,8 +49,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <script>
+    // ── Tema sin flash (antes del render) ──
+    (function() {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var isDark = saved ? saved === 'dark' : prefersDark;
+      if (!isDark) document.documentElement.classList.add('light');
+    })();
+
+    // ── Scroll restore ──
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-    // Limpia el hash de la URL sin disparar scroll (causa raíz del problema)
     if (window.location.hash) history.replaceState(null, '', window.location.pathname);
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     window.addEventListener('pageshow', function() {

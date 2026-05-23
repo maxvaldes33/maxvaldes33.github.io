@@ -224,11 +224,29 @@ function downloadCV() {
 
 // ── THEME TOGGLE ──────────────────────────────────────────
 const html = document.documentElement;
-if (localStorage.getItem('theme') === 'light') html.classList.add('light');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+function applyTheme(isDark) {
+  html.classList.toggle('light', !isDark);
+}
+
+// Prioridad: preferencia guardada → sistema
+const saved = localStorage.getItem('theme');
+if (saved) {
+  applyTheme(saved === 'dark');
+} else {
+  applyTheme(prefersDark.matches);
+}
+
+// Escuchar cambios del sistema en tiempo real (solo si no hay preferencia guardada)
+prefersDark.addEventListener('change', e => {
+  if (!localStorage.getItem('theme')) applyTheme(e.matches);
+});
 
 document.getElementById('theme-toggle').addEventListener('click', () => {
-  html.classList.toggle('light');
-  localStorage.setItem('theme', html.classList.contains('light') ? 'light' : 'dark');
+  const nowDark = !html.classList.contains('light');
+  applyTheme(!nowDark);
+  localStorage.setItem('theme', !nowDark ? 'dark' : 'light');
 });
 
 // ── WEATHER WIDGET ────────────────────────────────────────
