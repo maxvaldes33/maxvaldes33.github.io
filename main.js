@@ -32,45 +32,6 @@
   drawNoise();
 })();
 
-// ── CUSTOM CURSOR ─────────────────────────────────────────
-(function initCursor() {
-  const dot    = document.getElementById('cursor');
-  const ring   = document.getElementById('cursor-follower');
-  if (!dot || !ring) return;
-  if (window.matchMedia('(hover: none)').matches) return;
-
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  let rafRunning = false;
-
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`;
-    if (!rafRunning) { rafRunning = true; followRing(); }
-  }, { passive: true });
-
-  function followRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`;
-    if (Math.abs(mx - rx) > 0.1 || Math.abs(my - ry) > 0.1) {
-      requestAnimationFrame(followRing);
-    } else {
-      rafRunning = false;
-    }
-  }
-
-  document.addEventListener('mouseover', e => {
-    const el = e.target.closest('a, button, [data-magnetic], .skill-card, .project-card, .cert-card, .contact-link');
-    document.body.classList.toggle('cursor-on-link', !!el);
-  }, { passive: true });
-
-  document.addEventListener('mouseleave', () => {
-    dot.style.opacity = '0'; ring.style.opacity = '0';
-  });
-  document.addEventListener('mouseenter', () => {
-    dot.style.opacity = '1'; ring.style.opacity = '1';
-  });
-})();
 
 // ── MAGNETIC BUTTONS ──────────────────────────────────────
 (function initMagnetic() {
@@ -529,6 +490,76 @@ async function loadVisitorLocation() {
 }
 
 loadVisitorLocation();
+
+// ── FRANKFURTER EXCHANGE RATES ────────────────────────────
+// ── MINDICADOR.CL — Banco Central de Chile ────────────────
+const INDICADORES = [
+  { key: 'dolar',  nombre: 'Dólar observado', flag: '🇺🇸', unidad: 'CLP' },
+  { key: 'euro',   nombre: 'Euro',            flag: '🇪🇺', unidad: 'CLP' },
+  { key: 'uf',     nombre: 'UF',              flag: '🇨🇱', unidad: 'CLP' },
+  { key: 'utm',    nombre: 'UTM',             flag: '🇨🇱', unidad: 'CLP' },
+];
+
+async function loadExchangeRates() {
+  try {
+    const res  = await fetch('https://mindicador.cl/api');
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+
+    document.getElementById('exchange-list').innerHTML = INDICADORES.map(ind => {
+      const entry = data[ind.key];
+      if (!entry) return '';
+      const valor = entry.valor.toLocaleString('es-CL', { maximumFractionDigits: 2 });
+      return `
+        <div class="exchange-row">
+          <div class="crypto-left">
+            <span class="exchange-flag">${ind.flag}</span>
+            <div>
+              <div class="exchange-pair">${ind.nombre}</div>
+              <div class="exchange-name">en ${ind.unidad}</div>
+            </div>
+          </div>
+          <div class="exchange-rate">$${valor}</div>
+        </div>`;
+    }).join('');
+
+    const fecha = new Date(data.dolar.fecha).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' });
+    document.getElementById('exchange-updated').textContent = `Vigente al ${fecha} · Fuente: Banco Central de Chile`;
+  } catch {
+    document.getElementById('exchange-list').innerHTML =
+      `<p style="color:var(--muted);font-size:.85rem">No se pudo cargar los indicadores.</p>`;
+  }
+}
+
+loadExchangeRates();
+setInterval(loadExchangeRates, 300000);
+
+// ── JOKEAPI ───────────────────────────────────────────────
+async function loadJoke() {
+  const box = document.getElementById('joke-box');
+  box.innerHTML = `<div class="crypto-skeleton"></div><div class="crypto-skeleton"></div>`;
+  try {
+    const res  = await fetch('https://v2.jokeapi.dev/joke/Programming?lang=en&blacklistFlags=nsfw,racist,sexist');
+    const data = await res.json();
+
+    if (data.type === 'twopart') {
+      box.innerHTML = `
+        <div class="joke-card">
+          <div class="joke-setup">${data.setup}</div>
+          <div class="joke-delivery">— ${data.delivery}</div>
+        </div>`;
+    } else {
+      box.innerHTML = `
+        <div class="joke-card">
+          <div class="joke-single">${data.joke}</div>
+        </div>`;
+    }
+  } catch {
+    box.innerHTML = `<p style="color:var(--muted);font-size:.85rem">No se pudo cargar el chiste.</p>`;
+  }
+}
+
+loadJoke();
 
 // ── LIGHTBOX GALLERY ──────────────────────────────────────
 const GALLERY = [
