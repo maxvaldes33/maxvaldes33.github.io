@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <meta name="viewport" content="width=900">
   <title>CV — Maximiliano Valdés</title>
   <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <style>
@@ -49,16 +49,6 @@
       color: #000;
     }
 
-    /* ── Mobile: sin fondo gris, sin sombra, padding reducido ── */
-    @media (max-width: 700px) {
-      html, body { background: #fff; }
-      /* — toolbar — */
-      .toolbar-title { display: none; }
-      .toolbar-actions { margin-left: auto; }
-      /* — cv — */
-      .cv-wrap { background: #fff; padding: 0; min-height: unset; display: block; }
-      .cv { box-shadow: none; max-width: 100%; padding: 1.4rem 1.1rem 3rem; font-size: 10pt; }
-    }
 
     /* ── HEADER — centrado ── */
     .cv-header { text-align: center; margin-bottom: 0.6rem; }
@@ -86,12 +76,6 @@
     .entry-title { font-weight: 700; font-size: 11pt; }
     .entry-date  { font-weight: 700; font-size: 11pt; white-space: nowrap; flex-shrink: 0; }
 
-    @media (max-width: 700px) {
-      .cv-name { font-size: 15pt; }
-      .cv-p, .cv-contact, .entry-title, .entry-date, .course-group,
-      .bullets li, .edu-row { font-size: 10pt; }
-      .section-title { font-size: 11pt; }
-    }
 
     .bullets { list-style: none; margin: 0.25rem 0 0 1cm; }
     .bullets li {
@@ -104,9 +88,6 @@
     .edu-row {
       display: grid; grid-template-columns: 90px 1fr auto;
       gap: 0.5rem; align-items: baseline; font-size: 11pt;
-    }
-    @media (max-width: 700px) {
-      .edu-row { grid-template-columns: 80px 1fr auto; gap: 0.3rem; }
     }
 
     .course-group { font-weight: 700; font-size: 11pt; margin: 0.45rem 0 0.1rem; }
