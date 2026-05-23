@@ -216,6 +216,7 @@ function downloadCV() {
   const a = document.createElement('a');
   a.href = url;
   a.download = 'CV_Maximiliano_Valdes.pdf';
+  a.target = '_blank';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
