@@ -222,31 +222,71 @@ function downloadCV() {
   URL.revokeObjectURL(url);
 }
 
-// ── THEME TOGGLE ──────────────────────────────────────────
-const html = document.documentElement;
+// ── THEME TOGGLE — 3 modos ───────────────────────────────
+const html        = document.documentElement;
 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+// Detectar tipo de dispositivo para el ícono "sistema"
+function getDeviceIcon() {
+  const isTouch  = navigator.maxTouchPoints > 0;
+  const w        = window.screen.width;
+  if (isTouch && w <= 1024) {
+    // Teléfono o tablet
+    if (w <= 768) {
+      // Teléfono
+      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>`;
+    }
+    // Tablet
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>`;
+  }
+  if (w >= 1440) {
+    // Monitor escritorio
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`;
+  }
+  // Laptop
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>`;
+}
 
 function applyTheme(isDark) {
   html.classList.toggle('light', !isDark);
 }
 
-// Prioridad: preferencia guardada → sistema
-const saved = localStorage.getItem('theme');
-if (saved) {
-  applyTheme(saved === 'dark');
-} else {
-  applyTheme(prefersDark.matches);
+function setActiveBtn(mode) {
+  document.querySelectorAll('.theme-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.theme === mode);
+  });
 }
 
-// Escuchar cambios del sistema en tiempo real (solo si no hay preferencia guardada)
+function applyMode(mode) {
+  if (mode === 'system') {
+    applyTheme(prefersDark.matches);
+  } else {
+    applyTheme(mode === 'dark');
+  }
+  setActiveBtn(mode);
+}
+
+// Inyectar ícono de dispositivo
+document.getElementById('theme-btn-system').innerHTML = getDeviceIcon();
+
+// Inicializar con preferencia guardada o sistema por defecto
+const savedMode = localStorage.getItem('themeMode') || 'system';
+applyMode(savedMode);
+
+// Cambios del sistema en tiempo real (actúa solo si modo = system)
 prefersDark.addEventListener('change', e => {
-  if (!localStorage.getItem('theme')) applyTheme(e.matches);
+  if ((localStorage.getItem('themeMode') || 'system') === 'system') {
+    applyTheme(e.matches);
+  }
 });
 
-document.getElementById('theme-toggle').addEventListener('click', () => {
-  const nowDark = !html.classList.contains('light');
-  applyTheme(!nowDark);
-  localStorage.setItem('theme', !nowDark ? 'dark' : 'light');
+// Clicks en los 3 botones
+document.querySelectorAll('.theme-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const mode = btn.dataset.theme;
+    localStorage.setItem('themeMode', mode);
+    applyMode(mode);
+  });
 });
 
 // ── WEATHER WIDGET ────────────────────────────────────────
