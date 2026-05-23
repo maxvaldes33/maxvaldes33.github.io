@@ -315,7 +315,8 @@ document.addEventListener('click', e => {
 
 // Clicks en los 3 botones
 document.querySelectorAll('.theme-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
     const mode = btn.dataset.theme;
     localStorage.setItem('themeMode', mode);
     applyMode(mode);
