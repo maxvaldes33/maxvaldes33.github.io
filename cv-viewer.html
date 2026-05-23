@@ -8,10 +8,10 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
-      background: #d0d0d0;
+    html, body {
+      background: #fff;
       font-family: Calibri, 'Carlito', 'Trebuchet MS', sans-serif;
-      padding: 0 0 3rem;
+      min-height: 100%;
     }
 
     /* ── Toolbar ── */
@@ -19,24 +19,28 @@
       position: sticky; top: 0; z-index: 100;
       background: #1a1a2e; border-bottom: 1px solid #2a2a4a;
       padding: 0.55rem 1.5rem;
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
     }
-    .toolbar-title { color: #ccc; font-size: 0.82rem; font-family: system-ui; }
-    .toolbar-actions { display: flex; gap: 0.5rem; }
+    .toolbar-title { color: #ccc; font-size: 0.82rem; font-family: system-ui; white-space: nowrap; }
+    .toolbar-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
     .toolbar-btn {
       font-family: system-ui; font-size: 0.8rem; font-weight: 600;
       padding: 0.38rem 0.9rem; border-radius: 7px; border: none;
       cursor: pointer; text-decoration: none;
-      display: inline-flex; align-items: center; gap: 0.3rem;
+      display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap;
     }
     .btn-download { background: #7c83ff; color: #fff; }
     .btn-close    { background: transparent; border: 1px solid #3a3a5a; color: #aaa; }
 
-    /* ── CV Paper — ancho fijo para que zoom escale correctamente ── */
-    .cv-scaler { display: flex; justify-content: center; align-items: flex-start; padding: 1rem 0 3rem; }
+    /* ── CV — desktop: hoja centrada sobre fondo gris ── */
+    .cv-wrap {
+      background: #d0d0d0;
+      min-height: calc(100vh - 44px);
+      display: flex; justify-content: center;
+      padding: 1.5rem 1rem 4rem;
+    }
     .cv {
-      width: 794px;
-      flex-shrink: 0;
+      width: 100%; max-width: 794px;
       background: #fff;
       box-shadow: 0 4px 32px rgba(0,0,0,0.25);
       padding: 2.2cm 2.5cm 3cm;
@@ -45,74 +49,70 @@
       color: #000;
     }
 
+    /* ── Mobile: sin fondo gris, sin sombra, padding reducido ── */
+    @media (max-width: 700px) {
+      html, body { background: #fff; }
+      .cv-wrap { background: #fff; padding: 0; min-height: unset; display: block; }
+      .cv {
+        box-shadow: none; max-width: 100%;
+        padding: 1.4rem 1.1rem 3rem;
+        font-size: 10pt;
+      }
+      .toolbar-title { display: none; }
+    }
+
     /* ── HEADER — centrado ── */
     .cv-header { text-align: center; margin-bottom: 0.6rem; }
-    .cv-name {
-      font-size: 18pt; font-weight: 700; font-style: italic;
-      display: block; margin-bottom: 0.05rem;
-    }
-    .cv-rol { font-size: 11pt; font-style: italic; display: block; }
-    .cv-uni { font-size: 11pt; font-weight: 700; display: block; }
+    .cv-name { font-size: 18pt; font-weight: 700; font-style: italic; display: block; margin-bottom: 0.05rem; }
+    .cv-rol  { font-size: 11pt; font-style: italic; display: block; }
+    .cv-uni  { font-size: 11pt; font-weight: 700; display: block; }
     .cv-contact { font-size: 11pt; margin-top: 0.15rem; }
     .cv-contact a { color: #1155cc; text-decoration: underline; }
 
-    /* línea después del header */
-    .header-rule {
-      border: none; border-top: 1.5px solid #222;
-      margin: 0.55rem 0 0.7rem;
-    }
+    .header-rule { border: none; border-top: 1.5px solid #222; margin: 0.55rem 0 0.7rem; }
 
-    /* ── Sección sin línea arriba (Perfil) ── */
-    .section { margin-bottom: 0.7rem; }
+    .section       { margin-bottom: 0.7rem; }
+    .section-ruled { border-top: 1px solid #999; margin-top: 0.9rem; padding-top: 0.55rem; margin-bottom: 0.7rem; }
 
-    /* ── Sección con línea separadora arriba ── */
-    .section-ruled {
-      border-top: 1px solid #999;
-      margin-top: 0.9rem; padding-top: 0.55rem;
-      margin-bottom: 0.7rem;
-    }
-
-    /* ── Título de sección ── */
     .section-title {
       font-family: Arial, Helvetica, sans-serif;
       font-size: 12pt; font-weight: 400;
       margin-bottom: 0.5rem;
     }
 
-    /* ── Texto de perfil ── */
     .cv-p { font-size: 11pt; line-height: 1.5; text-align: justify; margin-bottom: 0.4rem; }
 
-    /* ── Entrada de experiencia ── */
     .entry { margin-bottom: 0.55rem; }
-    .entry-header {
-      display: flex; justify-content: space-between; align-items: baseline;
-      gap: 1rem;
-    }
+    .entry-header { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
     .entry-title { font-weight: 700; font-size: 11pt; }
     .entry-date  { font-weight: 700; font-size: 11pt; white-space: nowrap; flex-shrink: 0; }
 
-    /* ── Bullets con guión ── */
-    .bullets { list-style: none; margin: 0.25rem 0 0 1.1cm; }
+    @media (max-width: 700px) {
+      .cv-name { font-size: 15pt; }
+      .cv-p, .cv-contact, .entry-title, .entry-date, .course-group,
+      .bullets li, .edu-row { font-size: 10pt; }
+      .section-title { font-size: 11pt; }
+      .entry-header { flex-wrap: wrap; gap: 0.1rem; }
+      .entry-date { flex-shrink: 0; }
+    }
+
+    .bullets { list-style: none; margin: 0.25rem 0 0 1cm; }
     .bullets li {
-      display: flex; gap: 0.55rem;
+      display: flex; gap: 0.5rem;
       font-size: 11pt; line-height: 1.5; text-align: justify;
       margin-bottom: 0.05rem;
     }
     .bullets li::before { content: "-"; flex-shrink: 0; }
 
-    /* ── Educación 3 columnas ── */
     .edu-row {
-      display: grid; grid-template-columns: 100px 1fr auto;
-      gap: 0.5rem; align-items: baseline;
-      font-size: 11pt;
+      display: grid; grid-template-columns: 90px 1fr auto;
+      gap: 0.5rem; align-items: baseline; font-size: 11pt;
+    }
+    @media (max-width: 700px) {
+      .edu-row { grid-template-columns: 80px 1fr auto; gap: 0.3rem; }
     }
 
-    /* ── Cursos ── */
     .course-group { font-weight: 700; font-size: 11pt; margin: 0.45rem 0 0.1rem; }
-
-    @media (max-width: 600px) {
-      .toolbar-title { display: none; }
-    }
   </style>
 </head>
 <body>
@@ -125,10 +125,9 @@
     </div>
   </div>
 
-  <div class="cv-scaler">
-  <div class="cv" id="cv-page">
+  <div class="cv-wrap">
+  <div class="cv">
 
-    <!-- HEADER -->
     <div class="cv-header">
       <span class="cv-name">MAXIMILIANO VALDES</span>
       <span class="cv-rol">Ingeniero en Informática</span>
@@ -141,14 +140,12 @@
 
     <hr class="header-rule">
 
-    <!-- PERFIL PROFESIONAL -->
     <div class="section">
       <div class="section-title">Perfil Profesional</div>
       <p class="cv-p">Ingeniero en Informática con experiencia en proyectos tecnológicos, especializado en Python y Excel Avanzado y programación en VBA para el desarrollo y optimización de macros. Cuenta con sólida experiencia en automatización de procesos, creación de sistemas para tareas repetitivas, generación de reportes en Excel y Power BI, y despacho masivo de comunicaciones vía correo electrónico, SMS y WhatsApp mediante distintos proveedores de servicio. Maneja librerías Python como pandas, openpyxl, PyQt5, Selenium y PyInstaller para el desarrollo de herramientas de escritorio y automatización web, e integra soluciones basadas en modelos de lenguaje (LLMs) mediante la API de Anthropic (Claude) para potenciar flujos de trabajo y desarrollo de software.</p>
       <p class="cv-p">Maneja otros lenguajes de programación y bases de datos como JavaScript, SQL y control de versiones con Git, además de tecnologías web como HTML5 y CSS. Trabaja en entornos macOS y Windows. Se caracteriza por su comunicación clara, responsabilidad en el cumplimiento de plazos, capacidad de trabajo bajo presión y buen desempeño en equipos de trabajo.</p>
     </div>
 
-    <!-- EXPERIENCIA PROFESIONAL -->
     <div class="section-ruled">
       <div class="section-title">Experiencia Profesional</div>
 
@@ -205,7 +202,6 @@
       </div>
     </div>
 
-    <!-- EDUCACIÓN -->
     <div class="section-ruled">
       <div class="section-title">Educación</div>
       <div class="edu-row">
@@ -215,7 +211,6 @@
       </div>
     </div>
 
-    <!-- CURSOS -->
     <div class="section-ruled">
       <div class="section-title">Cursos – Otros conocimientos</div>
 
@@ -250,18 +245,6 @@
 
   </div>
   </div>
-
-  <script>
-    function scaleCv() {
-      const cv = document.getElementById('cv-page');
-      const padding = 16;
-      const available = window.innerWidth - padding;
-      const cvWidth = 794;
-      cv.style.zoom = available < cvWidth ? (available / cvWidth).toFixed(4) : '1';
-    }
-    scaleCv();
-    window.addEventListener('resize', scaleCv);
-  </script>
 
 </body>
 </html>
