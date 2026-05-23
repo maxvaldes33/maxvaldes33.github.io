@@ -37,7 +37,7 @@ html.light {
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 *, *::before, *::after {
   transition: background-color 0.35s ease, border-color 0.35s ease,
@@ -294,7 +294,7 @@ nav {
   transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
 }
 .btn-primary:hover {
-  background: color-mix(in srgb, var(--accent) 85%, white);
+  background: #9198ff;
   box-shadow: 0 0 32px rgba(124,131,255,0.5);
   transform: translateY(-2px);
 }
@@ -426,10 +426,10 @@ section { padding: 5.5rem 2rem; }
 }
 .skill-bar-track { height: 4px; background: var(--border); border-radius: 999px; overflow: hidden; }
 .skill-bar-fill  { height: 100%; border-radius: 999px; width: 0; transition: width 1.2s cubic-bezier(.25,.8,.25,1); }
-.fill-purple { background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 60%, white)); }
-.fill-green  { background: linear-gradient(90deg, var(--accent3), color-mix(in srgb, var(--accent3) 60%, white)); }
-.fill-pink   { background: linear-gradient(90deg, var(--accent2), color-mix(in srgb, var(--accent2) 60%, white)); }
-.fill-yellow { background: linear-gradient(90deg, var(--accent2), color-mix(in srgb, var(--accent2) 80%, yellow)); }
+.fill-purple { background: linear-gradient(90deg, var(--accent), #b0b5ff); }
+.fill-green  { background: linear-gradient(90deg, var(--accent3), #8eecd4); }
+.fill-pink   { background: linear-gradient(90deg, var(--accent2), #ffb885); }
+.fill-yellow { background: linear-gradient(90deg, var(--accent2), #ffd0a0); }
 
 /* ── TIMELINE ── */
 .timeline { position: relative; padding-left: 2rem; }
@@ -488,9 +488,9 @@ section { padding: 5.5rem 2rem; }
   background: transparent; transition: background 0.3s;
 }
 .project-card:hover { transform: translateY(-4px); box-shadow: var(--glow); }
-.project-card.purple::before { background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 50%, white)); }
-.project-card.pink::before   { background: linear-gradient(90deg, var(--accent2), color-mix(in srgb, var(--accent2) 50%, white)); }
-.project-card.green::before  { background: linear-gradient(90deg, var(--accent3), color-mix(in srgb, var(--accent3) 50%, white)); }
+.project-card.purple::before { background: linear-gradient(90deg, var(--accent), #b0b5ff); }
+.project-card.pink::before   { background: linear-gradient(90deg, var(--accent2), #ffb885); }
+.project-card.green::before  { background: linear-gradient(90deg, var(--accent3), #8eecd4); }
 .project-card.yellow::before { background: linear-gradient(90deg, var(--accent2), var(--accent)); }
 .project-card:hover.purple { border-color: rgba(124,131,255,0.4); }
 .project-card:hover.pink   { border-color: rgba(255,140,66,0.4); }
