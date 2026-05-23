@@ -1,3 +1,239 @@
+// ═══════════════════════════════════════════════════════
+//  ANIMATION SYSTEMS
+// ═══════════════════════════════════════════════════════
+
+// ── NOISE GRAIN ──────────────────────────────────────────
+(function initNoise() {
+  const canvas = document.getElementById('noise-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let frame;
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function drawNoise() {
+    const w = canvas.width, h = canvas.height;
+    const img = ctx.createImageData(w, h);
+    const data = img.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const v = (Math.random() * 255) | 0;
+      data[i] = data[i+1] = data[i+2] = v;
+      data[i+3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    frame = requestAnimationFrame(drawNoise);
+  }
+
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+  drawNoise();
+})();
+
+// ── CUSTOM CURSOR ─────────────────────────────────────────
+(function initCursor() {
+  const dot    = document.getElementById('cursor');
+  const ring   = document.getElementById('cursor-follower');
+  if (!dot || !ring) return;
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  let rafRunning = false;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`;
+    if (!rafRunning) { rafRunning = true; followRing(); }
+  }, { passive: true });
+
+  function followRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`;
+    if (Math.abs(mx - rx) > 0.1 || Math.abs(my - ry) > 0.1) {
+      requestAnimationFrame(followRing);
+    } else {
+      rafRunning = false;
+    }
+  }
+
+  document.addEventListener('mouseover', e => {
+    const el = e.target.closest('a, button, [data-magnetic], .skill-card, .project-card, .cert-card, .contact-link');
+    document.body.classList.toggle('cursor-on-link', !!el);
+  }, { passive: true });
+
+  document.addEventListener('mouseleave', () => {
+    dot.style.opacity = '0'; ring.style.opacity = '0';
+  });
+  document.addEventListener('mouseenter', () => {
+    dot.style.opacity = '1'; ring.style.opacity = '1';
+  });
+})();
+
+// ── MAGNETIC BUTTONS ──────────────────────────────────────
+(function initMagnetic() {
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  document.querySelectorAll('[data-magnetic]').forEach(el => {
+    el.addEventListener('mousemove', e => {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width  / 2;
+      const cy = rect.top  + rect.height / 2;
+      const dx = (e.clientX - cx) * 0.35;
+      const dy = (e.clientY - cy) * 0.35;
+      el.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = '';
+    });
+  });
+})();
+
+// ── 3D TILT ───────────────────────────────────────────────
+(function initTilt() {
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  document.querySelectorAll('.tilt').forEach(el => {
+    el.addEventListener('mousemove', e => {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width  / 2;
+      const cy = rect.top  + rect.height / 2;
+      const dx = (e.clientX - cx) / (rect.width  / 2);
+      const dy = (e.clientY - cy) / (rect.height / 2);
+      const tiltX = dy * -8;
+      const tiltY = dx *  8;
+      el.style.transform = `perspective(800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(4px)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateZ(0)';
+      el.style.transition = 'transform 0.5s cubic-bezier(0.23,1,0.32,1)';
+      setTimeout(() => { el.style.transition = ''; }, 500);
+    });
+  });
+})();
+
+// ── HERO MOUSE PARALLAX ───────────────────────────────────
+(function initParallax() {
+  if (window.matchMedia('(hover: none)').matches) return;
+  const bg   = document.querySelector('.hero-bg');
+  const grid = document.querySelector('.hero-grid');
+  if (!bg || !grid) return;
+
+  let ticking = false;
+  document.addEventListener('mousemove', e => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const dx = (e.clientX / window.innerWidth  - 0.5) * 30;
+      const dy = (e.clientY / window.innerHeight - 0.5) * 20;
+      bg.style.transform   = `translate(${dx * 0.6}px, ${dy * 0.6}px) scale(1.05)`;
+      grid.style.transform = `translate(${dx * 0.3}px, ${dy * 0.3}px)`;
+      ticking = false;
+    });
+  }, { passive: true });
+})();
+
+// ── TEXT SCRAMBLE ─────────────────────────────────────────
+class TextScramble {
+  constructor(el) {
+    this.el = el;
+    this.chars = '!<>-_\\/[]{}—=+*^?#░▒▓';
+    this.frame = 0;
+    this.queue = [];
+    this.frameReq = null;
+  }
+
+  setText(newText) {
+    const old = this.el.textContent;
+    const length = Math.max(old.length, newText.length);
+    return new Promise(resolve => {
+      this.queue = [];
+      for (let i = 0; i < length; i++) {
+        const from  = old[i]    || '';
+        const to    = newText[i] || '';
+        const start = Math.floor(Math.random() * 20);
+        const end   = start + Math.floor(Math.random() * 20);
+        this.queue.push({ from, to, start, end, char: '' });
+      }
+      cancelAnimationFrame(this.frameReq);
+      this.frame = 0;
+      this.resolve = resolve;
+      this.update();
+    });
+  }
+
+  update() {
+    let output = '';
+    let complete = 0;
+    this.queue.forEach(({ from, to, start, end, char }, i) => {
+      if (this.frame >= end) {
+        complete++;
+        output += to;
+      } else if (this.frame >= start) {
+        if (!char || Math.random() < 0.28) {
+          this.queue[i].char = this.chars[Math.floor(Math.random() * this.chars.length)];
+        }
+        output += `<span style="color:var(--accent);opacity:0.6">${this.queue[i].char}</span>`;
+      } else {
+        output += from;
+      }
+    });
+    this.el.innerHTML = output;
+    if (complete === this.queue.length) {
+      this.resolve();
+    } else {
+      this.frameReq = requestAnimationFrame(() => { this.frame++; this.update(); });
+    }
+  }
+}
+
+// Run scramble on hero name elements
+(function initScramble() {
+  const els = document.querySelectorAll('[data-scramble]');
+  if (!els.length) return;
+  let delay = 500;
+  els.forEach(el => {
+    const target = el.dataset.scramble;
+    el.textContent = target;
+    setTimeout(() => {
+      const scrambler = new TextScramble(el);
+      scrambler.setText(target);
+    }, delay);
+    delay += 200;
+  });
+})();
+
+// ── GLITCH ON HOVER ───────────────────────────────────────
+(function initGlitch() {
+  if (window.matchMedia('(hover: none)').matches) return;
+  document.querySelectorAll('[data-scramble]').forEach(el => {
+    const wrap = document.createElement('span');
+    wrap.className = 'glitch-wrap';
+    wrap.dataset.text = el.dataset.scramble;
+    el.parentNode.insertBefore(wrap, el);
+    wrap.appendChild(el);
+
+    let timeout;
+    wrap.addEventListener('mouseenter', () => {
+      clearTimeout(timeout);
+      wrap.classList.add('glitching');
+      timeout = setTimeout(() => wrap.classList.remove('glitching'), 400);
+    });
+  });
+})();
+
+// ── TIMELINE LINE DRAW ────────────────────────────────────
+(function initTimelineDraw() {
+  const timeline = document.querySelector('.timeline');
+  if (!timeline) return;
+  const io = new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) { timeline.classList.add('line-drawn'); io.disconnect(); }
+  }, { threshold: 0.1 });
+  io.observe(timeline);
+})();
+
 // ── ANCHOR LINKS sin cambiar URL ──────────────────────────
 document.addEventListener('click', function(e) {
   const a = e.target.closest('a[href^="#"]');

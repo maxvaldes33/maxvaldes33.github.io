@@ -43,6 +43,10 @@
   <meta name="author"             content="Maximiliano Valdés" />
   <meta name="theme-color"        content="#6c63ff" />
 
+  <!-- Fonts: Archivo + Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <script>
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -56,6 +60,13 @@
   </script>
 </head>
 <body>
+
+<!-- CUSTOM CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-follower"></div>
+
+<!-- NOISE CANVAS -->
+<canvas id="noise-canvas" aria-hidden="true"></canvas>
 
 <!-- SCROLL PROGRESS -->
 <div id="scroll-progress"></div>
@@ -98,14 +109,17 @@
       <div class="hero-badge">Disponible para nuevas oportunidades</div>
       <div class="hero-badge availability">🏠 Remoto &nbsp;·&nbsp; 🏢 Híbrido &nbsp;·&nbsp; 📍 Santiago</div>
     </div>
-    <h1>Maximiliano<br><span>Valdés</span></h1>
+    <h1>
+      <span class="hero-first-name" data-scramble="Maximiliano">Maximiliano</span><br>
+      <span class="hero-name-gradient" data-scramble="Valdés">Valdés</span>
+    </h1>
     <p class="hero-sub">
       Ingeniero en Informática · Automatización · Python · IA aplicada · Power BI
     </p>
     <div class="hero-ctas">
-      <a href="#experiencia" class="btn btn-primary">Ver experiencia</a>
-      <a href="#contacto" class="btn btn-outline">Contactar</a>
-      <button onclick="downloadCV()" class="btn btn-download">⬇ Descargar CV</button>
+      <a href="#experiencia" class="btn btn-primary" data-magnetic>Ver experiencia</a>
+      <a href="#contacto" class="btn btn-outline" data-magnetic>Contactar</a>
+      <button onclick="downloadCV()" class="btn btn-download" data-magnetic>⬇ Descargar CV</button>
     </div>
     <!-- Hero widgets row -->
     <div class="hero-widgets-row">
@@ -205,7 +219,7 @@
     </div>
 
     <div class="skills-grid">
-      <div class="skill-card reveal">
+      <div class="skill-card reveal tilt">
         <div class="skill-card-header">
           <div class="skill-icon" style="background:rgba(108,99,255,0.12)">🐍</div>
           <h3>Python Ecosystem</h3>
@@ -217,7 +231,7 @@
           <span class="tag">requests</span>
         </div>
       </div>
-      <div class="skill-card reveal">
+      <div class="skill-card reveal tilt">
         <div class="skill-card-header">
           <div class="skill-icon" style="background:rgba(67,233,123,0.1)">📊</div>
           <h3>Datos & Reportes</h3>
@@ -228,7 +242,7 @@
           <span class="tag green">Google Sheets</span>
         </div>
       </div>
-      <div class="skill-card reveal">
+      <div class="skill-card reveal tilt">
         <div class="skill-card-header">
           <div class="skill-icon" style="background:rgba(255,101,132,0.1)">🤖</div>
           <h3>IA & Automatización</h3>
@@ -239,7 +253,7 @@
           <span class="tag pink">Web scraping</span>
         </div>
       </div>
-      <div class="skill-card reveal">
+      <div class="skill-card reveal tilt">
         <div class="skill-card-header">
           <div class="skill-icon" style="background:rgba(255,204,0,0.1)">🌐</div>
           <h3>Web & Herramientas</h3>
@@ -445,7 +459,7 @@
 
     <div class="projects-grid">
 
-      <div class="project-card purple reveal">
+      <div class="project-card purple reveal tilt">
         <span class="project-status planned">En planificación</span>
         <h3>🤖 Agente IA de gestión documental</h3>
         <p>Sistema que ingesta contratos, facturas y reportes PDF, extrae información clave con Claude API y la almacena en una base de datos consultable por lenguaje natural.</p>
@@ -454,7 +468,7 @@
         </div>
       </div>
 
-      <div class="project-card green reveal">
+      <div class="project-card green reveal tilt">
         <span class="project-status concept">Concepto</span>
         <h3>📊 Dashboard SaaS de cobranza</h3>
         <p>Plataforma web ligera para empresas de cobranza: KPIs en tiempo real, segmentación de carteras y disparo automático de comunicaciones multicanal desde un solo panel.</p>
@@ -463,7 +477,7 @@
         </div>
       </div>
 
-      <div class="project-card pink reveal">
+      <div class="project-card pink reveal tilt">
         <span class="project-status concept">Concepto</span>
         <h3>📩 Motor de campañas inteligente</h3>
         <p>Herramienta que personaliza mensajes masivos (email/SMS/WhatsApp) usando IA para adaptar el tono según el perfil del destinatario y el historial de respuestas.</p>
@@ -472,7 +486,7 @@
         </div>
       </div>
 
-      <div class="project-card yellow reveal">
+      <div class="project-card yellow reveal tilt">
         <span class="project-status building">Explorando</span>
         <h3>🧠 Copiloto de macros VBA</h3>
         <p>Extensión para Excel que, a través de un chat integrado, genera, corrige y explica macros VBA desde lenguaje natural. Orientado a equipos no técnicos en empresas.</p>
@@ -481,7 +495,7 @@
         </div>
       </div>
 
-      <div class="project-card purple reveal">
+      <div class="project-card purple reveal tilt">
         <span class="project-status concept">Concepto</span>
         <h3>🔍 Scraper + reporte automatizado</h3>
         <p>Pipeline que extrae datos de portales públicos (licitaciones, precios, competencia), los limpia con pandas y genera reportes Power BI actualizados diariamente.</p>
@@ -490,7 +504,7 @@
         </div>
       </div>
 
-      <div class="project-card green reveal">
+      <div class="project-card green reveal tilt">
         <span class="project-status live">✦ Completado</span>
         <h3>💰 Finanzas CLI</h3>
         <p>Herramienta de terminal para gestionar finanzas personales desde exportaciones bancarias. Importa CSV, Excel y PDF, categoriza gastos automáticamente con reglas configurables, muestra dashboards con gráficos en terminal y envía reportes PDF por email. Soporta Banco de Chile, BancoEstado, Santander y más mediante parsers dedicados.</p>
