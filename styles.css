@@ -95,30 +95,31 @@ body {
 
 /* ── THEME SWITCHER (en nav) ── */
 #theme-switcher {
-  position: relative;
-  flex-shrink: 0;
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  z-index: 300;
 }
 #theme-current {
-  width: 34px; height: 34px; border-radius: 8px;
-  border: 1px solid var(--border); background: transparent;
+  width: 44px; height: 44px; border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
   color: var(--muted); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow);
   transition: color 0.2s, background 0.2s, border-color 0.2s;
 }
-#theme-current svg { width: 15px; height: 15px; }
-#theme-current:hover { color: var(--text); background: var(--surface2); border-color: var(--accent); }
+#theme-current svg { width: 18px; height: 18px; }
+#theme-current:hover { color: var(--text); border-color: var(--accent); }
 
 #theme-options {
-  position: absolute; top: calc(100% + 8px); right: 0;
-  display: flex; gap: 3px;
+  position: absolute; bottom: calc(100% + 8px); right: 0;
+  display: flex; flex-direction: column; gap: 3px;
   background: var(--card); border: 1px solid var(--border);
   border-radius: 12px; padding: 4px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-  opacity: 0; transform: translateY(-6px) scale(0.95);
+  opacity: 0; transform: translateY(6px) scale(0.95);
   pointer-events: none;
   transition: opacity 0.18s ease, transform 0.18s ease;
-  z-index: 200;
-  white-space: nowrap;
+  z-index: 300;
 }
 #theme-switcher:hover #theme-options,
 #theme-switcher.open  #theme-options {
@@ -838,7 +839,7 @@ footer {
 
 /* ── PRINT ── */
 @media print {
-  #scroll-progress, #back-to-top, #theme-toggle, nav,
+  #scroll-progress, #back-to-top, #theme-switcher, nav,
   .hero-ctas, #weather-widget, #visit-counter,
   #apis, #mejoras, .contact-form, footer { display: none !important; }
   body { background: white; color: black; font-size: 12pt; }
@@ -1062,8 +1063,9 @@ footer {
   .contact-link  { font-size: 0.82rem; padding: 0.5rem 1rem; }
 
   /* ── Buttons fixed ── */
-  #back-to-top  { bottom: 4.5rem; right: 1rem; width: 40px; height: 40px; }
-  #theme-toggle { bottom: 1rem; right: 1rem; width: 40px; height: 40px; }
+  #back-to-top    { bottom: 4.5rem; right: 1rem; width: 40px; height: 40px; }
+  #theme-switcher { bottom: 1rem; right: 1rem; }
+  #theme-current  { width: 40px; height: 40px; }
 
   /* ── Section headers ── */
   .section-title { font-size: clamp(1.6rem, 7vw, 2rem); }
