@@ -32,10 +32,11 @@
     .btn-download { background: #7c83ff; color: #fff; }
     .btn-close    { background: transparent; border: 1px solid #3a3a5a; color: #aaa; }
 
-    /* ── CV Paper ── */
+    /* ── CV Paper — ancho fijo para que zoom escale correctamente ── */
+    .cv-scaler { display: flex; justify-content: center; align-items: flex-start; padding: 1rem 0 3rem; }
     .cv {
-      max-width: 794px;
-      margin: 1.5rem auto;
+      width: 794px;
+      flex-shrink: 0;
       background: #fff;
       box-shadow: 0 4px 32px rgba(0,0,0,0.25);
       padding: 2.2cm 2.5cm 3cm;
@@ -109,7 +110,9 @@
     /* ── Cursos ── */
     .course-group { font-weight: 700; font-size: 11pt; margin: 0.45rem 0 0.1rem; }
 
-    .cv-scaler { display: flex; justify-content: center; padding: 1rem 0 3rem; }
+    @media (max-width: 600px) {
+      .toolbar-title { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -251,9 +254,10 @@
   <script>
     function scaleCv() {
       const cv = document.getElementById('cv-page');
-      const cvWidth = 842; // 794px + márgenes
-      const available = window.innerWidth;
-      cv.style.zoom = available < cvWidth ? (available / cvWidth).toFixed(3) : '1';
+      const padding = 16;
+      const available = window.innerWidth - padding;
+      const cvWidth = 794;
+      cv.style.zoom = available < cvWidth ? (available / cvWidth).toFixed(4) : '1';
     }
     scaleCv();
     window.addEventListener('resize', scaleCv);
