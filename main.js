@@ -195,17 +195,6 @@ class TextScramble {
   io.observe(timeline);
 })();
 
-// ── CV LINK ───────────────────────────────────────────────
-(function() {
-  const link = document.getElementById('cv-link');
-  if (!link) return;
-  if (navigator.maxTouchPoints > 0) {
-    link.target = '_blank';
-  } else {
-    link.setAttribute('download', 'CV_Maximiliano_Valdes.pdf');
-  }
-})();
-
 // ── ANCHOR LINKS sin cambiar URL ──────────────────────────
 document.addEventListener('click', function(e) {
   const a = e.target.closest('a[href^="#"]');

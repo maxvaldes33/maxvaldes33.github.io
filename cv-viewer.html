@@ -6,46 +6,88 @@
   <title>CV — Maximiliano Valdés</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; background: #111; font-family: system-ui, sans-serif; }
 
-    .toolbar {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 10;
-      background: #1a1a2e; border-bottom: 1px solid #2a2a4a;
-      padding: 0.6rem 1rem;
-      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    body {
+      font-family: 'Georgia', serif;
+      background: #f0ede8;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
     }
-    .toolbar-title { color: #eee; font-size: 0.9rem; font-weight: 600; }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: #1a1a2e; border-bottom: 1px solid #2a2a4a;
+      padding: 0.6rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .toolbar-title { color: #ccc; font-size: 0.85rem; font-family: system-ui; }
     .toolbar-actions { display: flex; gap: 0.5rem; }
     .toolbar-btn {
-      background: #7c83ff; color: #fff; border: none; border-radius: 8px;
-      padding: 0.45rem 1rem; font-size: 0.82rem; font-weight: 600;
-      cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: system-ui; font-size: 0.82rem; font-weight: 600;
+      padding: 0.4rem 1rem; border-radius: 8px; border: none;
+      cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.35rem;
     }
-    .toolbar-btn.secondary {
-      background: transparent; border: 1px solid #3a3a5a; color: #aaa;
+    .btn-download { background: #7c83ff; color: #fff; }
+    .btn-close    { background: transparent; border: 1px solid #3a3a5a; color: #aaa; }
+
+    /* ── CV Paper ── */
+    .cv {
+      max-width: 800px; margin: 4rem auto 0;
+      background: #fff;
+      box-shadow: 0 4px 40px rgba(0,0,0,0.15);
+      padding: 3rem 3.5rem;
     }
 
-    .viewer {
-      position: fixed; top: 48px; left: 0; right: 0; bottom: 0;
+    /* ── Header ── */
+    .cv-header { border-bottom: 2px solid #1a1a1a; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+    .cv-name { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; text-transform: uppercase; }
+    .cv-title { font-size: 1rem; color: #555; margin-top: 0.2rem; font-style: italic; }
+    .cv-contact {
+      margin-top: 0.6rem; font-size: 0.82rem; color: #444;
+      font-family: system-ui; display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem;
     }
-    iframe { width: 100%; height: 100%; border: none; display: block; }
+    .cv-contact a { color: #4a4af0; text-decoration: none; }
 
-    /* Mobile: iframe no funciona en iOS — mostrar botón descarga */
-    .mobile-msg {
-      display: none;
-      flex-direction: column; align-items: center; justify-content: center;
-      height: 100%; gap: 1.5rem; padding: 2rem; text-align: center;
+    /* ── Sections ── */
+    .cv-section { margin-bottom: 1.6rem; }
+    .cv-section-title {
+      font-size: 0.75rem; font-family: system-ui; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: #1a1a1a; border-bottom: 1px solid #ccc;
+      padding-bottom: 0.3rem; margin-bottom: 0.9rem;
     }
-    .mobile-msg p { color: #aaa; font-size: 0.95rem; line-height: 1.6; }
-    .mobile-msg a {
-      background: #7c83ff; color: #fff; border-radius: 10px;
-      padding: 0.75rem 2rem; font-size: 1rem; font-weight: 600;
-      text-decoration: none; display: inline-block;
-    }
+    .cv-text { font-size: 0.88rem; line-height: 1.7; color: #333; text-align: justify; }
 
-    @media (max-width: 768px) {
-      .viewer iframe { display: none; }
-      .mobile-msg   { display: flex; }
+    /* ── Experience entries ── */
+    .cv-entry { margin-bottom: 1.2rem; }
+    .cv-entry-header {
+      display: flex; justify-content: space-between; align-items: baseline;
+      flex-wrap: wrap; gap: 0.25rem;
+    }
+    .cv-entry-title { font-size: 0.92rem; font-weight: 700; }
+    .cv-entry-date  { font-size: 0.78rem; color: #666; font-family: system-ui; white-space: nowrap; }
+    .cv-entry-company { font-size: 0.82rem; color: #555; font-style: italic; margin: 0.1rem 0 0.5rem; }
+    .cv-entry ul { padding-left: 1.2rem; }
+    .cv-entry li { font-size: 0.85rem; line-height: 1.65; color: #333; margin-bottom: 0.2rem; }
+
+    /* ── Education ── */
+    .cv-edu { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+    .cv-edu-title { font-size: 0.92rem; font-weight: 700; }
+    .cv-edu-inst  { font-size: 0.85rem; color: #555; font-style: italic; }
+    .cv-edu-date  { font-size: 0.78rem; color: #666; font-family: system-ui; }
+
+    /* ── Other knowledge ── */
+    .cv-list { padding-left: 1.2rem; }
+    .cv-list li { font-size: 0.85rem; line-height: 1.7; color: #333; }
+    .cv-list .group-title { font-weight: 700; list-style: none; margin-left: -1.2rem; margin-top: 0.5rem; font-size: 0.85rem; }
+
+    @media (max-width: 600px) {
+      .cv { padding: 2rem 1.5rem; margin-top: 3.5rem; }
+      .cv-name { font-size: 1.5rem; }
+      .cv-entry-header { flex-direction: column; }
     }
   </style>
 </head>
@@ -54,17 +96,130 @@
   <div class="toolbar">
     <span class="toolbar-title">CV — Maximiliano Valdés</span>
     <div class="toolbar-actions">
-      <a href="cv.pdf" download="CV_Maximiliano_Valdes.pdf" class="toolbar-btn">⬇ Descargar</a>
-      <button onclick="window.close()" class="toolbar-btn secondary">✕ Cerrar</button>
+      <a href="cv.pdf" download="CV_Maximiliano_Valdes.pdf" class="toolbar-btn btn-download">⬇ Descargar PDF</a>
+      <button onclick="window.close()" class="toolbar-btn btn-close">✕ Cerrar</button>
     </div>
   </div>
 
-  <div class="viewer">
-    <iframe src="cv.pdf"></iframe>
-    <div class="mobile-msg">
-      <p>Toca el botón para abrir el CV.<br>Desde el visor puedes guardarlo en tus archivos.</p>
-      <a href="cv.pdf">Abrir CV</a>
+  <div class="cv">
+
+    <div class="cv-header">
+      <div class="cv-name">Maximiliano Valdés</div>
+      <div class="cv-title">Ingeniero en Informática · Duoc UC</div>
+      <div class="cv-contact">
+        <span>+56 9 4585 9365</span>
+        <a href="mailto:musrri.valdes.maxi03@gmail.com">musrri.valdes.maxi03@gmail.com</a>
+        <a href="https://linkedin.com/in/maxvaldes33" target="_blank">LinkedIn</a>
+        <a href="https://github.com/maxvaldes33" target="_blank">GitHub</a>
+      </div>
     </div>
+
+    <div class="cv-section">
+      <div class="cv-section-title">Perfil Profesional</div>
+      <p class="cv-text">
+        Ingeniero en Informática con experiencia en proyectos tecnológicos, especializado en Python y Excel Avanzado y programación en VBA para el desarrollo y optimización de macros. Cuenta con sólida experiencia en automatización de procesos, creación de sistemas para tareas repetitivas, generación de reportes en Excel y Power BI, y despacho masivo de comunicaciones vía correo electrónico, SMS y WhatsApp mediante distintos proveedores de servicio. Maneja librerías Python como pandas, openpyxl, PyQt5, Selenium y PyInstaller para el desarrollo de herramientas de escritorio y automatización web, e integra soluciones basadas en modelos de lenguaje (LLMs) mediante la API de Anthropic (Claude) para potenciar flujos de trabajo y desarrollo de software.
+      </p>
+      <p class="cv-text" style="margin-top:0.6rem">
+        Maneja otros lenguajes de programación y bases de datos como JavaScript, SQL y control de versiones con Git, además de tecnologías web como HTML5 y CSS. Trabaja en entornos macOS y Windows. Se caracteriza por su comunicación clara, responsabilidad en el cumplimiento de plazos, capacidad de trabajo bajo presión y buen desempeño en equipos de trabajo.
+      </p>
+    </div>
+
+    <div class="cv-section">
+      <div class="cv-section-title">Experiencia Profesional</div>
+
+      <div class="cv-entry">
+        <div class="cv-entry-header">
+          <span class="cv-entry-title">Técnico en Informática – Soporte de Cobranza</span>
+          <span class="cv-entry-date">10.2025 – Actualidad</span>
+        </div>
+        <div class="cv-entry-company">Multicob Chile LTDA</div>
+        <ul>
+          <li>Desarrollo, actualización y optimización de macros en Excel mediante Visual Basic (VBA) para mejorar la eficiencia operativa.</li>
+          <li>Automatización de procesos y generación de herramientas de escritorio con Python (pandas, openpyxl, PyQt5, tkinter, PyInstaller), reduciendo tiempos de ejecución manual.</li>
+          <li>Modelamiento de datos y generación de reportes analíticos en Power BI para soporte en la toma de decisiones.</li>
+          <li>Implementación y gestión de despachos masivos de Email, SMS y WhatsApp integrando múltiples proveedores de servicios, incluyendo desarrollo de plantillas HTML responsive para campañas.</li>
+          <li>Análisis y generación de reportes de comportamiento de campañas para evaluar rendimiento y efectividad.</li>
+        </ul>
+      </div>
+
+      <div class="cv-entry">
+        <div class="cv-entry-header">
+          <span class="cv-entry-title">Desarrollador de Sistemas</span>
+          <span class="cv-entry-date">06.2025 – 08.2025</span>
+        </div>
+        <div class="cv-entry-company">Avícola San Luis de Cuncumen</div>
+        <ul>
+          <li>Diseño y desarrollo de un sistema ofimático en Google Sheets para la gestión empresarial.</li>
+          <li>Implementación de procesos de automatización de datos que redujeron tareas manuales y aumentaron la eficiencia operativa.</li>
+          <li>Incorporación de cálculos matemáticos y financieros para generar reportes diarios sobre evolución del negocio, control de gastos y ganancias.</li>
+          <li>Contribución directa a la toma de decisiones mediante un sistema personalizado adaptado a las necesidades de la empresa.</li>
+        </ul>
+      </div>
+
+      <div class="cv-entry">
+        <div class="cv-entry-header">
+          <span class="cv-entry-title">Practicante de Ingeniería en Informática</span>
+          <span class="cv-entry-date">03.2025 – 05.2025</span>
+        </div>
+        <div class="cv-entry-company">Business Oil SPA</div>
+        <ul>
+          <li>Desarrollo de soluciones Full Stack para automatización de procesos internos.</li>
+          <li>Implementación de scripts en Python para optimizar tareas repetitivas.</li>
+          <li>Automatización de procesos en Excel para gestión administrativa.</li>
+          <li>Administración de bases de datos relacionales en MySQL.</li>
+        </ul>
+      </div>
+
+      <div class="cv-entry">
+        <div class="cv-entry-header">
+          <span class="cv-entry-title">Encargado de Logística</span>
+          <span class="cv-entry-date">03.2023 – 02.2024</span>
+        </div>
+        <div class="cv-entry-company">Avícola San Luis de Cuncumen</div>
+        <ul>
+          <li>Gestión de carga y coordinación de pedidos de productos avícolas.</li>
+          <li>Supervisión y control de documentación de envíos.</li>
+          <li>Optimización de procesos logísticos para asegurar entregas oportunas.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="cv-section">
+      <div class="cv-section-title">Educación</div>
+      <div class="cv-edu">
+        <div>
+          <div class="cv-edu-title">Ingeniería en Informática</div>
+          <div class="cv-edu-inst">Duoc UC</div>
+        </div>
+        <div class="cv-edu-date">2021 – 2025</div>
+      </div>
+    </div>
+
+    <div class="cv-section">
+      <div class="cv-section-title">Cursos y Otros Conocimientos</div>
+      <ul class="cv-list">
+        <li class="group-title">Santander Open Academy</li>
+        <li>Introducción a la Ciencia de Datos</li>
+        <li>Python</li>
+        <li class="group-title" style="margin-top:0.4rem">Mastermind</li>
+        <li>Fundamentos de Matemáticas para Informáticos</li>
+        <li class="group-title" style="margin-top:0.4rem">Otros Conocimientos</li>
+        <li>Inglés nivel B1, con capacidad de lectura y comprensión de documentación técnica.</li>
+        <li>Excel Avanzado para análisis de datos, automatización y generación de reportes.</li>
+        <li>Visual Basic (VBA) orientado a la creación y optimización de macros en Excel.</li>
+        <li>Gestión de trabajo en equipo y organización de tareas mediante Trello.</li>
+        <li>Manejo de finanzas y estructuración de información utilizando Notion.</li>
+        <li>Manejo avanzado de Microsoft Word y PowerPoint para documentación técnica y presentaciones ejecutivas.</li>
+        <li>Uso de Canva para diseño de material visual y presentaciones.</li>
+        <li>Automatización de correos electrónicos en Outlook para envíos y reglas de orden en subcarpetas.</li>
+        <li>Edición, manipulación y estructuración de documentos PDF.</li>
+        <li>Conversión y transformación de archivos PDF a HTML para su integración en campañas de correo electrónico.</li>
+        <li>Desarrollo de herramientas de escritorio en Python con pandas, openpyxl, PyQt5, tkinter y PyInstaller para distribución como ejecutables.</li>
+        <li>Integración de modelos de lenguaje (LLMs) en flujos de trabajo mediante la API de Anthropic (Claude): automatización asistida por IA, generación de código y desarrollo de soluciones inteligentes.</li>
+        <li>Entorno de desarrollo en macOS (Apple Silicon) y Windows, con gestión de dependencias vía pyenv, Homebrew y entornos virtuales.</li>
+      </ul>
+    </div>
+
   </div>
 
 </body>
