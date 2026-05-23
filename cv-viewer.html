@@ -52,14 +52,12 @@
     /* ── Mobile: sin fondo gris, sin sombra, padding reducido ── */
     @media (max-width: 700px) {
       html, body { background: #fff; }
-      .cv-wrap { background: #fff; padding: 0; min-height: unset; display: block; }
-      .cv {
-        box-shadow: none; max-width: 100%;
-        padding: 1.4rem 1.1rem 3rem;
-        font-size: 10pt;
-      }
+      /* — toolbar — */
       .toolbar-title { display: none; }
-      .toolbar { justify-content: flex-end; }
+      .toolbar-actions { margin-left: auto; }
+      /* — cv — */
+      .cv-wrap { background: #fff; padding: 0; min-height: unset; display: block; }
+      .cv { box-shadow: none; max-width: 100%; padding: 1.4rem 1.1rem 3rem; font-size: 10pt; }
     }
 
     /* ── HEADER — centrado ── */
@@ -93,8 +91,6 @@
       .cv-p, .cv-contact, .entry-title, .entry-date, .course-group,
       .bullets li, .edu-row { font-size: 10pt; }
       .section-title { font-size: 11pt; }
-      .entry-header { flex-wrap: wrap; gap: 0.1rem; }
-      .entry-date { flex-shrink: 0; }
     }
 
     .bullets { list-style: none; margin: 0.25rem 0 0 1cm; }
