@@ -262,16 +262,16 @@ function initShelf() {
   // --- Motor: más iteraciones = colisiones más firmes ---
   const engine = Engine.create({
     enableSleeping: true,
-    positionIterations: 12,
-    velocityIterations: 10,
-    constraintIterations: 4,
+    positionIterations: 18,
+    velocityIterations: 14,
+    constraintIterations: 6,
   });
   engine.gravity.y = 1;
   const world = engine.world;
 
   // --- Estructura estática (marco grueso + repisa central) ---
   const T = 16; // grosor de paredes (grueso = nada atraviesa)
-  const wood = { isStatic: true, friction: 0.9, frictionStatic: 1, restitution: 0 };
+  const wood = { isStatic: true, friction: 1, frictionStatic: 2, restitution: 0 };
   function wall(x, y, w, h) { World.add(world, Bodies.rectangle(x, y, w, h, wood)); }
   const FLOOR_TOP = VH - T;            // borde superior del piso
   const SHELF_Y = 118;                 // centro de la repisa central
@@ -304,8 +304,8 @@ function initShelf() {
       const cx = x + bw / 2;
       const cy = surfaceTop - bh / 2;
       const book = Bodies.rectangle(cx, cy, bw, bh, {
-        friction: 0.7, frictionStatic: 1, restitution: 0.02,
-        density: 0.004, slop: 0.02,
+        friction: 0.95, frictionStatic: 1.5, restitution: 0,
+        density: 0.02, slop: 0.01,
       });
       book.userData = {
         w: bw, h: bh,
@@ -345,7 +345,7 @@ function initShelf() {
   let dragBody = null;
   let dragConstraint = null;
   let lastP = null, lastT = 0, shakeCooldown = 0;
-  const MAX_SPEED = 22; // tope de velocidad del libro agarrado (anti-tunneling)
+  const MAX_SPEED = 15; // tope de velocidad del libro agarrado (anti-tunneling)
 
   function toWorld(e) {
     const r = canvas.getBoundingClientRect();
@@ -366,7 +366,7 @@ function initShelf() {
     const pb = { x: dx * Math.cos(a) - dy * Math.sin(a), y: dx * Math.sin(a) + dy * Math.cos(a) };
     dragConstraint = Constraint.create({
       pointA: p, bodyB: dragBody, pointB: pb,
-      stiffness: 0.28, damping: 0.22, length: 0,
+      stiffness: 0.2, damping: 0.3, length: 0,
     });
     World.add(world, dragConstraint);
     lastP = p; lastT = performance.now();
