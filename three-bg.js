@@ -72,7 +72,7 @@ function initBackground(canvas) {
   const pGeo = new THREE.BufferGeometry();
   pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   const pMat = new THREE.PointsMaterial({
-    size: 0.06,
+    size: 0.14,
     transparent: true,
     depthWrite: false,
     blending: THREE.AdditiveBlending,
@@ -101,8 +101,8 @@ function initBackground(canvas) {
     wireMat.color.setHex(c.wire);
     grid.material.color.setHex(c.grid);
 
-    pMat.opacity   = light ? 0.35 : 0.55;
-    wireMat.opacity = light ? 0.18 : 0.30;
+    pMat.opacity   = light ? 0.5 : 0.85;
+    wireMat.opacity = light ? 0.28 : 0.5;
     ico.visible  = light;
     knot.visible = !light;
     grid.visible = !light;
