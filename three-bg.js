@@ -43,12 +43,26 @@ const isLight = () => document.documentElement.classList.contains('light');
 const canvas = document.getElementById('three-bg');
 if (canvas && !reduceMotion) initBackground(canvas);
 
+function fallbackBackground() {
+  // WebGL no disponible (p.ej. aceleración por hardware desactivada):
+  // mostramos un fondo animado por CSS para no dejarlo en negro plano.
+  document.documentElement.classList.add('webgl-fallback');
+  if (canvas) canvas.classList.add('loaded');
+}
+
 function initBackground(canvas) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 100);
   camera.position.z = 16;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  } catch (e) {
+    console.warn('WebGL no disponible, usando fondo CSS:', e);
+    fallbackBackground();
+    return;
+  }
   renderer.setSize(innerWidth, innerHeight);
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
 

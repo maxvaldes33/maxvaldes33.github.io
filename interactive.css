@@ -45,6 +45,48 @@ body { background: transparent; overflow-x: visible; }
 }
 #three-bg.loaded { opacity: 1; }
 
+/* ===== Fallback CSS si WebGL no está disponible =====
+   (aceleración por hardware desactivada / WebGL bloqueado).
+   El canvas queda en blanco, así que le pintamos un fondo animado. */
+html.webgl-fallback #three-bg {
+  background:
+    radial-gradient(40vw 40vw at 18% 22%, rgba(0, 229, 255, 0.18), transparent 60%),
+    radial-gradient(38vw 38vw at 82% 30%, rgba(255, 43, 214, 0.16), transparent 60%),
+    radial-gradient(45vw 45vw at 55% 88%, rgba(0, 229, 255, 0.12), transparent 60%),
+    linear-gradient(180deg, var(--bg), var(--bg));
+  background-size: 200% 200%, 200% 200%, 200% 200%, 100% 100%;
+  animation: fb-glow 18s ease-in-out infinite alternate;
+}
+/* rejilla neón superpuesta (solo oscuro) */
+html.webgl-fallback:not(.light) #three-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 229, 255, 0.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.10) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(180deg, transparent, #000 55%, #000);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 55%, #000);
+  animation: fb-grid 8s linear infinite;
+}
+html.light.webgl-fallback #three-bg {
+  background:
+    radial-gradient(40vw 40vw at 20% 20%, rgba(85, 88, 227, 0.12), transparent 60%),
+    radial-gradient(40vw 40vw at 80% 30%, rgba(224, 108, 26, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--bg), var(--bg));
+  background-size: 200% 200%, 200% 200%, 100% 100%;
+  animation: fb-glow 18s ease-in-out infinite alternate;
+}
+@keyframes fb-glow {
+  0%   { background-position: 0% 0%, 100% 0%, 50% 100%, 0 0; }
+  100% { background-position: 100% 100%, 0% 100%, 50% 0%, 0 0; }
+}
+@keyframes fb-grid {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 0 44px, 44px 0; }
+}
+
 /* Elevar el contenido por encima del canvas (sin tocar la UI fija
    como nav/switcher/lightbox, que ya tienen z-index propio mayor). */
 body > section,
