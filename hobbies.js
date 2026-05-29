@@ -353,16 +353,50 @@ function initShelf() {
   }
 
   // ============================================================
-  // LIBROS FLOTANTES (fuera de la estantería, fijos al viewport)
+  // LIBROS FLOTANTES — segundo mundo Matter a escala del viewport.
+  // Los libros expulsados caen, giran, rebotan y chocan entre sí con
+  // físicas reales; viven fijos al viewport (sobreviven al scroll).
   // ============================================================
   const floating = [];
+  // enableSleeping:false → la gravedad siempre actúa (un cuerpo dormido se
+  // quedaría flotando si se mueve lento al arrastrarlo).
+  const fEngine = Engine.create({ enableSleeping: false, positionIterations: 10, velocityIterations: 8 });
+  fEngine.gravity.y = 1;
+  const fWorld = fEngine.world;
+  let fFloor, fLeft, fRight;
 
-  function placeEl(fb) {
-    fb.el.style.left = fb.x + 'px';
-    fb.el.style.top = fb.y + 'px';
+  function buildFloorBounds() {
+    const w = innerWidth, h = innerHeight;
+    const op = { isStatic: true, friction: 0.9, frictionStatic: 1, restitution: 0.05 };
+    if (fFloor) World.remove(fWorld, [fFloor, fLeft, fRight]);
+    fFloor = Bodies.rectangle(w / 2, h + 28, w + 400, 60, op);  // suelo de la página
+    fLeft = Bodies.rectangle(-30, h / 2, 60, h * 3, op);
+    fRight = Bodies.rectangle(w + 30, h / 2, 60, h * 3, op);
+    World.add(fWorld, [fFloor, fLeft, fRight]);
+  }
+  buildFloorBounds();
+  addEventListener('resize', buildFloorBounds);
+
+  let fDragFb = null, fDragConstraint = null;
+  function startFloorDrag(fb, cx, cy) {
+    fDragFb = fb;
+    if (fb.body.isSleeping) M.Sleeping.set(fb.body, false);
+    const a = -fb.body.angle;
+    const dx = cx - fb.body.position.x, dy = cy - fb.body.position.y;
+    const pb = { x: dx * Math.cos(a) - dy * Math.sin(a), y: dx * Math.sin(a) + dy * Math.cos(a) };
+    fDragConstraint = Constraint.create({
+      pointA: { x: cx, y: cy }, bodyB: fb.body, pointB: pb,
+      stiffness: 0.2, damping: 0.3, length: 0,
+    });
+    World.add(fWorld, fDragConstraint);
+  }
+  function moveFloorDrag(cx, cy) { if (fDragConstraint) fDragConstraint.pointA = { x: cx, y: cy }; }
+  function endFloorDrag() {
+    if (fDragConstraint) { World.remove(fWorld, fDragConstraint); fDragConstraint = null; }
+    fDragFb = null;
   }
 
-  function createFloating(d, cx, cy, state) {
+  function createFloating(d, cx, cy) {
     const sc = (canvas.getBoundingClientRect().width / VW) || 1.5;
     const wpx = Math.max(10, Math.round(d.w * sc));
     const hpx = Math.max(16, Math.round(d.h * sc));
@@ -375,53 +409,61 @@ function initShelf() {
     c.imageSmoothingEnabled = false;
     paintBook(c, 0, 0, d.w, d.h, d);
     document.body.appendChild(el);
-    const fb = { el, d, wpx, hpx, x: cx - wpx / 2, y: cy - hpx / 2, vy: 0, state };
-    placeEl(fb);
+    const body = Bodies.rectangle(cx, cy, wpx, hpx, {
+      friction: 0.6, frictionStatic: 0.9, restitution: 0.18,
+      density: 0.001, frictionAir: 0.02, slop: 0.02,
+    });
+    World.add(fWorld, body);
+    const fb = { el, d, body, wpx, hpx };
+    syncFloating(fb);
     el.addEventListener('pointerdown', (ev) => regrab(fb, ev));
     floating.push(fb);
     return fb;
   }
 
   function removeFloating(fb) {
+    World.remove(fWorld, fb.body);
     fb.el.remove();
     const i = floating.indexOf(fb);
     if (i >= 0) floating.splice(i, 1);
   }
 
-  // Volver a tomar un libro del suelo
+  function syncFloating(fb) {
+    fb.el.style.left = (fb.body.position.x - fb.wpx / 2) + 'px';
+    fb.el.style.top = (fb.body.position.y - fb.hpx / 2) + 'px';
+    fb.el.style.transform = `rotate(${fb.body.angle}rad)`;
+  }
+
+  // Volver a tomar un libro del suelo (con físicas)
   function regrab(fb, ev) {
     ev.preventDefault();
     ev.stopPropagation();
-    fb.state = 'drag';
     const el = fb.el;
-    const offx = ev.clientX - fb.x, offy = ev.clientY - fb.y;
+    startFloorDrag(fb, ev.clientX, ev.clientY);
     try { el.setPointerCapture(ev.pointerId); } catch (_) {}
-    const mv = (e2) => { fb.x = e2.clientX - offx; fb.y = e2.clientY - offy; placeEl(fb); };
+    const mv = (e2) => moveFloorDrag(e2.clientX, e2.clientY);
     const up = (e2) => {
       el.removeEventListener('pointermove', mv);
       el.removeEventListener('pointerup', up);
       el.removeEventListener('pointercancel', up);
-      finalizeFloating(fb, e2.clientX, e2.clientY);
+      endFloorDrag();
+      maybeReinsert(fb, e2.clientX, e2.clientY);
     };
     el.addEventListener('pointermove', mv);
     el.addEventListener('pointerup', up);
     el.addEventListener('pointercancel', up);
   }
 
-  // Al soltar: si está sobre la estantería se reintegra; si no, cae al suelo.
-  function finalizeFloating(fb, cx, cy) {
+  // Si se suelta sobre la estantería, se reintegra a su mundo de físicas.
+  function maybeReinsert(fb, cx, cy) {
     const r = canvas.getBoundingClientRect();
-    const inside = cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom;
-    if (inside) {
+    if (cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom) {
       let wx = (cx - r.left) / r.width * VW;
       let wy = (cy - r.top) / r.height * VH;
       wx = Math.max(T + fb.d.w / 2, Math.min(VW - T - fb.d.w / 2, wx));
       wy = Math.max(T + fb.d.h / 2, Math.min(VH - T - fb.d.h / 2, wy));
       makeBook(fb.d, wx, wy);
       removeFloating(fb);
-    } else {
-      fb.state = 'fall';
-      fb.vy = 0;
     }
   }
 
@@ -432,6 +474,7 @@ function initShelf() {
   let lastP = null, lastT = 0, shakeCooldown = 0;
   const MAX_SPEED = 11;   // tope de velocidad de CUALQUIER libro (anti-tunneling y anti-"saltón")
   const MAX_SPIN = 0.35;  // tope de velocidad angular
+  const FLOOR_MAX_SPEED = 38;  // tope en el mundo del viewport (px/step)
 
   function toWorld(e) {
     const r = canvas.getBoundingClientRect();
@@ -448,10 +491,12 @@ function initShelf() {
     World.remove(world, book);
     const d = book.userData;
     dragBody = null;
-    return createFloating(
+    const fb = createFloating(
       { w: d.w, h: d.h, color: d.color, trim: d.trim, bands: d.bands, plate: d.plate },
-      cx, cy, 'drag',
+      cx, cy,
     );
+    startFloorDrag(fb, cx, cy);  // queda agarrado por el puntero actual
+    return fb;
   }
 
   canvas.addEventListener('pointerdown', (e) => {
@@ -473,11 +518,9 @@ function initShelf() {
   });
 
   canvas.addEventListener('pointermove', (e) => {
-    // Si ya fue expulsado, el libro flotante sigue al puntero a nivel de página.
+    // Si ya fue expulsado, el libro (ya con físicas) sigue al puntero.
     if (ejected) {
-      ejected.x = e.clientX - ejected.wpx / 2;
-      ejected.y = e.clientY - ejected.hpx / 2;
-      placeEl(ejected);
+      moveFloorDrag(e.clientX, e.clientY);
       return;
     }
     if (!dragConstraint) return;
@@ -503,7 +546,8 @@ function initShelf() {
 
   function endDrag(e) {
     if (ejected) {
-      finalizeFloating(ejected, e ? e.clientX : -1, e ? e.clientY : -1);
+      endFloorDrag();
+      if (e) maybeReinsert(ejected, e.clientX, e.clientY);
       ejected = null;
     }
     if (dragConstraint) { World.remove(world, dragConstraint); dragConstraint = null; }
@@ -522,24 +566,17 @@ function initShelf() {
     buildBooks();
   });
 
-  // Reposiciona los libros del suelo al final del viewport (scroll/resize).
+  // Avanza el mundo del viewport y sincroniza los libros del suelo.
   function updateFloating() {
+    if (!floating.length) return;
+    Engine.update(fEngine, 1000 / 60);
     for (const fb of floating) {
-      if (fb.state === 'drag') continue;
-      if (fb.state === 'fall') {
-        fb.vy += 1.1;
-        fb.y += fb.vy;
-        const restTop = innerHeight - fb.hpx - 6;
-        if (fb.y >= restTop) {
-          fb.y = restTop;
-          if (fb.vy > 2.4) fb.vy *= -0.26;     // rebote suave
-          else { fb.vy = 0; fb.state = 'rest'; }
-        }
-      } else { // rest: pegado al fondo del viewport
-        fb.y = innerHeight - fb.hpx - 6;
+      const v = fb.body.velocity;
+      const sp = Math.hypot(v.x, v.y);
+      if (sp > FLOOR_MAX_SPEED) {
+        Body.setVelocity(fb.body, { x: v.x / sp * FLOOR_MAX_SPEED, y: v.y / sp * FLOOR_MAX_SPEED });
       }
-      fb.x = Math.max(6, Math.min(innerWidth - fb.wpx - 6, fb.x));
-      placeEl(fb);
+      syncFloating(fb);
     }
   }
 
