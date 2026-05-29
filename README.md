@@ -37,6 +37,21 @@ Sitio de una sola página (single-page) con navegación por anclas y las siguien
 
 ---
 
+---
+
+## 🥚 Easter egg
+
+<details>
+<summary>Hay una sección oculta de hobbies… (spoiler)</summary>
+
+Haz **5 clicks en el logo "MV."** para desbloquear una zona secreta con dos minijuegos:
+- 🏎️ **F1 · Largada & Dash** — espera a que se apaguen las 5 luces, mide tu reacción y esquiva el tráfico (← → / A D).
+- 📚 **Biblioteca 3D** — arrastra los libros con el mouse para sacarlos del estante y desordenarlos (Three.js).
+
+</details>
+
+---
+
 ## 🛠️ Stack técnico
 
 - **HTML5 + CSS3 + JavaScript** (vanilla, sin frameworks ni build step)

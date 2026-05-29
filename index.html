@@ -49,6 +49,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="interactive.css" />
+  <link rel="stylesheet" href="hobbies.css" />
   <script>
     // ── Tema sin flash (antes del render) ──
     (function() {
@@ -759,6 +760,60 @@
   </div>
 </section>
 
+<!-- ===== SECCIÓN OCULTA: HOBBIES (se revela con 5 clicks en el logo MV.) ===== -->
+<section id="hobbies" hidden>
+  <div class="container">
+    <p class="section-label reveal">Modo offstage · easter egg</p>
+    <h2 class="section-title reveal">Zona de hobbies 🎮</h2>
+    <p class="section-desc reveal">Encontraste la sección secreta. Nada profesional por aquí — solo lo que disfruto fuera del código.</p>
+
+    <div class="hobbies-grid">
+
+      <!-- ===== F1 ===== -->
+      <div class="hobby-card">
+        <div class="hobby-head">
+          <h3>🏎️ F1 · Largada &amp; Dash</h3>
+          <span class="hobby-tag">Me encanta la Fórmula 1</span>
+        </div>
+        <p class="hobby-desc">Espera a que se apaguen las 5 luces, reacciona y esquiva el tráfico. Flechas ← → o A / D.</p>
+
+        <div id="f1-game">
+          <div id="f1-lights" aria-label="Luces de largada">
+            <span class="f1-light"></span><span class="f1-light"></span>
+            <span class="f1-light"></span><span class="f1-light"></span>
+            <span class="f1-light"></span>
+          </div>
+          <canvas id="f1-canvas" width="320" height="420"></canvas>
+          <div id="f1-overlay">
+            <p id="f1-msg">Presiona <strong>Iniciar</strong> para la largada</p>
+            <button id="f1-start" class="btn btn-primary">Iniciar</button>
+          </div>
+          <div class="f1-stats">
+            <span>Reacción: <strong id="f1-reaction">—</strong></span>
+            <span>Distancia: <strong id="f1-score">0</strong></span>
+            <span>Récord: <strong id="f1-best">0</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== BIBLIOTECA 3D ===== -->
+      <div class="hobby-card">
+        <div class="hobby-head">
+          <h3>📚 Biblioteca interactiva</h3>
+          <span class="hobby-tag">Arrastra y desordena</span>
+        </div>
+        <p class="hobby-desc">Toma los libros con el mouse, sácalos del estante y desordénalos. Botón para volver a ordenar.</p>
+
+        <div id="shelf-wrap">
+          <canvas id="shelf-canvas"></canvas>
+          <button id="shelf-reset" class="btn btn-outline">Ordenar de nuevo</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <footer>
   <p>Maximiliano Valdés · Ingeniero en Informática · Santiago, Chile · 2026</p>
 </footer>
@@ -776,5 +831,6 @@
 }
 </script>
 <script type="module" src="three-bg.js"></script>
+<script type="module" src="hobbies.js"></script>
 </body>
 </html>
