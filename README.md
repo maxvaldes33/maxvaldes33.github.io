@@ -46,7 +46,7 @@ Sitio de una sola página (single-page) con navegación por anclas y las siguien
 
 Haz **5 clicks en el logo "MV."** para desbloquear una zona secreta con dos minijuegos:
 - 🏎️ **F1 · Largada & Dash** — espera a que se apaguen las 5 luces, mide tu reacción y esquiva el tráfico (← → / A D).
-- 📚 **Biblioteca 3D** — arrastra los libros con el mouse para sacarlos del estante y desordenarlos (Three.js).
+- 📚 **Biblioteca pixel-art con físicas** — arrastra los libros: caen, chocan y se apilan de verdad; si los agitas, sueltan hojas (Matter.js).
 
 </details>
 
@@ -55,7 +55,8 @@ Haz **5 clicks en el logo "MV."** para desbloquear una zona secreta con dos mini
 ## 🛠️ Stack técnico
 
 - **HTML5 + CSS3 + JavaScript** (vanilla, sin frameworks ni build step)
-- **[Three.js](https://threejs.org/)** r160 (vía CDN jsDelivr, como módulo ES)
+- **[Three.js](https://threejs.org/)** r160 (fondo 3D · módulo ES vía CDN)
+- **[Matter.js](https://brm.io/matter-js/)** (físicas 2D de la biblioteca pixel-art)
 - Tipografías: **Archivo** + **Space Grotesk** (Google Fonts)
 - Hospedaje: **GitHub Pages** (deploy automático desde `main`)
 

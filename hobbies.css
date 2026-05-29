@@ -153,15 +153,16 @@ html.light #f1-canvas { background: #1a1c28; }
 #shelf-canvas {
   display: block;
   width: 100%;
-  height: 320px;
+  height: auto;
+  aspect-ratio: 256 / 160;
   border-radius: 12px;
-  background: linear-gradient(180deg, #0a0c14, #11131f);
   border: 1px solid var(--border);
   cursor: grab;
   touch-action: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 #shelf-canvas:active { cursor: grabbing; }
-html.light #shelf-canvas { background: linear-gradient(180deg, #e9e5dc, #f4f1ea); }
 
 #shelf-reset {
   margin-top: 0.8rem;

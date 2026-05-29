@@ -1,10 +1,10 @@
 // ============================================================
 // HOBBIES.JS — Sección oculta (easter egg)
 // Desbloqueo: 5 clicks en el logo "MV."
-// Contiene: minijuego F1 (largada + dash) y biblioteca 3D
+// Contiene: minijuego F1 (largada + dash) y biblioteca pixel-art
+// con físicas reales (Matter.js): los libros caen, chocan y, al
+// agitarlos, sueltan hojas.
 // ============================================================
-
-import * as THREE from 'three';
 
 // ------------------------------------------------------------
 // DESBLOQUEO
@@ -104,11 +104,9 @@ function initF1() {
     targetX = playerX = LANES[lane];
     drawScene();
 
-    // Enciende las 5 luces, una por una
     lights.forEach((l, i) => {
       timeouts.push(setTimeout(() => l.classList.add('on'), 600 + i * 650));
     });
-    // Apagado tras delay aleatorio → ¡GO!
     const total = 600 + 5 * 650;
     const extra = 700 + Math.random() * 2200;
     timeouts.push(setTimeout(lightsOut, total + extra));
@@ -140,7 +138,6 @@ function initF1() {
     targetX = LANES[lane];
   }
 
-  // --- Controles ---
   function onKey(e) {
     if (state === 'lights' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight' ||
         e.key === 'a' || e.key === 'd' || e.key === ' ')) {
@@ -154,16 +151,13 @@ function initF1() {
   }
   window.addEventListener('keydown', onKey);
 
-  // Toque/click en mitades del canvas (móvil)
   canvas.addEventListener('pointerdown', (e) => {
     if (state === 'lights') { falseStart(); return; }
     if (state !== 'racing') return;
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    move(x < rect.width / 2 ? -1 : 1);
+    move((e.clientX - rect.left) < rect.width / 2 ? -1 : 1);
   });
 
-  // --- Loop ---
   function loop() {
     if (state !== 'racing') return;
     dist += speed * 0.1;
@@ -171,19 +165,16 @@ function initF1() {
     roadOffset = (roadOffset + speed) % 40;
     playerX += (targetX - playerX) * 0.25;
 
-    // Spawn
     if (Math.random() < 0.025 + dist * 0.00004) {
       const l = Math.floor(Math.random() * 3);
       if (!obstacles.some(o => o.lane === l && o.y < CAR_H * 1.6)) {
         obstacles.push({ lane: l, x: LANES[l], y: -CAR_H });
       }
     }
-    // Mover + colisión
     const py = H - CAR_H - 14;
     for (const o of obstacles) {
       o.y += speed;
-      if (o.lane === lane &&
-          o.y + CAR_H > py && o.y < py + CAR_H &&
+      if (o.lane === lane && o.y + CAR_H > py && o.y < py + CAR_H &&
           Math.abs(o.x - playerX) < CAR_W) {
         return gameOver();
       }
@@ -206,13 +197,10 @@ function initF1() {
     startBtn.textContent = 'Correr de nuevo';
   }
 
-  // --- Render ---
   function drawScene() {
     ctx.clearRect(0, 0, W, H);
-    // pista
     ctx.fillStyle = '#0d1018';
     ctx.fillRect(0, 0, W, H);
-    // líneas de carril en movimiento
     ctx.strokeStyle = 'rgba(255,255,255,0.18)';
     ctx.lineWidth = 3;
     ctx.setLineDash([18, 22]);
@@ -222,14 +210,11 @@ function initF1() {
       ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
     }
     ctx.setLineDash([]);
-    // bordes neón
     ctx.strokeStyle = 'rgba(0,229,255,0.5)';
     ctx.lineWidth = 4;
     ctx.strokeRect(2, 0, W - 4, H);
 
-    // obstáculos
     for (const o of obstacles) drawCar(o.x, o.y, '#ff3b6b');
-    // jugador
     drawCar(playerX, H - CAR_H - 14, '#00e5ff');
   }
 
@@ -237,10 +222,8 @@ function initF1() {
     const x = cx - CAR_W / 2;
     ctx.fillStyle = color;
     roundRect(x, top, CAR_W, CAR_H, 8); ctx.fill();
-    // cabina
     ctx.fillStyle = 'rgba(0,0,0,0.35)';
     roundRect(x + 8, top + 14, CAR_W - 16, CAR_H - 30, 5); ctx.fill();
-    // alerones
     ctx.fillStyle = color;
     ctx.fillRect(x - 4, top + 6, CAR_W + 8, 6);
     ctx.fillRect(x - 4, top + CAR_H - 12, CAR_W + 8, 6);
@@ -260,139 +243,231 @@ function initF1() {
 }
 
 // ============================================================
-// BIBLIOTECA 3D — libros arrastrables con Three.js
+// BIBLIOTECA PIXEL-ART CON FÍSICAS (Matter.js)
 // ============================================================
 function initShelf() {
   const canvas = document.getElementById('shelf-canvas');
   const resetBtn = document.getElementById('shelf-reset');
+  const M = window.Matter;
+  if (!M) { console.warn('Matter.js no cargó'); return; }
+  const { Engine, World, Bodies, Body, Query, Constraint } = M;
 
-  const scene = new THREE.Scene();
-  const w = canvas.clientWidth || 400;
-  const h = canvas.clientHeight || 320;
-  const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
-  camera.position.set(0, 1.5, 12);
-  camera.lookAt(0, 0.5, 0);
+  // --- Buffer pixel-art (se escala por CSS con image-rendering: pixelated) ---
+  const VW = 256, VH = 160;
+  canvas.width = VW;
+  canvas.height = VH;
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  renderer.setSize(w, h, false);
+  // --- Motor ---
+  const engine = Engine.create({ enableSleeping: true });
+  engine.gravity.y = 1;
+  const world = engine.world;
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-  const dir = new THREE.DirectionalLight(0xffffff, 1.1);
-  dir.position.set(4, 8, 6);
-  scene.add(dir);
-  const cyan = new THREE.PointLight(0x00e5ff, 0.6, 30);
-  cyan.position.set(-6, 2, 6);
-  scene.add(cyan);
+  // --- Estructura estática (marco + repisa central) ---
+  const wood = { isStatic: true, friction: 0.8, frictionStatic: 1, restitution: 0 };
+  function wall(x, y, w, h) { World.add(world, Bodies.rectangle(x, y, w, h, wood)); }
+  const FLOOR_Y = VH - 6;
+  const SHELF_Y = 78;                  // repisa central
+  wall(VW / 2, FLOOR_Y + 3, VW, 12);   // piso
+  wall(6, VH / 2, 12, VH);             // pared izq
+  wall(VW - 6, VH / 2, 12, VH);        // pared der
+  wall(VW / 2, 4, VW, 12);             // techo
+  wall(VW / 2, SHELF_Y, VW - 24, 6);   // repisa central
 
-  // --- Estante de madera ---
-  const woodMat = new THREE.MeshStandardMaterial({ color: 0x4a3826, roughness: 0.9 });
-  const shelfW = 9, shelfD = 2.4, t = 0.3;
-  function panel(sx, sy, sz, px, py, pz) {
-    const m = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), woodMat);
-    m.position.set(px, py, pz);
-    scene.add(m);
-  }
-  panel(shelfW, t, shelfD, 0, -1.2, 0);                 // base
-  panel(shelfW, t, shelfD, 0, 2.6, 0);                  // techo
-  panel(t, 3.8, shelfD, -shelfW / 2, 0.7, 0);           // lado izq
-  panel(t, 3.8, shelfD, shelfW / 2, 0.7, 0);            // lado der
-  panel(shelfW, 3.8, t, 0, 0.7, -shelfD / 2);           // fondo
-
-  // --- Libros ---
-  const COLORS = [0x00e5ff, 0xff2bd6, 0x7c83ff, 0x3dd6a4, 0xff8c42,
-                  0xffd166, 0xef476f, 0x06d6a0, 0x118ab2, 0x9b5de5];
+  // --- Libros (cuerpos dinámicos) ---
+  const COLORS = [
+    '#e6394a', '#f4a259', '#f7d046', '#5fb05a', '#3a8fb7',
+    '#7d5ba6', '#d96c9b', '#2a9d8f', '#e76f51', '#4895ef',
+  ];
   const books = [];
-  const N = 10;
-  let x = -shelfW / 2 + 0.6;
-  for (let i = 0; i < N; i++) {
-    const bw = 0.45 + Math.random() * 0.35;   // grosor
-    const bh = 2.6 + Math.random() * 0.7;      // alto
-    const bd = 1.8;                            // profundidad
-    const mat = new THREE.MeshStandardMaterial({
-      color: COLORS[i % COLORS.length], roughness: 0.55, metalness: 0.1,
-    });
-    const book = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, bd), mat);
-    book.position.set(x + bw / 2, -1.05 + bh / 2, 0);
-    book.userData.home = book.position.clone();
-    book.userData.homeRot = book.rotation.clone();
-    scene.add(book);
-    books.push(book);
-    x += bw + 0.04;
+  const rows = [SHELF_Y - 3, FLOOR_Y - 3]; // borde superior de cada repisa
+  const X0 = 16, X1 = VW - 16;
+
+  for (const rowTop of rows) {
+    let x = X0 + 4;
+    while (x < X1 - 16) {
+      const bw = 11 + Math.floor(Math.random() * 7);   // grosor del lomo
+      const bh = 34 + Math.floor(Math.random() * 12);  // alto
+      const cx = x + bw / 2;
+      const cy = rowTop - bh / 2;
+      const book = Bodies.rectangle(cx, cy, bw, bh, {
+        friction: 0.6, frictionStatic: 1, restitution: 0.04, density: 0.005,
+        chamfer: { radius: 0 },
+      });
+      book.userData = {
+        w: bw, h: bh,
+        color: COLORS[books.length % COLORS.length],
+        bands: 1 + Math.floor(Math.random() * 2),
+        home: { x: cx, y: cy, angle: 0 },
+      };
+      World.add(world, book);
+      books.push(book);
+      x += bw + 2;
+    }
   }
 
-  // --- Arrastre con raycaster ---
-  const ray = new THREE.Raycaster();
-  const pointer = new THREE.Vector2();
-  const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0); // z = 0
-  const hit = new THREE.Vector3();
-  const offset = new THREE.Vector3();
-  let dragged = null;
+  // --- Hojas que saltan al agitar ---
+  const pages = [];
+  function spawnPages(x, y, n) {
+    for (let i = 0; i < n; i++) {
+      pages.push({
+        x, y,
+        vx: (Math.random() - 0.5) * 4,
+        vy: -1.5 - Math.random() * 2.5,
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - 0.5) * 0.4,
+        life: 1,
+      });
+    }
+  }
 
-  function setPointer(e) {
+  // --- Arrastre con constraint + detección de "agitar" ---
+  let dragBody = null;
+  let dragConstraint = null;
+  let lastP = null, lastT = 0, shakeCooldown = 0;
+
+  function toWorld(e) {
     const r = canvas.getBoundingClientRect();
-    pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
-    pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+    return {
+      x: (e.clientX - r.left) / r.width * VW,
+      y: (e.clientY - r.top) / r.height * VH,
+    };
   }
 
   canvas.addEventListener('pointerdown', (e) => {
-    setPointer(e);
-    ray.setFromCamera(pointer, camera);
-    const hits = ray.intersectObjects(books);
-    if (hits.length) {
-      dragged = hits[0].object;
-      plane.constant = -dragged.position.z;
-      ray.ray.intersectPlane(plane, hit);
-      offset.copy(dragged.position).sub(hit);
-      canvas.setPointerCapture(e.pointerId);
-    }
+    const p = toWorld(e);
+    const found = Query.point(books, p)[0];
+    if (!found) return;
+    dragBody = found;
+    Body.setStatic(dragBody, false);
+    if (dragBody.isSleeping) M.Sleeping.set(dragBody, false);
+    const a = -dragBody.angle;
+    const dx = p.x - dragBody.position.x, dy = p.y - dragBody.position.y;
+    const pb = { x: dx * Math.cos(a) - dy * Math.sin(a), y: dx * Math.sin(a) + dy * Math.cos(a) };
+    dragConstraint = Constraint.create({
+      pointA: p, bodyB: dragBody, pointB: pb,
+      stiffness: 0.18, damping: 0.12, length: 0,
+    });
+    World.add(world, dragConstraint);
+    lastP = p; lastT = performance.now();
+    canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId);
   });
 
   canvas.addEventListener('pointermove', (e) => {
-    if (!dragged) return;
-    setPointer(e);
-    ray.setFromCamera(pointer, camera);
-    if (ray.ray.intersectPlane(plane, hit)) {
-      dragged.position.copy(hit).add(offset);
-      dragged.position.z = 0.6; // lo saca un poco hacia el frente
-      // inclinación "desordenada" según el movimiento horizontal
-      dragged.rotation.z = THREE.MathUtils.clamp(-dragged.position.x * 0.05, -0.7, 0.7);
-      dragged.rotation.x = -0.15;
+    if (!dragConstraint) return;
+    const p = toWorld(e);
+    dragConstraint.pointA = p;
+
+    const now = performance.now();
+    const dt = Math.max(16, now - lastT);
+    const speed = Math.hypot(p.x - lastP.x, p.y - lastP.y) / dt * 1000; // px/s
+    if (speed > 900 && now > shakeCooldown) {
+      spawnPages(dragBody.position.x, dragBody.position.y, 2);
+      shakeCooldown = now + 70;
+    }
+    lastP = p; lastT = now;
+  });
+
+  function drop() {
+    if (dragConstraint) { World.remove(world, dragConstraint); dragConstraint = null; }
+    dragBody = null;
+  }
+  canvas.addEventListener('pointerup', drop);
+  canvas.addEventListener('pointercancel', drop);
+  canvas.addEventListener('pointerleave', drop);
+
+  // --- Reordenar ---
+  resetBtn.addEventListener('click', () => {
+    drop();
+    pages.length = 0;
+    for (const b of books) {
+      Body.setPosition(b, { x: b.userData.home.x, y: b.userData.home.y });
+      Body.setAngle(b, 0);
+      Body.setVelocity(b, { x: 0, y: 0 });
+      Body.setAngularVelocity(b, 0);
     }
   });
 
-  function drop() { dragged = null; }
-  canvas.addEventListener('pointerup', drop);
-  canvas.addEventListener('pointerleave', drop);
+  // --- Render pixel-art ---
+  function draw() {
+    // fondo
+    ctx.fillStyle = '#14121d';
+    ctx.fillRect(0, 0, VW, VH);
+    ctx.fillStyle = '#1c1830';
+    ctx.fillRect(0, 0, VW, VH / 2);
 
-  // --- Reset (volver a ordenar) ---
-  let tweening = false;
-  resetBtn.addEventListener('click', () => { tweening = true; });
+    // marco de madera
+    drawWoodRect(0, 0, VW, 10);            // techo
+    drawWoodRect(0, VH - 12, VW, 12);      // piso
+    drawWoodRect(0, 0, 12, VH);            // izq
+    drawWoodRect(VW - 12, 0, 12, VH);      // der
+    drawWoodRect(12, SHELF_Y - 3, VW - 24, 6); // repisa
 
-  // --- Resize ---
-  const ro = new ResizeObserver(() => {
-    const nw = canvas.clientWidth, nh = canvas.clientHeight;
-    if (!nw || !nh) return;
-    camera.aspect = nw / nh;
-    camera.updateProjectionMatrix();
-    renderer.setSize(nw, nh, false);
-  });
-  ro.observe(canvas);
+    for (const b of books) drawBook(b);
+    for (const p of pages) drawPage(p);
+  }
+
+  function drawWoodRect(x, y, w, h) {
+    ctx.fillStyle = '#5a3d22';
+    ctx.fillRect(x, y, w, h);
+    ctx.fillStyle = '#76502e';
+    ctx.fillRect(x, y, w, Math.max(2, h * 0.3));
+    ctx.fillStyle = '#3d2817';
+    ctx.fillRect(x, y + h - 2, w, 2);
+  }
+
+  function drawBook(b) {
+    const d = b.userData;
+    ctx.save();
+    ctx.translate(Math.round(b.position.x), Math.round(b.position.y));
+    ctx.rotate(b.angle);
+    const w = d.w, h = d.h, x = -w / 2, y = -h / 2;
+    // lomo
+    ctx.fillStyle = d.color;
+    ctx.fillRect(x, y, w, h);
+    // páginas (borde claro a la derecha)
+    ctx.fillStyle = '#efe6cf';
+    ctx.fillRect(x + w - 2, y + 2, 2, h - 4);
+    // sombra/realce
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fillRect(x, y, 2, h);
+    ctx.fillStyle = 'rgba(255,255,255,0.18)';
+    ctx.fillRect(x + 2, y, 1, h);
+    // bandas del título
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    for (let i = 0; i < d.bands; i++) {
+      ctx.fillRect(x + 3, y + 6 + i * 6, w - 6, 2);
+    }
+    ctx.restore();
+  }
+
+  function drawPage(p) {
+    ctx.save();
+    ctx.translate(Math.round(p.x), Math.round(p.y));
+    ctx.rotate(p.rot);
+    ctx.globalAlpha = Math.max(0, Math.min(1, p.life));
+    ctx.fillStyle = '#f4eeda';
+    ctx.fillRect(-3, -2, 6, 5);
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(-2, 0, 4, 1);
+    ctx.restore();
+    ctx.globalAlpha = 1;
+  }
 
   // --- Loop ---
   function loop() {
-    if (tweening) {
-      let done = true;
-      for (const b of books) {
-        if (b === dragged) continue;
-        b.position.lerp(b.userData.home, 0.15);
-        b.rotation.z += (b.userData.homeRot.z - b.rotation.z) * 0.15;
-        b.rotation.x += (b.userData.homeRot.x - b.rotation.x) * 0.15;
-        if (b.position.distanceTo(b.userData.home) > 0.01) done = false;
-      }
-      if (done) tweening = false;
+    Engine.update(engine, 1000 / 60);
+
+    for (let i = pages.length - 1; i >= 0; i--) {
+      const p = pages[i];
+      p.vy += 0.06;
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      p.life -= 0.012;
+      if (p.life <= 0 || p.y > VH + 10) pages.splice(i, 1);
     }
-    renderer.render(scene, camera);
+
+    draw();
     requestAnimationFrame(loop);
   }
   loop();
