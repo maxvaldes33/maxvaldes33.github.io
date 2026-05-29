@@ -266,7 +266,7 @@ function initShelf() {
     velocityIterations: 14,
     constraintIterations: 6,
   });
-  engine.gravity.y = 1;
+  engine.gravity.y = 0.8;   // gravedad algo menor = caídas más lentas/pesadas
   const world = engine.world;
 
   // --- Estructura estática (marco grueso + repisa central) ---
@@ -306,6 +306,7 @@ function initShelf() {
       const book = Bodies.rectangle(cx, cy, bw, bh, {
         friction: 0.95, frictionStatic: 1.5, restitution: 0,
         density: 0.02, slop: 0.01,
+        frictionAir: 0.045,   // amortigua el movimiento: nada sale disparado
       });
       book.userData = {
         w: bw, h: bh,
@@ -345,7 +346,8 @@ function initShelf() {
   let dragBody = null;
   let dragConstraint = null;
   let lastP = null, lastT = 0, shakeCooldown = 0;
-  const MAX_SPEED = 15; // tope de velocidad del libro agarrado (anti-tunneling)
+  const MAX_SPEED = 11;   // tope de velocidad de CUALQUIER libro (anti-tunneling y anti-"saltón")
+  const MAX_SPIN = 0.35;  // tope de velocidad angular
 
   function toWorld(e) {
     const r = canvas.getBoundingClientRect();
@@ -366,7 +368,7 @@ function initShelf() {
     const pb = { x: dx * Math.cos(a) - dy * Math.sin(a), y: dx * Math.sin(a) + dy * Math.cos(a) };
     dragConstraint = Constraint.create({
       pointA: p, bodyB: dragBody, pointB: pb,
-      stiffness: 0.2, damping: 0.3, length: 0,
+      stiffness: 0.12, damping: 0.4, length: 0,
     });
     World.add(world, dragConstraint);
     lastP = p; lastT = performance.now();
@@ -511,12 +513,17 @@ function initShelf() {
   function loop() {
     for (let s = 0; s < 2; s++) Engine.update(engine, 1000 / 120);
 
-    // tope de velocidad del libro agarrado
-    if (dragBody) {
-      const v = dragBody.velocity;
+    // tope de velocidad lineal y angular de TODOS los libros:
+    // evita que al empujar uno, los demás salgan disparados (método de
+    // clamp por frame recomendado en la comunidad de Matter.js).
+    for (const b of books) {
+      const v = b.velocity;
       const sp = Math.hypot(v.x, v.y);
       if (sp > MAX_SPEED) {
-        Body.setVelocity(dragBody, { x: v.x / sp * MAX_SPEED, y: v.y / sp * MAX_SPEED });
+        Body.setVelocity(b, { x: v.x / sp * MAX_SPEED, y: v.y / sp * MAX_SPEED });
+      }
+      if (Math.abs(b.angularVelocity) > MAX_SPIN) {
+        Body.setAngularVelocity(b, Math.sign(b.angularVelocity) * MAX_SPIN);
       }
     }
 
