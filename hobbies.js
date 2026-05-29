@@ -253,59 +253,77 @@ function initShelf() {
   const { Engine, World, Bodies, Body, Query, Constraint } = M;
 
   // --- Buffer pixel-art (se escala por CSS con image-rendering: pixelated) ---
-  const VW = 256, VH = 160;
+  const VW = 340, VH = 230;
   canvas.width = VW;
   canvas.height = VH;
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
 
-  // --- Motor ---
-  const engine = Engine.create({ enableSleeping: true });
+  // --- Motor: más iteraciones = colisiones más firmes ---
+  const engine = Engine.create({
+    enableSleeping: true,
+    positionIterations: 12,
+    velocityIterations: 10,
+    constraintIterations: 4,
+  });
   engine.gravity.y = 1;
   const world = engine.world;
 
-  // --- Estructura estática (marco + repisa central) ---
-  const wood = { isStatic: true, friction: 0.8, frictionStatic: 1, restitution: 0 };
+  // --- Estructura estática (marco grueso + repisa central) ---
+  const T = 16; // grosor de paredes (grueso = nada atraviesa)
+  const wood = { isStatic: true, friction: 0.9, frictionStatic: 1, restitution: 0 };
   function wall(x, y, w, h) { World.add(world, Bodies.rectangle(x, y, w, h, wood)); }
-  const FLOOR_Y = VH - 6;
-  const SHELF_Y = 78;                  // repisa central
-  wall(VW / 2, FLOOR_Y + 3, VW, 12);   // piso
-  wall(6, VH / 2, 12, VH);             // pared izq
-  wall(VW - 6, VH / 2, 12, VH);        // pared der
-  wall(VW / 2, 4, VW, 12);             // techo
-  wall(VW / 2, SHELF_Y, VW - 24, 6);   // repisa central
+  const FLOOR_TOP = VH - T;            // borde superior del piso
+  const SHELF_Y = 118;                 // centro de la repisa central
+  const SHELF_TH = 8;
+  wall(VW / 2, VH - T / 2, VW, T);     // piso
+  wall(T / 2, VH / 2, T, VH);          // pared izq
+  wall(VW - T / 2, VH / 2, T, VH);     // pared der
+  wall(VW / 2, T / 2, VW, T);          // techo
+  wall(VW / 2, SHELF_Y, VW - T * 2, SHELF_TH); // repisa central
 
   // --- Libros (cuerpos dinámicos) ---
   const COLORS = [
-    '#e6394a', '#f4a259', '#f7d046', '#5fb05a', '#3a8fb7',
-    '#7d5ba6', '#d96c9b', '#2a9d8f', '#e76f51', '#4895ef',
+    '#8c2f2f', '#2f4858', '#3a5a40', '#9c6644', '#5a3e85',
+    '#1d3557', '#6a040f', '#386641', '#7f5539', '#995d81',
+    '#bb9457', '#344e41', '#7d4f50', '#40514e', '#a44a3f',
   ];
+  const TRIMS = ['#e9c46a', '#d4af37', '#cbd5e1', '#e6ccb2']; // dorados / plata / crema
   const books = [];
-  const rows = [SHELF_Y - 3, FLOOR_Y - 3]; // borde superior de cada repisa
-  const X0 = 16, X1 = VW - 16;
+  let colorI = 0;
 
-  for (const rowTop of rows) {
-    let x = X0 + 4;
-    while (x < X1 - 16) {
-      const bw = 11 + Math.floor(Math.random() * 7);   // grosor del lomo
-      const bh = 34 + Math.floor(Math.random() * 12);  // alto
+  // Coloca una fila de libros sobre una superficie, dejando ~25% de hueco.
+  function fillRow(surfaceTop, ceiling) {
+    const interiorW = (VW - T) - T;          // entre paredes
+    const usable = interiorW * 0.74;          // dejar espacio para que caigan
+    const space = surfaceTop - ceiling;       // alto disponible
+    let x = T + 6;
+    while (x < T + usable) {
+      const bw = 16 + Math.floor(Math.random() * 11);          // grosor lomo 16-26
+      const bh = Math.min(space - 6, 58 + Math.floor(Math.random() * 30)); // alto
       const cx = x + bw / 2;
-      const cy = rowTop - bh / 2;
+      const cy = surfaceTop - bh / 2;
       const book = Bodies.rectangle(cx, cy, bw, bh, {
-        friction: 0.6, frictionStatic: 1, restitution: 0.04, density: 0.005,
-        chamfer: { radius: 0 },
+        friction: 0.7, frictionStatic: 1, restitution: 0.02,
+        density: 0.004, slop: 0.02,
       });
       book.userData = {
         w: bw, h: bh,
-        color: COLORS[books.length % COLORS.length],
-        bands: 1 + Math.floor(Math.random() * 2),
-        home: { x: cx, y: cy, angle: 0 },
+        color: COLORS[colorI % COLORS.length],
+        trim: TRIMS[colorI % TRIMS.length],
+        bands: 2 + Math.floor(Math.random() * 2),
+        plate: 0.35 + Math.random() * 0.15,    // posición vertical de la placa
+        grab: 0,                               // animación de agarre (0..1)
+        home: { x: cx, y: cy },
       };
+      colorI++;
       World.add(world, book);
       books.push(book);
-      x += bw + 2;
+      x += bw + 4;
     }
   }
+  fillRow(SHELF_Y - SHELF_TH / 2, T);          // fila superior (sobre la repisa)
+  fillRow(FLOOR_TOP, SHELF_Y + SHELF_TH / 2);  // fila inferior (sobre el piso)
 
   // --- Hojas que saltan al agitar ---
   const pages = [];
@@ -313,19 +331,21 @@ function initShelf() {
     for (let i = 0; i < n; i++) {
       pages.push({
         x, y,
-        vx: (Math.random() - 0.5) * 4,
-        vy: -1.5 - Math.random() * 2.5,
+        vx: (Math.random() - 0.5) * 5,
+        vy: -2 - Math.random() * 3,
         rot: Math.random() * Math.PI,
-        vr: (Math.random() - 0.5) * 0.4,
+        vr: (Math.random() - 0.5) * 0.5,
+        sway: Math.random() * Math.PI * 2,
         life: 1,
       });
     }
   }
 
-  // --- Arrastre con constraint + detección de "agitar" ---
+  // --- Arrastre + detección de "agitar" ---
   let dragBody = null;
   let dragConstraint = null;
   let lastP = null, lastT = 0, shakeCooldown = 0;
+  const MAX_SPEED = 22; // tope de velocidad del libro agarrado (anti-tunneling)
 
   function toWorld(e) {
     const r = canvas.getBoundingClientRect();
@@ -340,18 +360,17 @@ function initShelf() {
     const found = Query.point(books, p)[0];
     if (!found) return;
     dragBody = found;
-    Body.setStatic(dragBody, false);
     if (dragBody.isSleeping) M.Sleeping.set(dragBody, false);
     const a = -dragBody.angle;
     const dx = p.x - dragBody.position.x, dy = p.y - dragBody.position.y;
     const pb = { x: dx * Math.cos(a) - dy * Math.sin(a), y: dx * Math.sin(a) + dy * Math.cos(a) };
     dragConstraint = Constraint.create({
       pointA: p, bodyB: dragBody, pointB: pb,
-      stiffness: 0.18, damping: 0.12, length: 0,
+      stiffness: 0.28, damping: 0.22, length: 0,
     });
     World.add(world, dragConstraint);
     lastP = p; lastT = performance.now();
-    canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId);
+    if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
   });
 
   canvas.addEventListener('pointermove', (e) => {
@@ -362,9 +381,9 @@ function initShelf() {
     const now = performance.now();
     const dt = Math.max(16, now - lastT);
     const speed = Math.hypot(p.x - lastP.x, p.y - lastP.y) / dt * 1000; // px/s
-    if (speed > 900 && now > shakeCooldown) {
-      spawnPages(dragBody.position.x, dragBody.position.y, 2);
-      shakeCooldown = now + 70;
+    if (speed > 1100 && now > shakeCooldown) {
+      spawnPages(dragBody.position.x, dragBody.position.y, 3);
+      shakeCooldown = now + 60;
     }
     lastP = p; lastT = now;
   });
@@ -391,30 +410,33 @@ function initShelf() {
 
   // --- Render pixel-art ---
   function draw() {
-    // fondo
-    ctx.fillStyle = '#14121d';
+    // fondo cálido de biblioteca
+    ctx.fillStyle = '#1a141d';
     ctx.fillRect(0, 0, VW, VH);
-    ctx.fillStyle = '#1c1830';
-    ctx.fillRect(0, 0, VW, VH / 2);
+    ctx.fillStyle = '#241a26';
+    ctx.fillRect(T, T, VW - 2 * T, VH - 2 * T);
 
-    // marco de madera
-    drawWoodRect(0, 0, VW, 10);            // techo
-    drawWoodRect(0, VH - 12, VW, 12);      // piso
-    drawWoodRect(0, 0, 12, VH);            // izq
-    drawWoodRect(VW - 12, 0, 12, VH);      // der
-    drawWoodRect(12, SHELF_Y - 3, VW - 24, 6); // repisa
+    // marco + repisa
+    drawWood(0, 0, VW, T);
+    drawWood(0, VH - T, VW, T);
+    drawWood(0, 0, T, VH);
+    drawWood(VW - T, 0, T, VH);
+    drawWood(T, SHELF_Y - SHELF_TH / 2, VW - 2 * T, SHELF_TH);
 
     for (const b of books) drawBook(b);
     for (const p of pages) drawPage(p);
   }
 
-  function drawWoodRect(x, y, w, h) {
+  function drawWood(x, y, w, h) {
     ctx.fillStyle = '#5a3d22';
     ctx.fillRect(x, y, w, h);
-    ctx.fillStyle = '#76502e';
-    ctx.fillRect(x, y, w, Math.max(2, h * 0.3));
-    ctx.fillStyle = '#3d2817';
+    ctx.fillStyle = '#774f2c';
+    ctx.fillRect(x, y, w, Math.max(2, Math.floor(h * 0.28)));
+    ctx.fillStyle = '#3a2614';
     ctx.fillRect(x, y + h - 2, w, 2);
+    // vetas
+    ctx.fillStyle = 'rgba(0,0,0,0.10)';
+    for (let i = x + 6; i < x + w; i += 14) ctx.fillRect(i, y + 2, 1, h - 4);
   }
 
   function drawBook(b) {
@@ -422,22 +444,49 @@ function initShelf() {
     ctx.save();
     ctx.translate(Math.round(b.position.x), Math.round(b.position.y));
     ctx.rotate(b.angle);
-    const w = d.w, h = d.h, x = -w / 2, y = -h / 2;
-    // lomo
+    const w = d.w, h = d.h, x = -Math.round(w / 2), y = -Math.round(h / 2);
+
+    // resaltado al agarrar
+    if (d.grab > 0.01) {
+      ctx.fillStyle = `rgba(0,229,255,${0.35 * d.grab})`;
+      ctx.fillRect(x - 2, y - 2, w + 4, h + 4);
+    }
+
+    // cuerpo (tapa)
     ctx.fillStyle = d.color;
     ctx.fillRect(x, y, w, h);
-    // páginas (borde claro a la derecha)
-    ctx.fillStyle = '#efe6cf';
-    ctx.fillRect(x + w - 2, y + 2, 2, h - 4);
-    // sombra/realce
-    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    // sombra lateral derecha + luz lateral izquierda (volumen)
+    ctx.fillStyle = 'rgba(0,0,0,0.28)';
+    ctx.fillRect(x + w - 3, y, 3, h);
+    ctx.fillStyle = 'rgba(255,255,255,0.16)';
+    ctx.fillRect(x + 2, y, 2, h);
+    // encuadernación (lomo) a la izquierda
+    ctx.fillStyle = 'rgba(0,0,0,0.22)';
     ctx.fillRect(x, y, 2, h);
-    ctx.fillStyle = 'rgba(255,255,255,0.18)';
-    ctx.fillRect(x + 2, y, 1, h);
-    // bandas del título
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+
+    // páginas arriba y abajo (cantos de hoja)
+    ctx.fillStyle = '#efe6cf';
+    ctx.fillRect(x + 3, y, w - 6, 2);
+    ctx.fillRect(x + 3, y + h - 2, w - 6, 2);
+    // líneas de páginas (canto inferior)
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.fillRect(x + 3, y + h - 1, w - 6, 1);
+
+    // bandas decorativas (trim dorado)
+    ctx.fillStyle = d.trim;
+    const bandY = y + Math.round(h * 0.16);
+    ctx.fillRect(x + 3, bandY, w - 6, 2);
+    ctx.fillRect(x + 3, y + h - Math.round(h * 0.16) - 2, w - 6, 2);
+
+    // placa de título con "texto"
+    const plateY = y + Math.round(h * d.plate);
+    const plateH = Math.min(20, Math.round(h * 0.28));
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.fillRect(x + 3, plateY, w - 6, plateH);
+    ctx.fillStyle = d.trim;
     for (let i = 0; i < d.bands; i++) {
-      ctx.fillRect(x + 3, y + 6 + i * 6, w - 6, 2);
+      const ly = plateY + 3 + i * 4;
+      if (ly < plateY + plateH - 2) ctx.fillRect(x + 4, ly, w - 8, 1);
     }
     ctx.restore();
   }
@@ -447,24 +496,46 @@ function initShelf() {
     ctx.translate(Math.round(p.x), Math.round(p.y));
     ctx.rotate(p.rot);
     ctx.globalAlpha = Math.max(0, Math.min(1, p.life));
+    // hoja con doblez (dos tonos)
     ctx.fillStyle = '#f4eeda';
-    ctx.fillRect(-3, -2, 6, 5);
-    ctx.fillStyle = 'rgba(0,0,0,0.3)';
-    ctx.fillRect(-2, 0, 4, 1);
+    ctx.fillRect(-4, -3, 8, 6);
+    ctx.fillStyle = '#e3d8b8';
+    ctx.fillRect(0, -3, 4, 6);
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fillRect(-3, 0, 6, 1);
     ctx.restore();
     ctx.globalAlpha = 1;
   }
 
-  // --- Loop ---
+  // --- Loop con subpasos (menos tunneling) ---
   function loop() {
-    Engine.update(engine, 1000 / 60);
+    for (let s = 0; s < 2; s++) Engine.update(engine, 1000 / 120);
 
+    // tope de velocidad del libro agarrado
+    if (dragBody) {
+      const v = dragBody.velocity;
+      const sp = Math.hypot(v.x, v.y);
+      if (sp > MAX_SPEED) {
+        Body.setVelocity(dragBody, { x: v.x / sp * MAX_SPEED, y: v.y / sp * MAX_SPEED });
+      }
+    }
+
+    // animación de agarre
+    for (const b of books) {
+      const target = b === dragBody ? 1 : 0;
+      b.userData.grab += (target - b.userData.grab) * 0.2;
+    }
+
+    // hojas
     for (let i = pages.length - 1; i >= 0; i--) {
       const p = pages[i];
-      p.vy += 0.06;
-      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
-      p.life -= 0.012;
-      if (p.life <= 0 || p.y > VH + 10) pages.splice(i, 1);
+      p.vy += 0.05;
+      p.sway += 0.2;
+      p.x += p.vx + Math.sin(p.sway) * 0.6;
+      p.y += p.vy;
+      p.rot += p.vr;
+      p.life -= 0.01;
+      if (p.life <= 0 || p.y > VH + 12) pages.splice(i, 1);
     }
 
     draw();

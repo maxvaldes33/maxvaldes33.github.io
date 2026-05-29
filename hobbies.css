@@ -154,7 +154,7 @@ html.light #f1-canvas { background: #1a1c28; }
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 256 / 160;
+  aspect-ratio: 340 / 230;
   border-radius: 12px;
   border: 1px solid var(--border);
   cursor: grab;
