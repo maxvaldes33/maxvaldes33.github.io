@@ -449,14 +449,44 @@ setInterval(loadCrypto, 60000);
 // ── GITHUB API ────────────────────────────────────────────
 const GITHUB_USER = 'maxvaldes33';
 
+function githubFallback(msg) {
+  const profile = document.getElementById('github-profile');
+  const reposEl = document.getElementById('github-repos');
+  if (profile) {
+    profile.innerHTML = `
+      <div class="github-fallback">
+        <p style="color:var(--muted);font-size:.85rem;margin-bottom:.75rem">${msg}</p>
+        <a class="btn btn-outline" href="https://github.com/${GITHUB_USER}" target="_blank" rel="noopener" style="font-size:.82rem;padding:.5rem 1rem">
+          Ver perfil en GitHub ↗
+        </a>
+      </div>`;
+  }
+  if (reposEl) reposEl.innerHTML = '';
+}
+
 async function loadGitHub() {
   try {
     const [userRes, reposRes] = await Promise.all([
       fetch(`https://api.github.com/users/${GITHUB_USER}`),
       fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=5`),
     ]);
+
+    // GitHub responde 403 al superar el límite de la API pública (sin token).
+    // fetch NO lanza en 403, así que hay que comprobar el status a mano.
+    if (!userRes.ok) {
+      const remaining = userRes.headers.get('x-ratelimit-remaining');
+      const reset = +userRes.headers.get('x-ratelimit-reset') * 1000;
+      if (userRes.status === 403 && remaining === '0') {
+        const mins = reset ? Math.max(1, Math.ceil((reset - Date.now()) / 60000)) : null;
+        githubFallback(`⏳ Límite de la API de GitHub alcanzado${mins ? ` · reintenta en ~${mins} min` : ''}.`);
+      } else {
+        githubFallback('No se pudo cargar la actividad de GitHub.');
+      }
+      return;
+    }
+
     const user  = await userRes.json();
-    const repos = await reposRes.json();
+    const repos = reposRes.ok ? await reposRes.json() : [];
 
     document.getElementById('github-profile').innerHTML = `
       <div class="github-stat-row">
@@ -488,8 +518,7 @@ async function loadGitHub() {
         </div>
       </a>`).join('');
   } catch {
-    document.getElementById('github-profile').innerHTML =
-      `<p style="color:var(--muted);font-size:.85rem">No se pudo cargar GitHub.</p>`;
+    githubFallback('No se pudo cargar la actividad de GitHub.');
   }
 }
 
