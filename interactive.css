@@ -1,0 +1,186 @@
+/* ============================================================
+   INTERACTIVE.CSS
+   - Fondo Three.js (sutil)
+   - Botones 3D de tecnologías (.tag)
+   - Modo claro: limpio y moderno
+   - Modo oscuro (default): hacker cyberpunk · cyan + magenta
+   Convención de tema: <html> sin clase = OSCURO, html.light = CLARO
+   ============================================================ */
+
+:root {
+  /* neón cyberpunk (modo oscuro / default) */
+  --neon-cyan:    #00e5ff;
+  --neon-magenta: #ff2bd6;
+  --i-tag-glow:   rgba(0, 229, 255, 0.40);
+  --i-tag-border: rgba(0, 229, 255, 0.28);
+}
+
+html.light {
+  /* acentos limpios (modo claro) */
+  --neon-cyan:    #5558e3;
+  --neon-magenta: #e06c1a;
+  --i-tag-glow:   rgba(85, 88, 227, 0.22);
+  --i-tag-border: rgba(85, 88, 227, 0.18);
+}
+
+/* ===== Color base al <html> para que el canvas se vea detrás ===== */
+html { background: var(--bg); }
+body { background: transparent; }
+
+/* ===== Canvas Three.js de fondo ===== */
+#three-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;            /* detrás de todo el contenido */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+#three-bg.loaded { opacity: 1; }
+
+/* ===== Scanlines sutiles solo en modo oscuro ===== */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 229, 255, 0.020) 0px,
+    rgba(0, 229, 255, 0.020) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+html:not(.light) body::after { opacity: 1; }
+
+/* ============================================================
+   BOTONES 3D DE TECNOLOGÍAS  (.tag)
+   ============================================================ */
+.skill-tags { perspective: 700px; }
+
+.tag {
+  position: relative;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  transition:
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+  will-change: transform;
+}
+
+/* borde luminoso (gradiente cyan→magenta) */
+.tag::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--neon-cyan), transparent 45%, var(--neon-magenta));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+/* brillo radial que sigue al cursor */
+.tag::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    90px circle at var(--mx, 50%) var(--my, 50%),
+    var(--i-tag-glow),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.tag:hover::before { opacity: 1; }
+.tag:hover::after  { opacity: 1; }
+.tag:active { transform: translateZ(-4px) scale(0.96) !important; }
+
+/* Cyberpunk: texto y glow neón en oscuro */
+html:not(.light) .tag:hover {
+  color: #eafdff;
+  border-color: var(--neon-cyan);
+  text-shadow: 0 0 6px var(--neon-cyan);
+  box-shadow:
+    0 0 14px -2px var(--i-tag-glow),
+    0 10px 26px -12px var(--i-tag-glow),
+    inset 0 0 10px rgba(0, 229, 255, 0.10);
+}
+
+/* Limpio: glass suave en claro */
+html.light .tag:hover {
+  border-color: var(--neon-cyan);
+  box-shadow:
+    0 10px 24px -10px var(--i-tag-glow),
+    0 0 0 1px var(--i-tag-border);
+}
+
+/* ============================================================
+   ACENTOS CYBERPUNK · MODO OSCURO
+   ============================================================ */
+html:not(.light) .section-title,
+html:not(.light) .hero h1 {
+  text-shadow: 0 0 22px rgba(0, 229, 255, 0.16);
+}
+
+html:not(.light) .hero-name-gradient {
+  background: linear-gradient(135deg, var(--neon-cyan) 0%, #34d3ff 45%, var(--neon-magenta) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.30));
+}
+
+html:not(.light) .skill-card:hover {
+  border-color: var(--neon-cyan);
+  box-shadow:
+    0 0 26px -12px var(--i-tag-glow),
+    inset 0 0 22px rgba(0, 229, 255, 0.05);
+}
+
+html:not(.light) .section-label {
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.25);
+}
+
+/* Glitch sutil del nombre hero al estar en oscuro */
+@keyframes cyber-glitch {
+  0%, 92%, 100% { transform: translate(0); }
+  93% { transform: translate(-1.5px, 1px); }
+  95% { transform: translate(1.5px, -1px); }
+  97% { transform: translate(-1px, 0); }
+}
+html:not(.light) .hero-name-gradient {
+  animation: cyber-glitch 7s infinite;
+}
+
+/* ============================================================
+   ACCESIBILIDAD
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  #three-bg { display: none; }
+  html:not(.light) .hero-name-gradient { animation: none; }
+  .tag { transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+}
+
+/* Táctil: sin tilt (coherente con el resto del sitio) */
+@media (hover: none) {
+  .tag { transform: none !important; }
+}

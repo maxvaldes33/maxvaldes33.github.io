@@ -48,6 +48,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="interactive.css" />
   <script>
     // ── Tema sin flash (antes del render) ──
     (function() {
@@ -762,7 +763,18 @@
   <p>Maximiliano Valdés · Ingeniero en Informática · Santiago, Chile · 2026</p>
 </footer>
 
+<!-- Fondo 3D con Three.js -->
+<canvas id="three-bg" aria-hidden="true"></canvas>
+
 <script src="cv-data.js"></script>
 <script src="main.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+<script type="module" src="three-bg.js"></script>
 </body>
 </html>
