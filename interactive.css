@@ -24,8 +24,11 @@ html.light {
 }
 
 /* ===== Color base al <html> para que el canvas se vea detrás ===== */
-html { background: var(--bg); }
-body { background: transparent; }
+/* overflow-x:hidden va en <html>, NO en <body>: en <body> convierte al
+   body en contenedor de scroll y Chrome pinta el canvas (z-index negativo)
+   detrás del fondo del body → se ve negro plano. En <html> no lo atrapa. */
+html { background: var(--bg); overflow-x: hidden; }
+body { background: transparent; overflow-x: visible; }
 
 /* ===== Canvas Three.js de fondo ===== */
 #three-bg {
