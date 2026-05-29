@@ -289,42 +289,52 @@ function initShelf() {
     '#bb9457', '#344e41', '#7d4f50', '#40514e', '#a44a3f',
   ];
   const TRIMS = ['#e9c46a', '#d4af37', '#cbd5e1', '#e6ccb2']; // dorados / plata / crema
+  const BOOK_OPTS = {
+    friction: 0.95, frictionStatic: 1.5, restitution: 0,
+    density: 0.02, slop: 0.01, frictionAir: 0.045,
+  };
   const books = [];
   let colorI = 0;
 
+  // Crea un cuerpo-libro con sus props visuales (d) en (x, y).
+  function makeBook(d, x, y) {
+    const b = Bodies.rectangle(x, y, d.w, d.h, BOOK_OPTS);
+    b.userData = {
+      w: d.w, h: d.h, color: d.color, trim: d.trim,
+      bands: d.bands, plate: d.plate, grab: 0, home: { x, y },
+    };
+    World.add(world, b);
+    books.push(b);
+    return b;
+  }
+
   // Coloca una fila de libros sobre una superficie, dejando ~25% de hueco.
   function fillRow(surfaceTop, ceiling) {
-    const interiorW = (VW - T) - T;          // entre paredes
-    const usable = interiorW * 0.74;          // dejar espacio para que caigan
+    const usable = ((VW - T) - T) * 0.74;     // dejar espacio para que caigan
     const space = surfaceTop - ceiling;       // alto disponible
     let x = T + 6;
     while (x < T + usable) {
       const bw = 16 + Math.floor(Math.random() * 11);          // grosor lomo 16-26
       const bh = Math.min(space - 6, 58 + Math.floor(Math.random() * 30)); // alto
-      const cx = x + bw / 2;
-      const cy = surfaceTop - bh / 2;
-      const book = Bodies.rectangle(cx, cy, bw, bh, {
-        friction: 0.95, frictionStatic: 1.5, restitution: 0,
-        density: 0.02, slop: 0.01,
-        frictionAir: 0.045,   // amortigua el movimiento: nada sale disparado
-      });
-      book.userData = {
+      const d = {
         w: bw, h: bh,
         color: COLORS[colorI % COLORS.length],
         trim: TRIMS[colorI % TRIMS.length],
         bands: 2 + Math.floor(Math.random() * 2),
-        plate: 0.35 + Math.random() * 0.15,    // posición vertical de la placa
-        grab: 0,                               // animación de agarre (0..1)
-        home: { x: cx, y: cy },
+        plate: 0.35 + Math.random() * 0.15,
       };
       colorI++;
-      World.add(world, book);
-      books.push(book);
+      makeBook(d, x + bw / 2, surfaceTop - bh / 2);
       x += bw + 4;
     }
   }
-  fillRow(SHELF_Y - SHELF_TH / 2, T);          // fila superior (sobre la repisa)
-  fillRow(FLOOR_TOP, SHELF_Y + SHELF_TH / 2);  // fila inferior (sobre el piso)
+
+  function buildBooks() {
+    colorI = 0;
+    fillRow(SHELF_Y - SHELF_TH / 2, T);          // fila superior (sobre la repisa)
+    fillRow(FLOOR_TOP, SHELF_Y + SHELF_TH / 2);  // fila inferior (sobre el piso)
+  }
+  buildBooks();
 
   // --- Hojas que saltan al agitar ---
   const pages = [];
@@ -342,9 +352,83 @@ function initShelf() {
     }
   }
 
-  // --- Arrastre + detección de "agitar" ---
+  // ============================================================
+  // LIBROS FLOTANTES (fuera de la estantería, fijos al viewport)
+  // ============================================================
+  const floating = [];
+
+  function placeEl(fb) {
+    fb.el.style.left = fb.x + 'px';
+    fb.el.style.top = fb.y + 'px';
+  }
+
+  function createFloating(d, cx, cy, state) {
+    const sc = (canvas.getBoundingClientRect().width / VW) || 1.5;
+    const wpx = Math.max(10, Math.round(d.w * sc));
+    const hpx = Math.max(16, Math.round(d.h * sc));
+    const el = document.createElement('canvas');
+    el.className = 'floating-book';
+    el.width = d.w; el.height = d.h;
+    el.style.width = wpx + 'px';
+    el.style.height = hpx + 'px';
+    const c = el.getContext('2d');
+    c.imageSmoothingEnabled = false;
+    paintBook(c, 0, 0, d.w, d.h, d);
+    document.body.appendChild(el);
+    const fb = { el, d, wpx, hpx, x: cx - wpx / 2, y: cy - hpx / 2, vy: 0, state };
+    placeEl(fb);
+    el.addEventListener('pointerdown', (ev) => regrab(fb, ev));
+    floating.push(fb);
+    return fb;
+  }
+
+  function removeFloating(fb) {
+    fb.el.remove();
+    const i = floating.indexOf(fb);
+    if (i >= 0) floating.splice(i, 1);
+  }
+
+  // Volver a tomar un libro del suelo
+  function regrab(fb, ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    fb.state = 'drag';
+    const el = fb.el;
+    const offx = ev.clientX - fb.x, offy = ev.clientY - fb.y;
+    try { el.setPointerCapture(ev.pointerId); } catch (_) {}
+    const mv = (e2) => { fb.x = e2.clientX - offx; fb.y = e2.clientY - offy; placeEl(fb); };
+    const up = (e2) => {
+      el.removeEventListener('pointermove', mv);
+      el.removeEventListener('pointerup', up);
+      el.removeEventListener('pointercancel', up);
+      finalizeFloating(fb, e2.clientX, e2.clientY);
+    };
+    el.addEventListener('pointermove', mv);
+    el.addEventListener('pointerup', up);
+    el.addEventListener('pointercancel', up);
+  }
+
+  // Al soltar: si está sobre la estantería se reintegra; si no, cae al suelo.
+  function finalizeFloating(fb, cx, cy) {
+    const r = canvas.getBoundingClientRect();
+    const inside = cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom;
+    if (inside) {
+      let wx = (cx - r.left) / r.width * VW;
+      let wy = (cy - r.top) / r.height * VH;
+      wx = Math.max(T + fb.d.w / 2, Math.min(VW - T - fb.d.w / 2, wx));
+      wy = Math.max(T + fb.d.h / 2, Math.min(VH - T - fb.d.h / 2, wy));
+      makeBook(fb.d, wx, wy);
+      removeFloating(fb);
+    } else {
+      fb.state = 'fall';
+      fb.vy = 0;
+    }
+  }
+
+  // --- Arrastre dentro de la estantería + detección de "agitar"/expulsión ---
   let dragBody = null;
   let dragConstraint = null;
+  let ejected = null;     // libro expulsado durante el arrastre actual
   let lastP = null, lastT = 0, shakeCooldown = 0;
   const MAX_SPEED = 11;   // tope de velocidad de CUALQUIER libro (anti-tunneling y anti-"saltón")
   const MAX_SPIN = 0.35;  // tope de velocidad angular
@@ -355,6 +439,19 @@ function initShelf() {
       x: (e.clientX - r.left) / r.width * VW,
       y: (e.clientY - r.top) / r.height * VH,
     };
+  }
+
+  function eject(book, cx, cy) {
+    if (dragConstraint) { World.remove(world, dragConstraint); dragConstraint = null; }
+    const i = books.indexOf(book);
+    if (i >= 0) books.splice(i, 1);
+    World.remove(world, book);
+    const d = book.userData;
+    dragBody = null;
+    return createFloating(
+      { w: d.w, h: d.h, color: d.color, trim: d.trim, bands: d.bands, plate: d.plate },
+      cx, cy, 'drag',
+    );
   }
 
   canvas.addEventListener('pointerdown', (e) => {
@@ -372,14 +469,28 @@ function initShelf() {
     });
     World.add(world, dragConstraint);
     lastP = p; lastT = performance.now();
-    if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+    try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
   });
 
   canvas.addEventListener('pointermove', (e) => {
+    // Si ya fue expulsado, el libro flotante sigue al puntero a nivel de página.
+    if (ejected) {
+      ejected.x = e.clientX - ejected.wpx / 2;
+      ejected.y = e.clientY - ejected.hpx / 2;
+      placeEl(ejected);
+      return;
+    }
     if (!dragConstraint) return;
+
+    // ¿El puntero salió del canvas? → expulsar el libro de la estantería.
+    const r = canvas.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) {
+      ejected = eject(dragBody, e.clientX, e.clientY);
+      return;
+    }
+
     const p = toWorld(e);
     dragConstraint.pointA = p;
-
     const now = performance.now();
     const dt = Math.max(16, now - lastT);
     const speed = Math.hypot(p.x - lastP.x, p.y - lastP.y) / dt * 1000; // px/s
@@ -390,25 +501,47 @@ function initShelf() {
     lastP = p; lastT = now;
   });
 
-  function drop() {
+  function endDrag(e) {
+    if (ejected) {
+      finalizeFloating(ejected, e ? e.clientX : -1, e ? e.clientY : -1);
+      ejected = null;
+    }
     if (dragConstraint) { World.remove(world, dragConstraint); dragConstraint = null; }
     dragBody = null;
   }
-  canvas.addEventListener('pointerup', drop);
-  canvas.addEventListener('pointercancel', drop);
-  canvas.addEventListener('pointerleave', drop);
+  canvas.addEventListener('pointerup', endDrag);
+  canvas.addEventListener('pointercancel', endDrag);
 
-  // --- Reordenar ---
+  // --- Reordenar: vuelve al estado inicial (incluye libros del suelo) ---
   resetBtn.addEventListener('click', () => {
-    drop();
+    endDrag(null);
+    for (const fb of [...floating]) removeFloating(fb);
+    for (const b of [...books]) World.remove(world, b);
+    books.length = 0;
     pages.length = 0;
-    for (const b of books) {
-      Body.setPosition(b, { x: b.userData.home.x, y: b.userData.home.y });
-      Body.setAngle(b, 0);
-      Body.setVelocity(b, { x: 0, y: 0 });
-      Body.setAngularVelocity(b, 0);
-    }
+    buildBooks();
   });
+
+  // Reposiciona los libros del suelo al final del viewport (scroll/resize).
+  function updateFloating() {
+    for (const fb of floating) {
+      if (fb.state === 'drag') continue;
+      if (fb.state === 'fall') {
+        fb.vy += 1.1;
+        fb.y += fb.vy;
+        const restTop = innerHeight - fb.hpx - 6;
+        if (fb.y >= restTop) {
+          fb.y = restTop;
+          if (fb.vy > 2.4) fb.vy *= -0.26;     // rebote suave
+          else { fb.vy = 0; fb.state = 'rest'; }
+        }
+      } else { // rest: pegado al fondo del viewport
+        fb.y = innerHeight - fb.hpx - 6;
+      }
+      fb.x = Math.max(6, Math.min(innerWidth - fb.wpx - 6, fb.x));
+      placeEl(fb);
+    }
+  }
 
   // --- Render pixel-art ---
   function draw() {
@@ -441,55 +574,56 @@ function initShelf() {
     for (let i = x + 6; i < x + w; i += 14) ctx.fillRect(i, y + 2, 1, h - 4);
   }
 
+  // Dibuja un libro pixel-art en (x,y) con tamaño w×h sobre el contexto c.
+  // Reutilizado por la estantería y por los libros flotantes.
+  function paintBook(c, x, y, w, h, d) {
+    // cuerpo (tapa)
+    c.fillStyle = d.color;
+    c.fillRect(x, y, w, h);
+    // sombra lateral derecha + luz lateral izquierda (volumen)
+    c.fillStyle = 'rgba(0,0,0,0.28)';
+    c.fillRect(x + w - 3, y, 3, h);
+    c.fillStyle = 'rgba(255,255,255,0.16)';
+    c.fillRect(x + 2, y, 2, h);
+    // encuadernación (lomo) a la izquierda
+    c.fillStyle = 'rgba(0,0,0,0.22)';
+    c.fillRect(x, y, 2, h);
+
+    // páginas arriba y abajo (cantos de hoja)
+    c.fillStyle = '#efe6cf';
+    c.fillRect(x + 3, y, w - 6, 2);
+    c.fillRect(x + 3, y + h - 2, w - 6, 2);
+    c.fillStyle = 'rgba(0,0,0,0.18)';
+    c.fillRect(x + 3, y + h - 1, w - 6, 1);
+
+    // bandas decorativas (trim dorado)
+    c.fillStyle = d.trim;
+    c.fillRect(x + 3, y + Math.round(h * 0.16), w - 6, 2);
+    c.fillRect(x + 3, y + h - Math.round(h * 0.16) - 2, w - 6, 2);
+
+    // placa de título con "texto"
+    const plateY = y + Math.round(h * d.plate);
+    const plateH = Math.min(20, Math.round(h * 0.28));
+    c.fillStyle = 'rgba(0,0,0,0.18)';
+    c.fillRect(x + 3, plateY, w - 6, plateH);
+    c.fillStyle = d.trim;
+    for (let i = 0; i < d.bands; i++) {
+      const ly = plateY + 3 + i * 4;
+      if (ly < plateY + plateH - 2) c.fillRect(x + 4, ly, w - 8, 1);
+    }
+  }
+
   function drawBook(b) {
     const d = b.userData;
     ctx.save();
     ctx.translate(Math.round(b.position.x), Math.round(b.position.y));
     ctx.rotate(b.angle);
     const w = d.w, h = d.h, x = -Math.round(w / 2), y = -Math.round(h / 2);
-
-    // resaltado al agarrar
     if (d.grab > 0.01) {
       ctx.fillStyle = `rgba(0,229,255,${0.35 * d.grab})`;
       ctx.fillRect(x - 2, y - 2, w + 4, h + 4);
     }
-
-    // cuerpo (tapa)
-    ctx.fillStyle = d.color;
-    ctx.fillRect(x, y, w, h);
-    // sombra lateral derecha + luz lateral izquierda (volumen)
-    ctx.fillStyle = 'rgba(0,0,0,0.28)';
-    ctx.fillRect(x + w - 3, y, 3, h);
-    ctx.fillStyle = 'rgba(255,255,255,0.16)';
-    ctx.fillRect(x + 2, y, 2, h);
-    // encuadernación (lomo) a la izquierda
-    ctx.fillStyle = 'rgba(0,0,0,0.22)';
-    ctx.fillRect(x, y, 2, h);
-
-    // páginas arriba y abajo (cantos de hoja)
-    ctx.fillStyle = '#efe6cf';
-    ctx.fillRect(x + 3, y, w - 6, 2);
-    ctx.fillRect(x + 3, y + h - 2, w - 6, 2);
-    // líneas de páginas (canto inferior)
-    ctx.fillStyle = 'rgba(0,0,0,0.18)';
-    ctx.fillRect(x + 3, y + h - 1, w - 6, 1);
-
-    // bandas decorativas (trim dorado)
-    ctx.fillStyle = d.trim;
-    const bandY = y + Math.round(h * 0.16);
-    ctx.fillRect(x + 3, bandY, w - 6, 2);
-    ctx.fillRect(x + 3, y + h - Math.round(h * 0.16) - 2, w - 6, 2);
-
-    // placa de título con "texto"
-    const plateY = y + Math.round(h * d.plate);
-    const plateH = Math.min(20, Math.round(h * 0.28));
-    ctx.fillStyle = 'rgba(0,0,0,0.18)';
-    ctx.fillRect(x + 3, plateY, w - 6, plateH);
-    ctx.fillStyle = d.trim;
-    for (let i = 0; i < d.bands; i++) {
-      const ly = plateY + 3 + i * 4;
-      if (ly < plateY + plateH - 2) ctx.fillRect(x + 4, ly, w - 8, 1);
-    }
+    paintBook(ctx, x, y, w, h, d);
     ctx.restore();
   }
 
@@ -545,6 +679,7 @@ function initShelf() {
       if (p.life <= 0 || p.y > VH + 12) pages.splice(i, 1);
     }
 
+    updateFloating();
     draw();
     requestAnimationFrame(loop);
   }

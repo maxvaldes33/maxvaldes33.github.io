@@ -170,6 +170,18 @@ html.light #f1-canvas { background: #1a1c28; }
   padding: 0.5rem 1rem;
 }
 
+/* Libros expulsados de la estantería: viven fijos al viewport */
+.floating-book {
+  position: fixed;
+  z-index: 150;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  cursor: grab;
+  touch-action: none;
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.55));
+}
+.floating-book:active { cursor: grabbing; }
+
 @media (max-width: 640px) {
   .hobbies-grid { grid-template-columns: 1fr; }
 }
