@@ -8,34 +8,30 @@ Portfolio personal de **Maximiliano Valdés**, Ingeniero en Informática (DUOC U
 
 ## ✨ Qué muestra el portfolio
 
-Sitio de una sola página (single-page) con navegación por anclas y las siguientes secciones:
+Sitio de una sola página con navegación por anclas:
 
 | Sección | Contenido |
 |---|---|
-| **Hero** | Presentación, badges de disponibilidad, CTAs (experiencia, contacto, CV), redes y widgets de clima + contador de visitas |
-| **Sobre mí** | Perfil profesional, idiomas y modalidad de trabajo (remoto / híbrido / presencial) |
-| **Habilidades** | Barras de dominio por tecnología + tarjetas por área (Python, Datos & Reportes, IA & Automatización, Web, Cloud/DevOps, FastAPI) con tecnologías como **botones 3D interactivos** |
-| **Experiencia** | Línea de tiempo con las posiciones laborales y logros |
-| **Educación & Certificados** | Formación académica + galería de certificados verificables (lightbox) |
-| **Proyectos & Roadmap** | Proyectos construidos y en desarrollo, con su stack y enlaces a GitHub |
-| **Áreas de desarrollo** | Ejes de crecimiento técnico en foco |
-| **Datos en tiempo real (APIs)** | Integraciones en vivo: cripto (Binance), actividad en GitHub, noticias tech (Hacker News), ubicación por IP (ipinfo.io), tipo de cambio (Banco Central de Chile vía mindicador.cl) y un chiste dev (JokeAPI) |
-| **Contacto** | Enlaces directos (email, LinkedIn, teléfono) y formulario |
+| **Inicio** | Presentación, enfoque profesional, modalidad de trabajo y accesos a CV, LinkedIn y GitHub |
+| **01 · Trabajo** | Tres casos reales (problema → solución → resultado) y otros proyectos personales con enlace a GitHub |
+| **02 · Experiencia** | Trayectoria con logros concretos por cargo |
+| **03 · Habilidades** | Herramientas agrupadas por tipo de problema; las que están en aprendizaje aparecen marcadas |
+| **04 · Formación** | Título, cursos, idiomas y certificados verificables (visor con teclado) |
+| **05 · Contacto** | Datos directos y formulario con validación en línea (Web3Forms) |
 | **Visor de CV** | CV en `cv-viewer/` con versión PDF descargable |
 
----
-
-## 🎨 Experiencia visual e interactividad
-
-- **Dos modos de tema** con switcher (sistema / claro / oscuro), sin parpadeo al cargar.
-  - **Modo claro:** diseño limpio y moderno, paleta indigo sobre fondo crema.
-  - **Modo oscuro:** estética *hacker cyberpunk futurista* — neón **cyan + magenta**, glow en títulos, scanlines y glitch sutil.
-- **Fondo 3D con Three.js** (sutil): campo de partículas + geometría wireframe (icosaedro en claro, torus-knot + grilla tipo Tron en oscuro) con parallax al mover el mouse. Reacciona al cambio de tema en tiempo real.
-- **Tecnologías como botones 3D:** inclinación que sigue al cursor, borde luminoso y brillo radial.
-- Otros efectos: botones magnéticos, tilt 3D en tarjetas, parallax del hero, animación *text-scramble* del nombre y grano (noise) sutil sobre todo el sitio.
-- **Accesible:** respeta `prefers-reduced-motion` (desactiva el fondo/animaciones) y degrada de forma limpia en dispositivos táctiles o sin conexión.
+Los casos de trabajo omiten clientes, proveedores y montos por confidencialidad.
 
 ---
+
+## 🎨 Diseño
+
+- **Estética editorial:** fondo tipo papel, tinta cálida y un solo color de acento (verde profundo).
+- **Tipografía:** Newsreader (títulos), Geist (texto) y Geist Mono (fechas, etiquetas y datos).
+- **Tema claro y oscuro** que sigue al sistema, con selector Sistema / Claro / Oscuro en el pie de página y sin parpadeo al cargar.
+- **Accesible:** enlace para saltar al contenido, foco visible con teclado, landmarks semánticos y respeto a `prefers-reduced-motion`.
+- **Liviano:** sin fondo 3D ni widgets externos; el grano de papel es un SVG estático.
+- **Vista previa para redes:** `og-image.png` (1200 × 630) para LinkedIn y otras plataformas.
 
 ---
 
@@ -55,9 +51,8 @@ Haz **5 clicks en el logo "MV."** para desbloquear una zona secreta con dos mini
 ## 🛠️ Stack técnico
 
 - **HTML5 + CSS3 + JavaScript** (vanilla, sin frameworks ni build step)
-- **[Three.js](https://threejs.org/)** r160 (fondo 3D · módulo ES vía CDN)
-- **[Matter.js](https://brm.io/matter-js/)** (físicas 2D de la biblioteca pixel-art)
-- Tipografías: **Archivo** + **Space Grotesk** (Google Fonts)
+- **[Matter.js](https://brm.io/matter-js/)** (físicas 2D de la biblioteca pixel-art del easter egg)
+- Tipografías: **Newsreader**, **Geist** y **Geist Mono** (Google Fonts)
 - Hospedaje: **GitHub Pages** (deploy automático desde `main`)
 
 ---
@@ -67,11 +62,10 @@ Haz **5 clicks en el logo "MV."** para desbloquear una zona secreta con dos mini
 ```
 .
 ├── index.html        # Página principal (todas las secciones)
-├── styles.css        # Estilos base + sistema de tema (claro/oscuro)
-├── interactive.css   # Botones 3D, fondo Three.js y acentos cyberpunk
-├── main.js           # Lógica: tema, widgets, APIs en vivo, efectos
-├── three-bg.js       # Fondo animado Three.js + tilt 3D de tecnologías
-├── cv-data.js        # Datos del CV
+├── styles.css        # Sistema de diseño: tokens, tema claro/oscuro y componentes
+├── main.js           # Tema, navegación, visor de certificados y formulario
+├── hobbies.css/.js   # Sección oculta (minijuegos)
+├── og-image.png      # Imagen de vista previa para redes
 ├── cv-viewer/        # Visor de CV (HTML + PDF)
 └── Certificados/     # Imágenes/PDF de certificados
 ```
@@ -80,7 +74,7 @@ Haz **5 clicks en el logo "MV."** para desbloquear una zona secreta con dos mini
 
 ## 🚀 Ejecutar en local
 
-No requiere build. Basta con servir la carpeta (Three.js usa módulos ES, así que conviene un servidor en vez de abrir el archivo directo):
+No requiere build. Basta con servir la carpeta (el easter egg usa módulos ES, así que conviene un servidor en vez de abrir el archivo directo):
 
 ```bash
 python3 -m http.server 8000
