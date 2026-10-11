@@ -20,7 +20,7 @@ Sitio de una sola página con navegación por anclas:
 | **05 · Contacto** | Datos directos y formulario con validación en línea (Web3Forms) |
 | **Visor de CV** | CV en `cv-viewer/` con versión PDF descargable |
 
-Los casos de trabajo omiten clientes, proveedores y montos por confidencialidad.
+Los casos de trabajo omiten clientes, proveedores y cualquier cifra de la operación por confidencialidad.
 
 ---
 
