@@ -88,6 +88,7 @@ document.addEventListener('keydown', e => {
 // ── CERTIFICADOS (lightbox) ───────────────────────────────
 const GALLERY = [
   { src: 'Certificados/1768766643346.jpeg',          caption: 'Ingeniería en Informática · DUOC UC · 2025' },
+  { src: 'Certificados/certificado_claude_analisis_datos_uc.jpeg', caption: 'Taller de Claude para el análisis de datos · Pontificia Universidad Católica de Chile · 2026' },
   { src: 'Certificados/1756486420666.jpeg',          caption: 'Introducción a la Ciencia de Datos · Santander Open Academy' },
   { src: 'Certificados/certificado_matematicas.jpeg', caption: 'Fundamentos de Matemáticas para Informáticos · Mastermind' },
 ];
