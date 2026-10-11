@@ -150,7 +150,7 @@
         <h2 class="section-title reveal" id="trabajo-title">Trabajo seleccionado</h2>
         <p class="section-desc reveal">
           Herramientas construidas para la operación de una empresa de cobranza. Omito clientes y datos por
-          confidencialidad; las cifras provienen de las pruebas y validaciones de cada proyecto.
+          confidencialidad; las mejoras se expresan en porcentajes medidos en las pruebas de cada proyecto.
         </p>
       </div>
     </header>
@@ -170,7 +170,7 @@
           <dl class="case-points">
             <div>
               <dt>Problema</dt>
-              <dd>Cientos de reportes en formatos distintos (un proveedor envía 151 archivos en unos 13 formatos) que había que consolidar a mano para validar cada factura.</dd>
+              <dd>Cientos de reportes en formatos distintos (un solo proveedor aporta cerca de un tercio de los archivos, en unos 13 formatos) que había que consolidar a mano para validar cada factura.</dd>
             </div>
             <div>
               <dt>Solución</dt>
@@ -178,7 +178,7 @@
             </div>
             <div class="result">
               <dt>Resultado</dt>
-              <dd>Procesa ~3,5 millones de filas al mes. Con caché, la carga baja de 23 s a 0,3 s. 99 pruebas automáticas, y el estimado cuadra al peso con la prefactura real.</dd>
+              <dd>La caché reduce el tiempo de carga en un 98,7 % y la lectura en paralelo, en un 82 % en Windows. 99 pruebas automáticas; en la validación, el estimado coincidió al peso con la prefactura real.</dd>
             </div>
           </dl>
           <ul class="tags case-foot" aria-label="Tecnologías">
@@ -220,37 +220,6 @@
         </article>
       </li>
 
-      <li class="case reveal">
-        <div>
-          <p class="case-num">03</p>
-          <p class="case-meta-line">Multicob · 2026<br>En diseño</p>
-        </div>
-        <article>
-          <h3>Migración de una macro VBA a Python y PostgreSQL</h3>
-          <p class="case-summary">
-            Rediseño del sistema que clasifica las gestiones de cobranza, que hoy depende de una macro sobre un
-            libro Excel de 117 MB.
-          </p>
-          <dl class="case-points">
-            <div>
-              <dt>Problema</dt>
-              <dd>La macro clasifica ~2,2 millones de gestiones al mes sobre un único archivo, difícil de auditar y de escalar.</dd>
-            </div>
-            <div>
-              <dt>Diseño</dt>
-              <dd>Base de datos por capas (raw, staging, core, reporting, audit), tabla particionada por mes, cargas idempotentes con SHA&#8209;256 y roles con auditoría. Decisiones registradas en 10 ADR.</dd>
-            </div>
-            <div class="result">
-              <dt>Hallazgos</dt>
-              <dd>El perfilado de datos detectó ~728 mil filas mal clasificadas y mostró que python-calamine lee los archivos 6 veces más rápido.</dd>
-            </div>
-          </dl>
-          <ul class="tags case-foot" aria-label="Tecnologías">
-            <li class="tag">Python</li><li class="tag">PostgreSQL</li><li class="tag">python-calamine</li>
-            <li class="tag">SQL</li><li class="tag">TOML</li>
-          </ul>
-        </article>
-      </li>
     </ol>
 
     <h3 class="cert-head reveal">Otros proyectos</h3>
@@ -306,9 +275,9 @@
           <h3 class="xp-role">Técnico en Informática, Soporte de Cobranza</h3>
           <p class="xp-org">Multicob Chile Ltda.</p>
           <ul>
-            <li>Desarrollé el control de facturación de cuatro proveedores de mensajería, que procesa ~3,5 millones de filas al mes y cuadra al peso con la prefactura.</li>
+            <li>Desarrollé el control de facturación de cuatro proveedores de mensajería, que reduce en un 98,7 % el tiempo de carga de los reportes y cuyo estimado coincidió al peso con la prefactura real.</li>
             <li>Automaticé la preparación diaria de campañas de email y SMS, antes armadas a mano en Excel; la herramienta corre en macOS y Windows.</li>
-            <li>Diseño la migración de una macro VBA que clasifica ~2,2 millones de gestiones mensuales a Python y PostgreSQL.</li>
+            <li>Diseño la migración a Python y PostgreSQL de una macro VBA que clasifica las gestiones de cobranza (en curso).</li>
             <li>Gestiono campañas masivas por email, SMS y WhatsApp con varios proveedores, y mantengo macros VBA y reportes para supervisión.</li>
           </ul>
         </div>
@@ -360,7 +329,7 @@
       <p class="section-label reveal"><b>03</b>Habilidades</p>
       <div>
         <h2 class="section-title reveal" id="habilidades-title">Herramientas que uso a diario</h2>
-        <p class="section-desc reveal">Agrupadas por el tipo de problema que resuelven. Las que estoy aprendiendo aparecen marcadas.</p>
+        <p class="section-desc reveal">Agrupadas por el tipo de problema que resuelven. Las de nivel básico o que estoy aprendiendo aparecen marcadas.</p>
       </div>
     </header>
 
@@ -401,21 +370,21 @@
         <h3>Reportes y análisis</h3>
         <p>Indicadores operativos y análisis estadístico con fuentes verificables.</p>
         <ul class="tags">
-          <li class="tag">Power BI</li><li class="tag">ECharts</li><li class="tag">Google Sheets</li><li class="tag">Muestreo complejo</li>
+          <li class="tag is-learning">Power BI</li><li class="tag">ECharts</li><li class="tag">Google Sheets</li><li class="tag">Muestreo complejo</li>
         </ul>
       </div>
       <div class="skill-group reveal">
         <h3>IA aplicada al desarrollo</h3>
         <p>Asistentes de código y análisis de datos con IA, extendidos con herramientas propias.</p>
         <ul class="tags">
-          <li class="tag">Claude Code</li><li class="tag">Claude para análisis de datos</li><li class="tag">MCP</li><li class="tag">Hooks y skills</li><li class="tag is-learning">Ollama</li>
+          <li class="tag">Claude API</li><li class="tag">Claude Code</li><li class="tag">Claude para análisis de datos</li><li class="tag">MCP</li><li class="tag">Hooks y skills</li><li class="tag is-learning">Ollama</li>
         </ul>
       </div>
     </div>
 
     <div class="skills-legend reveal">
       <span><span class="tag">Python</span> Uso en proyectos</span>
-      <span><span class="tag is-learning">PostgreSQL</span> Aprendiendo</span>
+      <span><span class="tag is-learning">PostgreSQL</span> Nivel básico o en aprendizaje</span>
     </div>
   </div>
 </section>
