@@ -25,38 +25,46 @@
 
 -->
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="no-js">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maximiliano Valdés — Ingeniero en Informática</title>
+  <meta name="description" content="Ingeniero en Informática en Santiago de Chile. Desarrollo herramientas en Python que automatizan procesos operativos: procesamiento de datos, aplicaciones de escritorio y pruebas automáticas." />
+  <meta name="author" content="Maximiliano Valdés" />
+  <link rel="canonical" href="https://maxvaldes33.github.io/" />
 
-  <!-- Favicon SVG -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237c83ff'/><text x='50' y='68' font-family='system-ui,sans-serif' font-size='44' font-weight='800' fill='white' text-anchor='middle'>MV</text></svg>" />
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%231f5c4a'/><text x='32' y='43' font-family='Georgia,serif' font-size='30' text-anchor='middle' fill='%23f6f4ef'>MV</text></svg>" />
 
-  <!-- Open Graph / LinkedIn preview -->
+  <!-- Open Graph / LinkedIn -->
   <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://maxvaldes33.github.io/" />
   <meta property="og:title"       content="Maximiliano Valdés — Ingeniero en Informática" />
-  <meta property="og:description" content="Portfolio profesional · Python · Automatización · IA aplicada · Power BI · Santiago, Chile" />
+  <meta property="og:description" content="Automatización de procesos con Python: procesamiento de datos, aplicaciones de escritorio y pruebas automáticas. Santiago, Chile." />
+  <meta property="og:image"       content="https://maxvaldes33.github.io/og-image.png" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:locale"      content="es_CL" />
-  <meta name="description"        content="Portfolio profesional de Maximiliano Valdés, Ingeniero en Informática especializado en Python, automatización, IA y análisis de datos." />
-  <meta name="author"             content="Maximiliano Valdés" />
-  <meta name="theme-color"        content="#7c83ff" />
+  <meta name="twitter:card"       content="summary_large_image" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f4ef" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#131311" />
 
-  <!-- Fonts: Archivo + Space Grotesk -->
+  <!-- Tipografías: Newsreader (títulos) + Geist (texto) + Geist Mono (datos) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..500&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="interactive.css" />
   <link rel="stylesheet" href="hobbies.css" />
   <script>
     // ── Tema sin flash (antes del render) ──
     (function() {
+      var root = document.documentElement;
+      root.classList.remove('no-js');
       var mode = localStorage.getItem('themeMode') || 'system';
       var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       var isDark = mode === 'system' ? prefersDark : mode === 'dark';
-      if (!isDark) document.documentElement.classList.add('light');
+      if (!isDark) root.classList.add('light');
     })();
 
     // ── Scroll restore ──
@@ -71,694 +79,451 @@
 </head>
 <body>
 
-<!-- NOISE CANVAS -->
-<canvas id="noise-canvas" aria-hidden="true"></canvas>
-
-<!-- SCROLL PROGRESS -->
-<div id="scroll-progress"></div>
-
-<!-- BACK TO TOP -->
-<button id="back-to-top" aria-label="Volver al inicio" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-
-
-<!-- THEME SWITCHER — fixed bottom-right -->
-<div id="theme-switcher" aria-label="Cambiar tema">
-  <button id="theme-current" aria-label="Tema actual" aria-expanded="false">
-    <!-- ícono activo inyectado por JS -->
-  </button>
-  <div id="theme-options" role="group">
-    <button class="theme-btn" data-theme="system" aria-label="Seguir dispositivo" id="theme-btn-system"><!-- JS --></button>
-    <button class="theme-btn" data-theme="dark"   aria-label="Modo oscuro">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    </button>
-    <button class="theme-btn" data-theme="light"  aria-label="Modo claro">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-    </button>
-  </div>
-</div>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
 
 <!-- NAV -->
-<nav>
-  <span class="nav-logo">MV.</span>
-  <ul class="nav-links" id="nav-links">
-    <li><a href="#sobre-mi" class="nav-link-item">Sobre mí</a></li>
-    <li><a href="#habilidades" class="nav-link-item">Skills</a></li>
-    <li><a href="#experiencia" class="nav-link-item">Experiencia</a></li>
-    <li><a href="#educacion" class="nav-link-item">Educación</a></li>
-    <li><a href="#proyectos" class="nav-link-item">Proyectos</a></li>
-    <li><a href="#apis" class="nav-link-item">APIs</a></li>
-    <li><a href="#contacto" class="nav-link-item">Contacto</a></li>
-  </ul>
-  <button class="nav-hamburger" id="nav-hamburger" aria-label="Menú" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
+<header class="site-nav" id="site-nav">
+  <nav class="container nav-inner" aria-label="Principal">
+    <span class="nav-logo" title="Maximiliano Valdés">MV<span>.</span></span>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#trabajo" class="nav-link-item">Trabajo</a></li>
+      <li><a href="#experiencia" class="nav-link-item">Experiencia</a></li>
+      <li><a href="#habilidades" class="nav-link-item">Habilidades</a></li>
+      <li><a href="#formacion" class="nav-link-item">Formación</a></li>
+      <li><a href="#contacto" class="nav-link-item">Contacto</a></li>
+    </ul>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-links">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<main id="contenido" tabindex="-1">
 
 <!-- HERO -->
-<section class="hero" id="inicio">
-  <div class="hero-bg">
-    <div class="hero-orb hero-orb-1"></div>
-    <div class="hero-orb hero-orb-2"></div>
-    <div class="hero-orb hero-orb-3"></div>
-  </div>
-  <div class="hero-grid"></div>
-  <div class="hero-content">
-    <div class="hero-badges">
-      <div class="hero-badge">Disponible para nuevas oportunidades</div>
-      <div class="hero-badge availability">Remoto · Híbrido · Santiago, CL</div>
-    </div>
-    <h1>
-      <span class="hero-first-name" data-scramble="Maximiliano">Maximiliano</span><br>
-      <span class="hero-name-gradient" data-scramble="Valdés">Valdés</span>
-    </h1>
-    <p class="hero-sub">
-      Ingeniero en Informática · Automatización · Python · IA aplicada · Power BI
-    </p>
-    <div class="hero-ctas">
-      <a href="#experiencia" class="btn btn-primary" data-magnetic>Ver experiencia</a>
-      <a href="#contacto" class="btn btn-outline" data-magnetic>Contactar</a>
-      <a href="cv-viewer/cv-viewer.html" target="_blank" rel="noopener" class="btn btn-download" data-magnetic>Ver CV</a>
-    </div>
-    <div class="hero-social">
-      <a href="https://www.linkedin.com/in/maximiliano-alejandro-valdes-musrri-716678271/" target="_blank" rel="noopener" class="hero-social-link" aria-label="LinkedIn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        LinkedIn
-      </a>
-      <span class="hero-social-sep"></span>
-      <a href="https://github.com/maxvaldes33" target="_blank" rel="noopener" class="hero-social-link" aria-label="GitHub">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-        GitHub
-      </a>
-    </div>
-    <!-- Hero widgets row -->
-    <div class="hero-widgets-row">
-      <div id="weather-widget">
-        <div class="w-spinner"></div>
-        <span class="w-desc">Obteniendo clima...</span>
-      </div>
-      <div id="visit-counter">
-        <span class="w-icon">👁</span>
-        <span class="w-desc">Cargando visitas...</span>
+<section class="hero" id="inicio" aria-labelledby="hero-title">
+  <div class="container hero-grid">
+    <div>
+      <p class="hero-kicker"><span class="status-dot" aria-hidden="true"></span>Disponible para nuevas oportunidades · Santiago, Chile</p>
+      <h1 id="hero-title">Maximiliano<br><em>Valdés</em></h1>
+      <p class="hero-lead">
+        Ingeniero en Informática. Desarrollo herramientas en Python que reemplazan procesos manuales en Excel
+        <span>— desde millones de filas mensuales hasta reportes confiables, probados y listos para usar.</span>
+      </p>
+      <div class="hero-actions">
+        <a href="#trabajo" class="btn btn-primary">Ver trabajo <span class="arrow" aria-hidden="true">→</span></a>
+        <a href="cv-viewer/cv-viewer.html" target="_blank" rel="noopener" class="btn btn-outline">Ver CV</a>
+        <div class="hero-links">
+          <a class="link" href="https://www.linkedin.com/in/maximiliano-alejandro-valdes-musrri-716678271/" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="link" href="https://github.com/maxvaldes33" target="_blank" rel="noopener">GitHub</a>
+        </div>
       </div>
     </div>
+
+    <dl class="hero-facts">
+      <div>
+        <dt>Actualmente</dt>
+        <dd>Técnico en Informática en Multicob, empresa de cobranza.</dd>
+      </div>
+      <div>
+        <dt>Enfoque</dt>
+        <dd>Automatización de procesos, procesamiento de datos y aplicaciones de escritorio en Python.</dd>
+      </div>
+      <div>
+        <dt>Formación</dt>
+        <dd>Ingeniero en Informática, DUOC UC (2025).</dd>
+      </div>
+      <div>
+        <dt>Modalidad</dt>
+        <dd>Remoto, híbrido o presencial en Santiago.</dd>
+      </div>
+    </dl>
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats">
-  <div class="stats-grid">
-    <div>
-      <div class="stat-num" data-count="3">0</div>
-      <div class="stat-label">Años de experiencia</div>
-    </div>
-    <div>
-      <div class="stat-num" data-count="5">0</div>
-      <div class="stat-label">Lenguajes / stacks</div>
-    </div>
-    <div>
-      <div class="stat-num" data-count="10">0</div>
-      <div class="stat-label">Librerías Python</div>
-    </div>
-    <div>
-      <div class="stat-num" data-count="4">0</div>
-      <div class="stat-label">Posiciones laborales</div>
-    </div>
-  </div>
-</div>
-
-<!-- SOBRE MI -->
-<section id="sobre-mi">
+<!-- TRABAJO SELECCIONADO -->
+<section id="trabajo" aria-labelledby="trabajo-title">
   <div class="container">
-    <p class="section-label reveal">Quién soy</p>
-    <h2 class="section-title reveal">Perfil profesional</h2>
-    <p class="section-desc reveal" style="max-width:720px; margin-bottom: 2rem;">
-      Ingeniero en Informática titulado en DUOC UC, especializado en
-      <strong style="color:var(--text)">automatización de procesos</strong>,
-      desarrollo de herramientas de escritorio con Python y análisis de datos con Power BI.
-      Experiencia integrando <strong style="color:var(--text)">LLMs (Claude API)</strong> en flujos reales de trabajo,
-      desde generación de reportes hasta sistemas de comunicación masiva vía email, SMS y WhatsApp.
-      Me muevo entre macOS y Windows, valoro los plazos y el trabajo bien hecho.
-    </p>
-    <div class="about-pills reveal">
-      <div class="about-pill">🌐 <strong>Inglés B1</strong> — lectura técnica fluida</div>
-      <div class="about-pill">🇨🇱 <strong>Español</strong> — nativo</div>
-      <div class="about-pill">🏠 Disponible <strong>remoto</strong></div>
-      <div class="about-pill">🏢 Disponible <strong>híbrido / presencial</strong> en Santiago</div>
-      <div class="about-pill">⚡ Incorporación <strong>inmediata</strong></div>
-    </div>
-  </div>
-</section>
-
-<!-- HABILIDADES -->
-<section id="habilidades" style="background: var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
-  <div class="container">
-    <p class="section-label reveal">Stack técnico</p>
-    <h2 class="section-title reveal">Habilidades</h2>
-    <p class="section-desc reveal">Tecnologías y herramientas que domino en el día a día.</p>
-
-    <div class="skills-bars reveal" style="margin-bottom:3rem; display:grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap:1rem;">
+    <header class="section-head">
+      <p class="section-label reveal"><b>01</b>Trabajo</p>
       <div>
-        <div class="skill-bar-wrap">
-          <div class="skill-bar-label"><span>Python</span><span>90%</span></div>
-          <div class="skill-bar-track"><div class="skill-bar-fill fill-purple" data-width="90"></div></div>
-        </div>
-        <div class="skill-bar-wrap">
-          <div class="skill-bar-label"><span>Excel / VBA</span><span>88%</span></div>
-          <div class="skill-bar-track"><div class="skill-bar-fill fill-green" data-width="88"></div></div>
-        </div>
-        <div class="skill-bar-wrap">
-          <div class="skill-bar-label"><span>Power BI</span><span>75%</span></div>
-          <div class="skill-bar-track"><div class="skill-bar-fill fill-pink" data-width="75"></div></div>
-        </div>
+        <h2 class="section-title reveal" id="trabajo-title">Trabajo seleccionado</h2>
+        <p class="section-desc reveal">
+          Herramientas construidas para la operación de una empresa de cobranza. Omito clientes y datos por
+          confidencialidad; las cifras provienen de las pruebas y validaciones de cada proyecto.
+        </p>
       </div>
-      <div>
-        <div class="skill-bar-wrap">
-          <div class="skill-bar-label"><span>SQL / MySQL</span><span>72%</span></div>
-          <div class="skill-bar-track"><div class="skill-bar-fill fill-yellow" data-width="72"></div></div>
-        </div>
-        <div class="skill-bar-wrap">
-          <div class="skill-bar-label"><span>HTML / CSS / JS</span><span>65%</span></div>
-          <div class="skill-bar-track"><div class="skill-bar-fill fill-purple" data-width="65"></div></div>
-        </div>
-        <div class="skill-bar-wrap">
-          <div class="skill-bar-label"><span>Git / GitHub</span><span>68%</span></div>
-          <div class="skill-bar-track"><div class="skill-bar-fill fill-green" data-width="68"></div></div>
-        </div>
-      </div>
-    </div>
+    </header>
 
-    <div class="skills-grid">
-      <div class="skill-card reveal tilt">
-        <div class="skill-card-header">
-          <div class="skill-icon" style="background:rgba(124,131,255,0.12); color:#7c83ff">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
-          </div>
-          <h3>Python Ecosystem</h3>
+    <ol class="cases">
+      <li class="case reveal">
+        <div>
+          <p class="case-num">01</p>
+          <p class="case-meta-line">Multicob · 2026<br>Terminado · v1.2</p>
         </div>
-        <div class="skill-tags">
-          <span class="tag">pandas</span><span class="tag">openpyxl</span>
-          <span class="tag">PyQt5</span><span class="tag">tkinter</span>
-          <span class="tag">Selenium</span><span class="tag">PyInstaller</span>
-          <span class="tag">requests</span>
+        <article>
+          <h3>Control de facturación de proveedores de mensajería</h3>
+          <p class="case-summary">
+            Aplicación de escritorio que calcula cada mes lo que se paga a cuatro proveedores de SMS, WhatsApp,
+            correo y bot de voz, a partir de sus reportes crudos.
+          </p>
+          <dl class="case-points">
+            <div>
+              <dt>Problema</dt>
+              <dd>Cientos de reportes en formatos distintos (un proveedor envía 151 archivos en unos 13 formatos) que había que consolidar a mano para validar cada factura.</dd>
+            </div>
+            <div>
+              <dt>Solución</dt>
+              <dd>Un lector por proveedor, consolidación con caché y lectura en paralelo, y un panel con detalle, comparativo mensual con proyección de cierre y control contra presupuesto y factura real.</dd>
+            </div>
+            <div class="result">
+              <dt>Resultado</dt>
+              <dd>Procesa ~3,5 millones de filas al mes. Con caché, la carga baja de 23 s a 0,3 s. 99 pruebas automáticas, y el estimado cuadra al peso con la prefactura real.</dd>
+            </div>
+          </dl>
+          <ul class="tags case-foot" aria-label="Tecnologías">
+            <li class="tag">Python</li><li class="tag">pandas</li><li class="tag">PyQt5</li><li class="tag">QtWebEngine</li>
+            <li class="tag">ECharts</li><li class="tag">multiprocessing</li><li class="tag">PyInstaller</li><li class="tag">unittest</li>
+          </ul>
+        </article>
+      </li>
+
+      <li class="case reveal">
+        <div>
+          <p class="case-num">02</p>
+          <p class="case-meta-line">Multicob · 2026<br>En uso · v2.0</p>
         </div>
-      </div>
-      <div class="skill-card reveal tilt">
-        <div class="skill-card-header">
-          <div class="skill-icon" style="background:rgba(61,214,164,0.12); color:#3dd6a4">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-4"/></svg>
-          </div>
-          <h3>Datos & Reportes</h3>
+        <article>
+          <h3>Preparación automática de campañas de email y SMS</h3>
+          <p class="case-summary">
+            Herramienta de escritorio que arma las bases diarias de una campaña de cobranza para una empresa
+            de servicios básicos.
+          </p>
+          <dl class="case-points">
+            <div>
+              <dt>Problema</dt>
+              <dd>Cada día las bases de envío se preparaban a mano en Excel: cruces con pagos, filtros, depuración de contactos y tablas dinámicas.</dd>
+            </div>
+            <div>
+              <dt>Solución</dt>
+              <dd>Un flujo de cuatro pasos que excluye cuentas pagadas, corrige errores de tipeo en correos, valida celulares y evita repetir contactos el mismo día.</dd>
+            </div>
+            <div class="result">
+              <dt>Resultado</dt>
+              <dd>La salida coincide con la preparación manual, validada contra muestras reales. Corre en macOS y Windows, y cada cambio se compila y prueba en GitHub Actions.</dd>
+            </div>
+          </dl>
+          <ul class="tags case-foot" aria-label="Tecnologías">
+            <li class="tag">Python</li><li class="tag">pandas</li><li class="tag">openpyxl</li><li class="tag">xlsxwriter</li>
+            <li class="tag">pywebview</li><li class="tag">PyInstaller</li><li class="tag">GitHub Actions</li>
+          </ul>
+        </article>
+      </li>
+
+      <li class="case reveal">
+        <div>
+          <p class="case-num">03</p>
+          <p class="case-meta-line">Multicob · 2026<br>En diseño</p>
         </div>
-        <div class="skill-tags">
-          <span class="tag green">Power BI</span><span class="tag green">Excel Avanzado</span>
-          <span class="tag green">VBA / Macros</span><span class="tag green">SQL</span>
-          <span class="tag green">Google Sheets</span>
+        <article>
+          <h3>Migración de una macro VBA a Python y PostgreSQL</h3>
+          <p class="case-summary">
+            Rediseño del sistema que clasifica las gestiones de cobranza, que hoy depende de una macro sobre un
+            libro Excel de 117 MB.
+          </p>
+          <dl class="case-points">
+            <div>
+              <dt>Problema</dt>
+              <dd>La macro clasifica ~2,2 millones de gestiones al mes sobre un único archivo, difícil de auditar y de escalar.</dd>
+            </div>
+            <div>
+              <dt>Diseño</dt>
+              <dd>Base de datos por capas (raw, staging, core, reporting, audit), tabla particionada por mes, cargas idempotentes con SHA&#8209;256 y roles con auditoría. Decisiones registradas en 10 ADR.</dd>
+            </div>
+            <div class="result">
+              <dt>Hallazgos</dt>
+              <dd>El perfilado de datos detectó ~728 mil filas mal clasificadas y mostró que python-calamine lee los archivos 6 veces más rápido.</dd>
+            </div>
+          </dl>
+          <ul class="tags case-foot" aria-label="Tecnologías">
+            <li class="tag">Python</li><li class="tag">PostgreSQL</li><li class="tag">python-calamine</li>
+            <li class="tag">SQL</li><li class="tag">TOML</li>
+          </ul>
+        </article>
+      </li>
+    </ol>
+
+    <h3 class="cert-head reveal">Otros proyectos</h3>
+    <ul class="others">
+      <li class="other reveal">
+        <div class="other-head">
+          <h4>finanzas-cli</h4>
+          <a class="link mono" href="https://github.com/maxvaldes33/finanzas-cli" target="_blank" rel="noopener">GitHub ↗</a>
         </div>
-      </div>
-      <div class="skill-card reveal tilt">
-        <div class="skill-card-header">
-          <div class="skill-icon" style="background:rgba(255,140,66,0.12); color:#ff8c42">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h1v6H9zm5 0h1v6h-1zM9 12h6"/></svg>
-          </div>
-          <h3>IA & Automatización</h3>
+        <p>Gestor de finanzas personales en la terminal: importa cartolas de bancos chilenos (CSV, Excel y PDF), categoriza gastos y envía reportes por correo.</p>
+        <ul class="tags" aria-label="Tecnologías"><li class="tag">Typer</li><li class="tag">Rich</li><li class="tag">SQLite</li><li class="tag">pdfplumber</li></ul>
+      </li>
+      <li class="other reveal">
+        <div class="other-head">
+          <h4>Hamster Cámara</h4>
+          <a class="link mono" href="https://github.com/maxvaldes33/facedetector" target="_blank" rel="noopener">GitHub ↗</a>
         </div>
-        <div class="skill-tags">
-          <span class="tag pink">Claude API</span><span class="tag pink">Claude Code</span>
-          <span class="tag pink">LLM Workflows</span><span class="tag pink">Email masivo</span>
-          <span class="tag pink">SMS / WhatsApp</span><span class="tag pink">Web scraping</span>
+        <p>Detección de rostro, manos y expresiones en tiempo real, con salida a una cámara virtual para usar en OBS.</p>
+        <ul class="tags" aria-label="Tecnologías"><li class="tag">OpenCV</li><li class="tag">MediaPipe</li><li class="tag">pyvirtualcam</li></ul>
+      </li>
+      <li class="other reveal">
+        <div class="other-head">
+          <h4>Análisis de la encuesta CASEN 2024</h4>
         </div>
-      </div>
-      <div class="skill-card reveal tilt">
-        <div class="skill-card-header">
-          <div class="skill-icon" style="background:rgba(124,131,255,0.1); color:#7c83ff">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          </div>
-          <h3>Web & Herramientas</h3>
+        <p>Replicación de 82 cifras oficiales desde los microdatos, con diseño muestral complejo, marcando la fiabilidad de cada estimación según el estándar del INE.</p>
+        <ul class="tags" aria-label="Temas"><li class="tag">Análisis de datos</li><li class="tag">Muestreo complejo</li></ul>
+      </li>
+      <li class="other reveal">
+        <div class="other-head">
+          <h4>Entorno de desarrollo asistido por IA</h4>
         </div>
-        <div class="skill-tags">
-          <span class="tag yellow">HTML5 / CSS</span><span class="tag yellow">JavaScript</span>
-          <span class="tag yellow">Git / GitHub</span><span class="tag yellow">Notion</span>
-          <span class="tag yellow">Trello</span><span class="tag yellow">Canva</span>
-        </div>
-      </div>
-      <div class="skill-card reveal skill-card-learning">
-        <div class="skill-card-header">
-          <div class="skill-icon" style="background:rgba(255,140,66,0.1); color:#ff8c42">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
-          </div>
-          <h3>Cloud & DevOps <span class="learning-badge">En aprendizaje</span></h3>
-        </div>
-        <div class="skill-tags">
-          <span class="tag yellow">Docker</span><span class="tag yellow">GitHub Actions</span>
-          <span class="tag yellow">AWS básico</span><span class="tag yellow">CI/CD</span>
-          <span class="tag yellow">Linux CLI</span>
-        </div>
-      </div>
-      <div class="skill-card reveal skill-card-learning">
-        <div class="skill-card-header">
-          <div class="skill-icon" style="background:rgba(124,131,255,0.12); color:#7c83ff">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          </div>
-          <h3>FastAPI & Backend <span class="learning-badge">En aprendizaje</span></h3>
-        </div>
-        <div class="skill-tags">
-          <span class="tag">FastAPI</span><span class="tag">REST APIs</span>
-          <span class="tag">PostgreSQL</span><span class="tag">Pydantic</span>
-          <span class="tag">Uvicorn</span>
-        </div>
-      </div>
-    </div>
+        <p>Configuración de Claude Code con hooks, skills y una extensión con pruebas. El archivo automático de sesiones convierte 56 MB de registros en 224 KB de notas consultables.</p>
+        <ul class="tags" aria-label="Tecnologías"><li class="tag">Claude Code</li><li class="tag">MCP</li><li class="tag">JavaScript</li></ul>
+      </li>
+    </ul>
   </div>
 </section>
 
 <!-- EXPERIENCIA -->
-<section id="experiencia">
+<section id="experiencia" aria-labelledby="experiencia-title">
   <div class="container">
-    <p class="section-label reveal">Trayectoria</p>
-    <h2 class="section-title reveal">Experiencia profesional</h2>
-    <p class="section-desc reveal">Posiciones donde generé impacto real con tecnología.</p>
+    <header class="section-head">
+      <p class="section-label reveal"><b>02</b>Experiencia</p>
+      <div>
+        <h2 class="section-title reveal" id="experiencia-title">Trayectoria profesional</h2>
+      </div>
+    </header>
 
-    <div class="timeline">
-
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-header">
-            <div>
-              <div class="timeline-title">Técnico en Informática – Soporte de Cobranza</div>
-              <div class="timeline-company">Multicob Chile LTDA</div>
-            </div>
-            <span class="timeline-date">Oct 2025 – Actualidad</span>
-          </div>
+    <ol class="xp">
+      <li class="xp-item reveal">
+        <p class="xp-date">Oct 2025 — hoy</p>
+        <div>
+          <h3 class="xp-role">Técnico en Informática, Soporte de Cobranza</h3>
+          <p class="xp-org">Multicob Chile Ltda.</p>
           <ul>
-            <li>Desarrollo y optimización de macros VBA para eficiencia operativa.</li>
-            <li>Herramientas de escritorio Python (pandas, PyQt5, PyInstaller) que redujeron tiempos manuales.</li>
-            <li>Dashboards en Power BI para soporte en toma de decisiones.</li>
-            <li>Gestión de campañas masivas: Email, SMS y WhatsApp con múltiples proveedores.</li>
-            <li>Diseño de plantillas HTML responsive para campañas de email.</li>
+            <li>Desarrollé el control de facturación de cuatro proveedores de mensajería, que procesa ~3,5 millones de filas al mes y cuadra al peso con la prefactura.</li>
+            <li>Automaticé la preparación diaria de campañas de email y SMS, antes armadas a mano en Excel; la herramienta corre en macOS y Windows.</li>
+            <li>Diseño la migración de una macro VBA que clasifica ~2,2 millones de gestiones mensuales a Python y PostgreSQL.</li>
+            <li>Gestiono campañas masivas por email, SMS y WhatsApp con varios proveedores, y mantengo macros VBA y reportes para supervisión.</li>
           </ul>
         </div>
-      </div>
+      </li>
 
-      <div class="timeline-item">
-        <div class="timeline-dot pink"></div>
-        <div class="timeline-card">
-          <div class="timeline-header">
-            <div>
-              <div class="timeline-title">Desarrollador de Sistemas</div>
-              <div class="timeline-company">Avícola San Luis de Cuncumen</div>
-            </div>
-            <span class="timeline-date">Jun 2025 – Ago 2025</span>
-          </div>
+      <li class="xp-item reveal">
+        <p class="xp-date">Jun — Ago 2025</p>
+        <div>
+          <h3 class="xp-role">Desarrollador de Sistemas</h3>
+          <p class="xp-org">Avícola San Luis de Cuncumen</p>
           <ul>
-            <li>Sistema ofimático en Google Sheets para gestión empresarial.</li>
-            <li>Automatización de datos que eliminó tareas manuales repetitivas.</li>
-            <li>Reportes diarios de evolución del negocio con cálculos financieros integrados.</li>
+            <li>Construí un sistema de gestión en Google Sheets que centralizó la información del negocio.</li>
+            <li>Automaticé el ingreso y cruce de datos que antes se hacía a mano.</li>
+            <li>Implementé reportes diarios de evolución del negocio con cálculos financieros integrados.</li>
           </ul>
         </div>
-      </div>
+      </li>
 
-      <div class="timeline-item">
-        <div class="timeline-dot green"></div>
-        <div class="timeline-card">
-          <div class="timeline-header">
-            <div>
-              <div class="timeline-title">Practicante – Desarrollo Full Stack</div>
-              <div class="timeline-company">Business Oil SPA</div>
-            </div>
-            <span class="timeline-date">Mar 2025 – May 2025</span>
-          </div>
+      <li class="xp-item reveal">
+        <p class="xp-date">Mar — May 2025</p>
+        <div>
+          <h3 class="xp-role">Práctica profesional, Desarrollo Full Stack</h3>
+          <p class="xp-org">Business Oil SpA</p>
           <ul>
-            <li>Soluciones Full Stack para automatización de procesos internos.</li>
-            <li>Scripts Python para optimizar tareas repetitivas.</li>
-            <li>Administración de bases de datos relacionales en MySQL.</li>
+            <li>Desarrollé soluciones web y scripts en Python para automatizar procesos internos.</li>
+            <li>Administré bases de datos relacionales en MySQL.</li>
           </ul>
         </div>
-      </div>
+      </li>
 
-      <div class="timeline-item">
-        <div class="timeline-dot" style="background: #888; box-shadow: none;"></div>
-        <div class="timeline-card">
-          <div class="timeline-header">
-            <div>
-              <div class="timeline-title">Encargado de Logística</div>
-              <div class="timeline-company">Avícola San Luis de Cuncumen</div>
-            </div>
-            <span class="timeline-date">Mar 2023 – Feb 2024</span>
-          </div>
+      <li class="xp-item is-earlier reveal">
+        <p class="xp-date">Mar 2023 — Feb 2024</p>
+        <div>
+          <h3 class="xp-role">Encargado de Logística</h3>
+          <p class="xp-org">Avícola San Luis de Cuncumen</p>
           <ul>
-            <li>Gestión y coordinación de pedidos de productos avícolas.</li>
-            <li>Supervisión de documentación de envíos.</li>
-            <li>Optimización de procesos logísticos.</li>
+            <li>Coordiné pedidos y documentación de despacho; experiencia directa en la operación que hoy ayudo a automatizar.</li>
           </ul>
         </div>
-      </div>
+      </li>
+    </ol>
+  </div>
+</section>
 
+<!-- HABILIDADES -->
+<section id="habilidades" aria-labelledby="habilidades-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="section-label reveal"><b>03</b>Habilidades</p>
+      <div>
+        <h2 class="section-title reveal" id="habilidades-title">Herramientas que uso a diario</h2>
+        <p class="section-desc reveal">Agrupadas por el tipo de problema que resuelven. Las que estoy aprendiendo aparecen marcadas.</p>
+      </div>
+    </header>
+
+    <div class="skills">
+      <div class="skill-group reveal">
+        <h3>Datos y automatización</h3>
+        <p>Lectura, limpieza y cruce de grandes volúmenes de archivos Excel y CSV.</p>
+        <ul class="tags">
+          <li class="tag">Python</li><li class="tag">pandas</li><li class="tag">openpyxl</li><li class="tag">xlsxwriter</li>
+          <li class="tag">multiprocessing</li><li class="tag">Excel avanzado</li><li class="tag">VBA</li><li class="tag is-learning">python-calamine</li>
+        </ul>
+      </div>
+      <div class="skill-group reveal">
+        <h3>Bases de datos</h3>
+        <p>Modelado relacional, consultas y diseño de cargas confiables.</p>
+        <ul class="tags">
+          <li class="tag">SQL</li><li class="tag">MySQL</li><li class="tag">SQLite</li>
+          <li class="tag is-learning">PostgreSQL</li><li class="tag is-learning">psycopg 3</li>
+        </ul>
+      </div>
+      <div class="skill-group reveal">
+        <h3>Aplicaciones de escritorio</h3>
+        <p>Interfaces para equipos no técnicos, distribuidas como ejecutables para macOS y Windows.</p>
+        <ul class="tags">
+          <li class="tag">PyQt5</li><li class="tag">QtWebEngine</li><li class="tag">pywebview</li><li class="tag">ECharts</li>
+          <li class="tag">PyInstaller</li><li class="tag">HTML / CSS / JS</li>
+        </ul>
+      </div>
+      <div class="skill-group reveal">
+        <h3>Calidad y entrega</h3>
+        <p>Pruebas automáticas, compilación continua y documentación para usuarios.</p>
+        <ul class="tags">
+          <li class="tag">Git</li><li class="tag">GitHub Actions</li><li class="tag">Git LFS</li><li class="tag">unittest</li>
+          <li class="tag">python-docx</li><li class="tag is-learning">pytest</li><li class="tag is-learning">ruff</li><li class="tag is-learning">uv</li>
+        </ul>
+      </div>
+      <div class="skill-group reveal">
+        <h3>Reportes y análisis</h3>
+        <p>Indicadores operativos y análisis estadístico con fuentes verificables.</p>
+        <ul class="tags">
+          <li class="tag">Power BI</li><li class="tag">ECharts</li><li class="tag">Google Sheets</li><li class="tag">Muestreo complejo</li>
+        </ul>
+      </div>
+      <div class="skill-group reveal">
+        <h3>IA aplicada al desarrollo</h3>
+        <p>Flujos de trabajo con asistentes de código, extendidos con herramientas propias.</p>
+        <ul class="tags">
+          <li class="tag">Claude Code</li><li class="tag">MCP</li><li class="tag">Hooks y skills</li><li class="tag is-learning">Ollama</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="skills-legend reveal">
+      <span><span class="tag">Python</span> Uso en proyectos</span>
+      <span><span class="tag is-learning">PostgreSQL</span> Aprendiendo</span>
     </div>
   </div>
 </section>
 
-<!-- EDUCACIÓN Y CERTIFICADOS -->
-<section id="educacion" style="background: var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+<!-- FORMACIÓN -->
+<section id="formacion" aria-labelledby="formacion-title">
   <div class="container">
-    <p class="section-label reveal">Formación</p>
-    <h2 class="section-title reveal">Educación & Certificados</h2>
-    <p class="section-desc reveal">Formación académica y cursos complementarios completados.</p>
+    <header class="section-head">
+      <p class="section-label reveal"><b>04</b>Formación</p>
+      <div>
+        <h2 class="section-title reveal" id="formacion-title">Educación y certificados</h2>
+      </div>
+    </header>
 
-    <div class="edu-grid">
-      <div class="edu-card reveal">
-        <div class="edu-icon">🎓</div>
-        <div class="edu-body">
-          <div class="edu-period">2021 – 2025</div>
-          <div class="edu-title">Ingeniería en Informática</div>
-          <div class="edu-institution">DUOC UC</div>
-          <p class="edu-desc">Carrera técnico-profesional con énfasis en desarrollo de software, bases de datos, redes y sistemas operativos.</p>
+    <ul class="edu">
+      <li class="edu-item reveal">
+        <p class="xp-date">2021 — 2025</p>
+        <div>
+          <h3>Ingeniería en Informática</h3>
+          <p>DUOC UC. Desarrollo de software, bases de datos, redes y sistemas operativos.</p>
         </div>
-      </div>
-      <div class="edu-card reveal">
-        <div class="edu-icon">📚</div>
-        <div class="edu-body">
-          <div class="edu-period">Santander Open Academy</div>
-          <div class="edu-title">Introducción a la Ciencia de Datos</div>
-          <div class="edu-institution">Santander Open Academy</div>
-          <p class="edu-desc">Fundamentos de análisis de datos, estadística descriptiva y herramientas de visualización.</p>
+      </li>
+      <li class="edu-item reveal">
+        <p class="xp-date">Curso</p>
+        <div>
+          <h3>Introducción a la Ciencia de Datos</h3>
+          <p>Santander Open Academy. Análisis de datos, estadística descriptiva y visualización.</p>
         </div>
-      </div>
-      <div class="edu-card reveal">
-        <div class="edu-icon">🧮</div>
-        <div class="edu-body">
-          <div class="edu-period">Mastermind</div>
-          <div class="edu-title">Fundamentos de Matemáticas para Informáticos</div>
-          <div class="edu-institution">Mastermind</div>
-          <p class="edu-desc">Lógica, álgebra booleana, teoría de conjuntos y matemática discreta aplicada a la informática.</p>
+      </li>
+      <li class="edu-item reveal">
+        <p class="xp-date">Curso</p>
+        <div>
+          <h3>Fundamentos de Matemáticas para Informáticos</h3>
+          <p>Mastermind. Lógica, álgebra booleana, teoría de conjuntos y matemática discreta.</p>
         </div>
-      </div>
-    </div>
+      </li>
+      <li class="edu-item reveal">
+        <p class="xp-date">Idiomas</p>
+        <div>
+          <h3>Español nativo · Inglés B1</h3>
+          <p>Lectura técnica fluida en inglés: documentación, foros y especificaciones.</p>
+        </div>
+      </li>
+    </ul>
 
-    <h3 class="cert-subtitle reveal">Certificados verificables</h3>
+    <h3 class="cert-head reveal">Certificados</h3>
     <div class="cert-grid">
-      <div class="cert-card reveal" onclick="openGallery(0)">
-        <img src="Certificados/1768766643346.jpeg" alt="Título Ingeniero en Informática — DUOC UC" loading="lazy" />
-        <div class="cert-overlay">🔍 Ver certificado</div>
-        <div class="cert-label">Ingeniería en Informática · DUOC UC</div>
-      </div>
-      <div class="cert-card reveal" onclick="openGallery(1)">
-        <img src="Certificados/1756486420666.jpeg" alt="Introducción a la Ciencia de Datos — Santander" loading="lazy" />
-        <div class="cert-overlay">🔍 Ver certificado</div>
-        <div class="cert-label">Ciencia de Datos · Santander</div>
-      </div>
-      <div class="cert-card reveal" onclick="openGallery(2)">
-        <img src="Certificados/certificado_matematicas.jpeg" alt="Matemáticas para Informáticos — Mastermind" loading="lazy" />
-        <div class="cert-overlay">🔍 Ver certificado</div>
-        <div class="cert-label">Matemáticas para Informáticos · Mastermind</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- LIGHTBOX GALLERY -->
-<div id="lightbox" onclick="handleLightboxClick(event)">
-  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <button class="lightbox-prev" onclick="galleryNav(-1); event.stopPropagation()">&#8249;</button>
-  <div class="lightbox-content">
-    <img id="lightbox-img" src="" alt="Certificado" />
-    <div id="lightbox-pdf-btn" style="display:none">
-      <a id="lightbox-pdf-link" href="Certificados/Cerficado Matematicas.pdf" target="_blank" class="btn btn-primary" onclick="event.stopPropagation()">📄 Abrir PDF</a>
-    </div>
-    <div id="lightbox-caption"></div>
-  </div>
-  <button class="lightbox-next" onclick="galleryNav(1); event.stopPropagation()">&#8250;</button>
-  <div id="lightbox-counter"></div>
-</div>
-
-<!-- PROYECTOS FUTUROS -->
-<section id="proyectos" style="background: var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
-  <div class="container">
-    <p class="section-label reveal">Proyectos personales</p>
-    <h2 class="section-title reveal">Proyectos & Roadmap</h2>
-    <p class="section-desc reveal">Proyectos construidos y en desarrollo. Iniciativas para crecer técnicamente y generar valor real.</p>
-
-    <div class="projects-grid">
-
-      <div class="project-card purple reveal tilt">
-        <span class="project-status planned">En planificación</span>
-        <h3>🤖 Agente IA de gestión documental</h3>
-        <p>Sistema que ingesta contratos, facturas y reportes PDF, extrae información clave con Claude API y la almacena en una base de datos consultable por lenguaje natural.</p>
-        <div class="project-stack">
-          <span class="tag">Python</span><span class="tag">Claude API</span><span class="tag">SQLite</span><span class="tag">PyQt5</span>
-        </div>
-      </div>
-
-      <div class="project-card green reveal tilt">
-        <span class="project-status concept">Concepto</span>
-        <h3>📊 Dashboard SaaS de cobranza</h3>
-        <p>Plataforma web ligera para empresas de cobranza: KPIs en tiempo real, segmentación de carteras y disparo automático de comunicaciones multicanal desde un solo panel.</p>
-        <div class="project-stack">
-          <span class="tag green">FastAPI</span><span class="tag green">React</span><span class="tag green">Power BI Embed</span><span class="tag green">PostgreSQL</span>
-        </div>
-      </div>
-
-      <div class="project-card pink reveal tilt">
-        <span class="project-status concept">Concepto</span>
-        <h3>📩 Motor de campañas inteligente</h3>
-        <p>Herramienta que personaliza mensajes masivos (email/SMS/WhatsApp) usando IA para adaptar el tono según el perfil del destinatario y el historial de respuestas.</p>
-        <div class="project-stack">
-          <span class="tag pink">Python</span><span class="tag pink">Claude API</span><span class="tag pink">SMTP</span><span class="tag pink">Twilio</span>
-        </div>
-      </div>
-
-      <div class="project-card yellow reveal tilt">
-        <span class="project-status building">Explorando</span>
-        <h3>🧠 Copiloto de macros VBA</h3>
-        <p>Extensión para Excel que, a través de un chat integrado, genera, corrige y explica macros VBA desde lenguaje natural. Orientado a equipos no técnicos en empresas.</p>
-        <div class="project-stack">
-          <span class="tag yellow">VBA</span><span class="tag yellow">Claude API</span><span class="tag yellow">Excel Add-in</span>
-        </div>
-      </div>
-
-      <div class="project-card purple reveal tilt">
-        <span class="project-status concept">Concepto</span>
-        <h3>🔍 Scraper + reporte automatizado</h3>
-        <p>Pipeline que extrae datos de portales públicos (licitaciones, precios, competencia), los limpia con pandas y genera reportes Power BI actualizados diariamente.</p>
-        <div class="project-stack">
-          <span class="tag">Selenium</span><span class="tag">pandas</span><span class="tag">Power BI API</span><span class="tag">cron</span>
-        </div>
-      </div>
-
-      <div class="project-card green reveal tilt">
-        <span class="project-status live">✦ Completado</span>
-        <h3>💰 Finanzas CLI</h3>
-        <p>Herramienta de terminal para gestionar finanzas personales desde exportaciones bancarias. Importa CSV, Excel y PDF, categoriza gastos automáticamente con reglas configurables, muestra dashboards con gráficos en terminal y envía reportes PDF por email. Soporta Banco de Chile, BancoEstado, Santander y más mediante parsers dedicados.</p>
-        <div class="project-stack">
-          <span class="tag green">Python</span><span class="tag green">Rich</span><span class="tag green">pandas</span><span class="tag green">SQLite</span><span class="tag green">pdfplumber</span><span class="tag green">openpyxl</span><span class="tag green">ReportLab</span><span class="tag green">SMTP</span>
-        </div>
-        <a href="https://github.com/maxvaldes33/finanzas-cli" target="_blank" rel="noopener" class="project-github-link">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-          Ver en GitHub
-        </a>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ÁREAS DE MEJORA -->
-<section id="mejoras">
-  <div class="container">
-    <p class="section-label reveal">Crecimiento</p>
-    <h2 class="section-title reveal">Áreas de desarrollo</h2>
-    <p class="section-desc reveal">Ejes en los que me estoy enfocando para ampliar mi perfil técnico.</p>
-
-    <div class="improvement-grid">
-      <div class="improvement-card reveal">
-        <div class="improvement-icon">☁️</div>
-        <div>
-          <h4>Cloud & DevOps</h4>
-          <p>AWS / GCP básico, Docker, CI/CD con GitHub Actions para deployar proyectos reales.</p>
-        </div>
-      </div>
-      <div class="improvement-card reveal">
-        <div class="improvement-icon">🌐</div>
-        <div>
-          <h4>Desarrollo Web Full Stack</h4>
-          <p>Fortalecer FastAPI + React para construir interfaces de usuario para mis herramientas Python.</p>
-        </div>
-      </div>
-      <div class="improvement-card reveal">
-        <div class="improvement-icon">🧪</div>
-        <div>
-          <h4>Testing & calidad de código</h4>
-          <p>pytest, unittest, coverage reports. Escribir código más robusto y documentado.</p>
-        </div>
-      </div>
-      <div class="improvement-card reveal">
-        <div class="improvement-icon">🗃️</div>
-        <div>
-          <h4>Bases de datos avanzadas</h4>
-          <p>PostgreSQL, índices, optimización de queries, Redis para caché en proyectos de mayor escala.</p>
-        </div>
-      </div>
-      <div class="improvement-card reveal">
-        <div class="improvement-icon">🤖</div>
-        <div>
-          <h4>MLOps & Data Engineering</h4>
-          <p>Pipelines de datos con Airflow, integración de modelos ML en producción con FastAPI.</p>
-        </div>
-      </div>
-      <div class="improvement-card reveal">
-        <div class="improvement-icon">🔐</div>
-        <div>
-          <h4>Seguridad en aplicaciones</h4>
-          <p>OWASP básico, autenticación JWT/OAuth2, buenas prácticas de manejo de secrets.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- APIS EN VIVO -->
-<section id="apis">
-  <div class="container">
-    <p class="section-label reveal">Integración de APIs</p>
-    <h2 class="section-title reveal">Datos en tiempo real</h2>
-    <p class="section-desc reveal">Conexión en vivo a APIs públicas — precios de crypto y actividad en GitHub.</p>
-
-    <div class="apis-grid">
-
-      <!-- CoinGecko -->
-      <div class="api-card reveal">
-        <div class="api-card-header">
-          <div class="api-badge">Binance API</div>
-          <div class="api-live-dot"></div>
-        </div>
-        <h3>Mercado Crypto</h3>
-        <p class="api-desc">Precios actualizados cada 60 seg · Sin API key · REST público</p>
-        <div id="crypto-list">
-          <div class="crypto-skeleton"></div>
-          <div class="crypto-skeleton"></div>
-          <div class="crypto-skeleton"></div>
-          <div class="crypto-skeleton"></div>
-        </div>
-        <div id="crypto-updated" class="api-updated"></div>
-      </div>
-
-      <!-- GitHub -->
-      <div class="api-card reveal">
-        <div class="api-card-header">
-          <div class="api-badge github">GitHub API</div>
-          <div class="api-live-dot"></div>
-        </div>
-        <h3>Actividad en GitHub</h3>
-        <p class="api-desc">Repositorios públicos · Lenguajes · Actividad reciente</p>
-        <div id="github-profile" class="github-profile">
-          <div class="crypto-skeleton"></div>
-          <div class="crypto-skeleton"></div>
-          <div class="crypto-skeleton"></div>
-        </div>
-        <div id="github-repos" class="github-repos"></div>
-      </div>
-
-      <!-- NewsAPI -->
-      <div class="api-card reveal">
-        <div class="api-card-header">
-          <div class="api-badge news">Hacker News API</div>
-          <div class="api-live-dot"></div>
-        </div>
-        <h3>Noticias Tech</h3>
-        <p class="api-desc">Top stories de tecnología en tiempo real · Fuente: Hacker News</p>
-        <div id="news-list">
-          <div class="crypto-skeleton"></div>
-          <div class="crypto-skeleton"></div>
-          <div class="crypto-skeleton"></div>
-        </div>
-      </div>
-
-      <!-- Visitor Location -->
-      <div class="api-card reveal">
-        <div class="api-card-header">
-          <div class="api-badge visitor">ipinfo.io</div>
-          <div class="api-live-dot"></div>
-        </div>
-        <h3>Tu Ubicación</h3>
-        <p class="api-desc">Detección de ubicación por IP · Sin datos personales almacenados · Fuente: ipinfo.io</p>
-        <div id="visitor-location">
-          <div class="crypto-skeleton"></div>
-          <div class="crypto-skeleton"></div>
-        </div>
-      </div>
-
-      <!-- Frankfurter Exchange Rates -->
-      <div class="api-card reveal">
-        <div class="api-card-header">
-          <div class="api-badge exchange">mindicador.cl · BCCh</div>
-          <div class="api-live-dot"></div>
-        </div>
-        <h3>Tipo de Cambio</h3>
-        <p class="api-desc">Indicadores económicos oficiales · Fuente: Banco Central de Chile</p>
-        <div id="exchange-list">
-          <div class="crypto-skeleton"></div>
-          <div class="crypto-skeleton"></div>
-          <div class="crypto-skeleton"></div>
-          <div class="crypto-skeleton"></div>
-        </div>
-        <div id="exchange-updated" class="api-updated"></div>
-      </div>
-
-      <!-- JokeAPI -->
-      <div class="api-card reveal">
-        <div class="api-card-header">
-          <div class="api-badge joke">JokeAPI</div>
-          <div class="api-live-dot"></div>
-        </div>
-        <h3>Chiste de Programación</h3>
-        <p class="api-desc">Un chiste dev aleatorio cada vez que visitas · Fuente: JokeAPI</p>
-        <div id="joke-box">
-          <div class="crypto-skeleton"></div>
-          <div class="crypto-skeleton"></div>
-        </div>
-        <button id="joke-next-btn" class="joke-next-btn" onclick="loadJoke()">Otro chiste</button>
-      </div>
-
+      <button type="button" class="cert-card reveal" data-gallery="0">
+        <img src="Certificados/1768766643346.jpeg" alt="Certificado de título de Ingeniero en Informática, DUOC UC" loading="lazy" />
+        <span>Ingeniería en Informática · DUOC UC</span>
+      </button>
+      <button type="button" class="cert-card reveal" data-gallery="1">
+        <img src="Certificados/1756486420666.jpeg" alt="Certificado del curso Introducción a la Ciencia de Datos, Santander Open Academy" loading="lazy" />
+        <span>Ciencia de Datos · Santander</span>
+      </button>
+      <button type="button" class="cert-card reveal" data-gallery="2">
+        <img src="Certificados/certificado_matematicas.jpeg" alt="Certificado del curso Fundamentos de Matemáticas para Informáticos, Mastermind" loading="lazy" />
+        <span>Matemáticas para Informáticos · Mastermind</span>
+      </button>
     </div>
   </div>
 </section>
 
 <!-- CONTACTO -->
-<section id="contacto" class="contact-section">
-  <div class="container">
-    <div class="contact-inner">
-      <p class="section-label reveal">Contacto</p>
-      <h2 class="section-title reveal">Hablemos</h2>
-      <p style="color:var(--muted); margin-top:0.5rem;" class="reveal">
-        Abierto a nuevas oportunidades, proyectos freelance o simplemente conversar sobre tecnología.
+<section id="contacto" aria-labelledby="contacto-title">
+  <div class="container contact-grid">
+    <div class="contact-intro">
+      <p class="section-label reveal"><b>05</b>Contacto</p>
+      <h2 class="reveal" id="contacto-title">Conversemos</h2>
+      <p class="reveal">
+        Abierto a roles en automatización, herramientas internas e ingeniería de datos, en modalidad remota,
+        híbrida o presencial en Santiago.
       </p>
-      <div class="contact-links reveal">
-        <a href="mailto:musrri.valdes.maxi03@gmail.com" class="contact-link">✉️ Email</a>
-        <a href="https://www.linkedin.com/in/maximiliano-alejandro-valdes-musrri-716678271/" class="contact-link" target="_blank" rel="noopener">💼 LinkedIn</a>
-        <a href="tel:+56945859365" class="contact-link">📱 +56 9 4585 9365</a>
-      </div>
+      <ul class="contact-list reveal">
+        <li><span class="mono">Correo</span><a class="link" href="mailto:musrri.valdes.maxi03@gmail.com">musrri.valdes.maxi03@gmail.com</a></li>
+        <li><span class="mono">LinkedIn</span><a class="link" href="https://www.linkedin.com/in/maximiliano-alejandro-valdes-musrri-716678271/" target="_blank" rel="noopener">Maximiliano Valdés</a></li>
+        <li><span class="mono">Teléfono</span><a class="link" href="tel:+56945859365">+56 9 4585 9365</a></li>
+        <li><span class="mono">GitHub</span><a class="link" href="https://github.com/maxvaldes33" target="_blank" rel="noopener">maxvaldes33</a></li>
+      </ul>
+    </div>
 
-      <form id="contact-form" class="contact-form reveal">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="cf-name">Nombre</label>
-            <input type="text" id="cf-name" name="name" placeholder="Tu nombre" required />
-          </div>
-          <div class="form-group">
-            <label for="cf-email">Email</label>
-            <input type="email" id="cf-email" name="email" placeholder="tu@email.com" required />
-          </div>
+    <form id="contact-form" class="contact-form reveal" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cf-name">Nombre</label>
+          <input type="text" id="cf-name" name="name" autocomplete="name" required aria-describedby="cf-name-err" />
+          <p class="field-error" id="cf-name-err"></p>
         </div>
         <div class="form-group">
-          <label for="cf-message">Mensaje</label>
-          <textarea id="cf-message" name="message" rows="4" placeholder="¿En qué puedo ayudarte?" required></textarea>
+          <label for="cf-email">Correo</label>
+          <input type="email" id="cf-email" name="email" autocomplete="email" required aria-describedby="cf-email-err" />
+          <p class="field-error" id="cf-email-err"></p>
         </div>
-        <button type="submit" class="btn btn-primary form-submit" id="form-btn">Enviar mensaje</button>
-        <div id="form-status"></div>
-      </form>
-    </div>
+      </div>
+      <div class="form-group">
+        <label for="cf-message">Mensaje</label>
+        <textarea id="cf-message" name="message" rows="5" required aria-describedby="cf-message-err"></textarea>
+        <p class="field-error" id="cf-message-err"></p>
+      </div>
+      <div class="form-foot">
+        <button type="submit" class="btn btn-primary" id="form-btn">Enviar mensaje</button>
+        <p id="form-status" role="status" aria-live="polite"></p>
+      </div>
+    </form>
   </div>
 </section>
+
+</main>
 
 <!-- ===== SECCIÓN OCULTA: HOBBIES (se revela con 5 clicks en el logo MV.) ===== -->
 <section id="hobbies" hidden>
@@ -814,24 +579,33 @@
   </div>
 </section>
 
-<footer>
-  <p>Maximiliano Valdés · Ingeniero en Informática · Santiago, Chile · 2026</p>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p>© 2026 Maximiliano Valdés · Santiago, Chile</p>
+    <div class="theme-control" role="group" aria-label="Tema de color">
+      <button type="button" class="theme-btn" data-theme="system" aria-pressed="false">Sistema</button>
+      <button type="button" class="theme-btn" data-theme="light" aria-pressed="false">Claro</button>
+      <button type="button" class="theme-btn" data-theme="dark" aria-pressed="false">Oscuro</button>
+    </div>
+  </div>
 </footer>
 
-<!-- Fondo 3D con Three.js -->
-<canvas id="three-bg" aria-hidden="true"></canvas>
+<button id="back-to-top" type="button" aria-label="Volver al inicio">↑</button>
 
-<script src="cv-data.js"></script>
+<!-- LIGHTBOX DE CERTIFICADOS -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Certificado">
+  <button type="button" class="lightbox-close" aria-label="Cerrar">✕</button>
+  <button type="button" class="lightbox-prev" aria-label="Anterior">‹</button>
+  <div class="lightbox-content">
+    <img id="lightbox-img" src="" alt="" />
+    <p id="lightbox-caption"></p>
+  </div>
+  <button type="button" class="lightbox-next" aria-label="Siguiente">›</button>
+  <p id="lightbox-counter"></p>
+</div>
+
 <script src="main.js"></script>
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
-  }
-}
-</script>
-<script type="module" src="three-bg.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js" defer></script>
 <script type="module" src="hobbies.js"></script>
 </body>
 </html>
