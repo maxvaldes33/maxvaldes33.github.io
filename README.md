@@ -1,6 +1,6 @@
-# Portfolio — Maximiliano Valdés
+# Portfolio — Maximiliano Valdés Musrri
 
-Portfolio personal de **Maximiliano Valdés**, Ingeniero en Informática (DUOC UC) especializado en automatización de procesos, desarrollo con Python, IA aplicada (Claude API) y análisis de datos con Power BI.
+Portfolio personal de **Maximiliano Valdés Musrri**, Ingeniero en Informática (DUOC UC) especializado en automatización de procesos, desarrollo con Python, IA aplicada (Claude API) y análisis de datos con Power BI.
 
 🔗 **En vivo:** [maxvaldes33.github.io](https://maxvaldes33.github.io)
 
@@ -86,5 +86,5 @@ python3 -m http.server 8000
 ## 📬 Contacto
 
 - **Email:** musrri.valdes.maxi03@gmail.com
-- **LinkedIn:** [Maximiliano Valdés](https://www.linkedin.com/in/maximiliano-alejandro-valdes-musrri-716678271/)
+- **LinkedIn:** [Maximiliano Valdés Musrri](https://www.linkedin.com/in/maximiliano-alejandro-valdes-musrri-716678271/)
 - **GitHub:** [@maxvaldes33](https://github.com/maxvaldes33)
